@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'org.jlleitschuh.gradle.ktlint'
 }
 
 android {
@@ -39,6 +40,19 @@ android {
         xmlReport true
     }
 }
+
+configurations {
+    ktlint
+}
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    mainClass.set("com.pinterest.ktlint.Main")
+    classpath = configurations.ktlint
+    args "src/**/*.kt", "--color", "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
+}
+
+check.dependsOn ktlint
 
 dependencies {
 
@@ -87,6 +101,9 @@ dependencies {
     // Test
     testImplementation "junit:junit:4.13.2"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
+
+    // Ktlint
+    ktlint "com.pinterest:ktlint:0.43.1"
 }
 
 // Allow references to generated code
