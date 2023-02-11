@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<checkstyle version="8.0">
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/androidTest/java/com/example/hideandseek/ExampleInstrumentedTest.kt">
+		<error line="5" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/MainApplication.kt">
+		<error line="7" column="39" severity="error" message="Unnecessary block (&quot;{}&quot;)" source="no-empty-class-body" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/data/datasource/local/LocationRoomDatabase.kt">
+		<error line="3" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="5" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="7" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="8" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="9" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/data/datasource/local/TrapRoomDatabase.kt">
+		<error line="3" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="5" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="7" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="8" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="9" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/data/datasource/local/UserDao.kt">
+		<error line="3" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/data/datasource/local/UserRoomDatabase.kt">
+		<error line="3" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="4" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="6" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="8" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="9" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="10" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/data/repository/MapRepository.kt">
+		<error line="5" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/data/repository/TrapRepository.kt">
+		<error line="4" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/di/ApiModule.kt">
+		<error line="1" column="1" severity="error" message="File must end with a newline (\n)" source="final-newline" />
+		<error line="32" column="1" severity="error" message="Unexpected indentation (20) (should be 16)" source="indent" />
+		<error line="33" column="1" severity="error" message="Unexpected indentation (20) (should be 16)" source="indent" />
+		<error line="34" column="1" severity="error" message="Unexpected indentation (20) (should be 16)" source="indent" />
+		<error line="35" column="1" severity="error" message="Unexpected indentation (20) (should be 16)" source="indent" />
+		<error line="36" column="1" severity="error" message="Unexpected indentation (20) (should be 16)" source="indent" />
+		<error line="37" column="1" severity="error" message="Unexpected indentation (20) (should be 16)" source="indent" />
+		<error line="38" column="1" severity="error" message="Unexpected indentation (20) (should be 16)" source="indent" />
+		<error line="39" column="1" severity="error" message="Unexpected indentation (20) (should be 16)" source="indent" />
+		<error line="40" column="1" severity="error" message="Unexpected indentation (20) (should be 16)" source="indent" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/di/ApiRepositoryModule.kt">
+		<error line="1" column="1" severity="error" message="File must end with a newline (\n)" source="final-newline" />
+		<error line="8" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="9" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="11" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/di/LocationModule.kt">
+		<error line="1" column="1" severity="error" message="File must end with a newline (\n)" source="final-newline" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/di/LocationRepositoryModule.kt">
+		<error line="1" column="1" severity="error" message="File must end with a newline (\n)" source="final-newline" />
+		<error line="8" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="9" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="11" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/di/MapModule.kt">
+		<error line="1" column="1" severity="error" message="File must end with a newline (\n)" source="final-newline" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/di/MapRepositoryModule.kt">
+		<error line="1" column="1" severity="error" message="File must end with a newline (\n)" source="final-newline" />
+		<error line="8" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="9" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="11" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="12" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/di/TrapModule.kt">
+		<error line="1" column="1" severity="error" message="File must end with a newline (\n)" source="final-newline" />
+		<error line="5" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/di/TrapRepositoryModule.kt">
+		<error line="1" column="1" severity="error" message="File must end with a newline (\n)" source="final-newline" />
+		<error line="8" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="9" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="11" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/di/UserModule.kt">
+		<error line="1" column="1" severity="error" message="File must end with a newline (\n)" source="final-newline" />
+		<error line="5" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="6" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/di/UserRepositoryModule.kt">
+		<error line="1" column="1" severity="error" message="File must end with a newline (\n)" source="final-newline" />
+		<error line="8" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="9" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="11" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/ui/view/MainActivity.kt">
+		<error line="19" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+		<error line="167" column="1" severity="error" message="Unexpected indentation (16) (should be 20)" source="indent" />
+		<error line="168" column="1" severity="error" message="Unexpected indentation (16) (should be 20)" source="indent" />
+		<error line="169" column="1" severity="error" message="Unexpected indentation (12) (should be 16)" source="indent" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/ui/view/MainFragment.kt">
+		<error line="17" column="1" severity="error" message="Unused import" source="no-unused-imports" />
+		<error line="24" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/ui/viewmodel/BeTrappedFragmentViewModel.kt">
+		<error line="1" column="1" severity="error" message="File must end with a newline (\n)" source="final-newline" />
+		<error line="4" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/ui/viewmodel/MainActivityViewModel.kt">
+		<error line="5" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+		<error line="8" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/ui/viewmodel/MainFragmentViewModel.kt">
+		<error line="5" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+		<error line="6" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+		<error line="8" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/main/java/com/example/hideandseek/ui/viewmodel/WatchFragmentViewModel.kt">
+		<error line="5" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+		<error line="7" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+	</file>
+	<file name="/mnt/c/Users/daimu/My_work_space/EinStealthAndroid/app/src/test/java/com/example/hideandseek/ExampleUnitTest.kt">
+		<error line="3" column="1" severity="error" message="Wildcard import (cannot be auto-corrected)" source="no-wildcard-imports" />
+	</file>
+</checkstyle>
