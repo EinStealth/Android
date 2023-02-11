@@ -3,7 +3,6 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
-    id 'org.jlleitschuh.gradle.ktlint'
 }
 
 android {
@@ -45,14 +44,25 @@ configurations {
     ktlint
 }
 
+// Add コードスタイルをチェック
 task ktlint(type: JavaExec, group: "verification") {
     description = "Check Kotlin code style."
+    // main = "com.pinterest.ktlint.Main" は非推奨
     mainClass.set("com.pinterest.ktlint.Main")
     classpath = configurations.ktlint
     args "src/**/*.kt", "--color", "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
 }
 
 check.dependsOn ktlint
+
+// Add 自動でフォーマットしてくれる
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    // main = "com.pinterest.ktlint.Main" は非推奨
+    mainClass.set("com.pinterest.ktlint.Main")
+    classpath = configurations.ktlint
+    args "-F", "src/**/*.kt"
+}
 
 dependencies {
 
