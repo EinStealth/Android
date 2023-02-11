@@ -40,6 +40,31 @@ android {
     }
 }
 
+configurations {
+    ktlint
+}
+
+// Add コードスタイルをチェック
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    // main = "com.pinterest.ktlint.Main" は非推奨
+    mainClass.set("com.pinterest.ktlint.Main")
+    classpath = configurations.ktlint
+    args "src/**/*.kt", "--color", "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
+    ignoreExitValue = true
+}
+
+check.dependsOn ktlint
+
+// Add 自動でフォーマットしてくれる
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    // main = "com.pinterest.ktlint.Main" は非推奨
+    mainClass.set("com.pinterest.ktlint.Main")
+    classpath = configurations.ktlint
+    args "-F", "src/**/*.kt"
+}
+
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -87,6 +112,9 @@ dependencies {
     // Test
     testImplementation "junit:junit:4.13.2"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
+
+    // Ktlint
+    ktlint "com.pinterest:ktlint:0.43.1"
 }
 
 // Allow references to generated code
