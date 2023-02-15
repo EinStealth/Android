@@ -97,8 +97,8 @@ dependencies {
     implementation 'com.github.MikeOrtiz:TouchImageView:3.2.1'
 
     // Coroutine
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
 
     // Retrofit2
     def retrofit_version = "2.9.0"
@@ -112,7 +112,7 @@ dependencies {
 
     // Test
     testImplementation "junit:junit:4.13.2"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
 
     // ktlint
     ktlint "com.pinterest:ktlint:0.43.1"
