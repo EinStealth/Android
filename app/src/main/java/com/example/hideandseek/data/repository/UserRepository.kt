@@ -3,7 +3,10 @@ package com.example.hideandseek.data.repository
 import androidx.annotation.WorkerThread
 import com.example.hideandseek.data.datasource.local.UserDao
 import com.example.hideandseek.data.datasource.local.UserData
+import com.example.hideandseek.di.IODispatcher
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface UserRepository {
@@ -18,6 +21,7 @@ interface UserRepository {
 
 class UserRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
+    @IODispatcher private val ioDispatcher: CoroutineDispatcher
 ) : UserRepository {
 
     override val allUsers: Flow<List<UserData>>
@@ -26,18 +30,24 @@ class UserRepositoryImpl @Inject constructor(
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     override suspend fun getLatest(): UserData {
-        return userDao.getLatest()
+        return withContext(ioDispatcher) {
+            return@withContext userDao.getLatest()
+        }
     }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     override suspend fun insert(user: UserData) {
-        userDao.insert(user)
+        withContext(ioDispatcher) {
+            userDao.insert(user)
+        }
     }
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
     override suspend fun deleteAll() {
-        userDao.deleteAll()
+        withContext(ioDispatcher) {
+            userDao.deleteAll()
+        }
     }
 }
