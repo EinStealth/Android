@@ -1,7 +1,8 @@
 package com.example.hideandseek.data.repository
 
 import androidx.annotation.WorkerThread
-import com.example.hideandseek.data.datasource.local.*
+import com.example.hideandseek.data.datasource.local.TrapDao
+import com.example.hideandseek.data.datasource.local.TrapData
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

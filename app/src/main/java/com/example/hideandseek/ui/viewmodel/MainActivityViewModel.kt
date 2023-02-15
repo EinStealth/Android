@@ -2,7 +2,8 @@ package com.example.hideandseek.ui.viewmodel
 
 import android.location.Location
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.hideandseek.data.datasource.remote.PostData
 import com.example.hideandseek.data.datasource.remote.ResponseData
 import com.example.hideandseek.data.repository.*
