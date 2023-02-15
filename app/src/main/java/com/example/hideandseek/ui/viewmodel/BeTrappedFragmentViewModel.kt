@@ -12,11 +12,8 @@ import com.example.hideandseek.data.datasource.remote.PostData
 import com.example.hideandseek.data.repository.ApiRepository
 import com.example.hideandseek.data.repository.TrapRepository
 import com.example.hideandseek.data.repository.UserRepository
-import com.example.hideandseek.di.IODispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +21,6 @@ class BeTrappedFragmentViewModel @Inject constructor(
     private val trapRepository: TrapRepository,
     private val userRepository: UserRepository,
     private val apiRepository: ApiRepository,
-    @IODispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
     val userLive = userRepository.allUsers.asLiveData()
 
@@ -32,30 +28,24 @@ class BeTrappedFragmentViewModel @Inject constructor(
         var user: UserData = UserData(0, "", 0.0, 0.0, 0.0)
 
         viewModelScope.launch {
-            withContext(ioDispatcher) {
-                user = userRepository.getLatest()
-            }
+            user = userRepository.getLatest()
         }
         return user
     }
 
     fun postTrapRoom(isMine: Int) = viewModelScope.launch {
-        withContext(ioDispatcher) {
-            Log.d("USER_TRAP", userRepository.getLatest().toString())
-            val nowUser = userRepository.getLatest()
-            val trap = TrapData(0, nowUser.latitude, nowUser.longitude, nowUser.altitude, isMine)
-            trapRepository.insert(trap)
-        }
+        Log.d("USER_TRAP", userRepository.getLatest().toString())
+        val nowUser = userRepository.getLatest()
+        val trap = TrapData(0, nowUser.latitude, nowUser.longitude, nowUser.altitude, isMine)
+        trapRepository.insert(trap)
     }
 
     private val _skillTime = MutableLiveData<String>()
     val skillTime: LiveData<String> = _skillTime
 
     fun setSkillTime() = viewModelScope.launch {
-        withContext(ioDispatcher) {
-            val nowUser = userRepository.getLatest()
-            _skillTime.value = nowUser.relativeTime
-        }
+        val nowUser = userRepository.getLatest()
+        _skillTime.value = nowUser.relativeTime
     }
 
     fun setSkillTimeInit(skillTime: String) {
@@ -113,7 +103,7 @@ class BeTrappedFragmentViewModel @Inject constructor(
     }
 
     fun postTrapSpacetime() {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             val nowUser = userRepository.getLatest()
             try {
                 val request = PostData.PostSpacetime(nowUser.relativeTime.substring(0, 7) + "0", nowUser.latitude, nowUser.longitude, nowUser.altitude, 1)

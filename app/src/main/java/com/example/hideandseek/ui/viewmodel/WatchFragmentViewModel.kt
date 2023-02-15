@@ -12,11 +12,8 @@ import com.example.hideandseek.data.repository.LocationRepository
 import com.example.hideandseek.data.repository.MapRepository
 import com.example.hideandseek.data.repository.TrapRepository
 import com.example.hideandseek.data.repository.UserRepository
-import com.example.hideandseek.di.IODispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,7 +22,6 @@ class WatchFragmentViewModel @Inject constructor(
     private val trapRepository: TrapRepository,
     private val userRepository: UserRepository,
     private val mapRepository: MapRepository,
-    @IODispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     val allLocationsLive = locationRepository.allLocations.asLiveData()
     val allTrapsLive = trapRepository.allTraps.asLiveData()
@@ -39,12 +35,10 @@ class WatchFragmentViewModel @Inject constructor(
     }
 
     fun postTrapRoom(isMine: Int) = viewModelScope.launch {
-        withContext(ioDispatcher) {
-            Log.d("USER_TRAP", userRepository.getLatest().toString())
-            val nowUser = userRepository.getLatest()
-            val trap = TrapData(0, nowUser.latitude, nowUser.longitude, nowUser.altitude, isMine)
-            trapRepository.insert(trap)
-        }
+        Log.d("USER_TRAP", userRepository.getLatest().toString())
+        val nowUser = userRepository.getLatest()
+        val trap = TrapData(0, nowUser.latitude, nowUser.longitude, nowUser.altitude, isMine)
+        trapRepository.insert(trap)
     }
 
     suspend fun fetchMap(url: String): Bitmap {
