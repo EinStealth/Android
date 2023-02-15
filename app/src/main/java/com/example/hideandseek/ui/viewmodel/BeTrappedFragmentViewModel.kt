@@ -12,11 +12,8 @@ import com.example.hideandseek.data.datasource.remote.PostData
 import com.example.hideandseek.data.repository.ApiRepository
 import com.example.hideandseek.data.repository.TrapRepository
 import com.example.hideandseek.data.repository.UserRepository
-import com.example.hideandseek.di.IODispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
