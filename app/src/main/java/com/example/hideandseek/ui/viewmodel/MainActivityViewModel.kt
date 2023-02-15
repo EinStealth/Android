@@ -99,10 +99,10 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun deleteAllUser() = viewModelScope.launch {
-            userRepository.deleteAll()
+        userRepository.deleteAll()
     }
 
     fun deleteAllTrap() = viewModelScope.launch {
-            trapRepository.deleteAll()
+        trapRepository.deleteAll()
     }
 }

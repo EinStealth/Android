@@ -19,3 +19,4 @@ android_lint.lint(inline_mode: true)
 # ktlint
 checkstyle_format.base_path = Dir.pwd
 checkstyle_format.report 'app/build/ktlint.xml'
+checkstyle_format.lint(inline_mode: true)
