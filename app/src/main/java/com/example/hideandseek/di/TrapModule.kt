@@ -2,7 +2,8 @@ package com.example.hideandseek.di
 
 import android.content.Context
 import androidx.room.Room
-import com.example.hideandseek.data.datasource.local.*
+import com.example.hideandseek.data.datasource.local.TrapDao
+import com.example.hideandseek.data.datasource.local.TrapRoomDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

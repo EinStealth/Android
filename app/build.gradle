@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace 'com.example.hideandseek'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.hideandseek"
         minSdk 28
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -63,17 +63,18 @@ task ktlintFormat(type: JavaExec, group: "formatting") {
     mainClass.set("com.pinterest.ktlint.Main")
     classpath = configurations.ktlint
     args "-F", "src/**/*.kt"
+    ignoreExitValue = true
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     // Lifecycle components
     implementation 'androidx.lifecycle:lifecycle-common-java8:2.5.1'
@@ -88,16 +89,16 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     // Room
-    implementation 'androidx.room:room-ktx:2.4.3'
-    implementation 'androidx.room:room-runtime:2.4.3'
-    kapt 'androidx.room:room-compiler:2.4.3'
+    implementation 'androidx.room:room-ktx:2.5.0'
+    implementation 'androidx.room:room-runtime:2.5.0'
+    kapt 'androidx.room:room-compiler:2.5.0'
 
     // ImageViewのピンチ操作ライブラリ
     implementation 'com.github.MikeOrtiz:TouchImageView:3.2.1'
 
     // Coroutine
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
 
     // Retrofit2
     def retrofit_version = "2.9.0"
@@ -111,9 +112,9 @@ dependencies {
 
     // Test
     testImplementation "junit:junit:4.13.2"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
 
-    // Ktlint
+    // ktlint
     ktlint "com.pinterest:ktlint:0.43.1"
 }
 
