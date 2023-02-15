@@ -10,11 +10,8 @@ import com.example.hideandseek.data.repository.ApiRepository
 import com.example.hideandseek.data.repository.LocationRepository
 import com.example.hideandseek.data.repository.TrapRepository
 import com.example.hideandseek.data.repository.UserRepository
-import com.example.hideandseek.di.IODispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalTime
 import javax.inject.Inject
 import kotlin.math.pow
