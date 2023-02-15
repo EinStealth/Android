@@ -27,7 +27,6 @@ class MainActivityViewModel @Inject constructor(
     private val trapRepository: TrapRepository,
     private val userRepository: UserRepository,
     private val apiRepository: ApiRepository,
-    @IODispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : ViewModel() {
 
     lateinit var relativeTime: LocalTime
@@ -51,23 +50,19 @@ class MainActivityViewModel @Inject constructor(
     fun insertUser(relativeTime: LocalTime, location: Location) = viewModelScope.launch {
         val user =
             com.example.hideandseek.data.datasource.local.UserData(0, relativeTime.toString().substring(0, 8), location.latitude, location.longitude, location.altitude)
-        withContext(ioDispatcher) {
-            userRepository.insert(user)
-        }
+        userRepository.insert(user)
     }
 
     private fun insertLocationAll(relativeTime: LocalTime, response: List<ResponseData.ResponseGetSpacetime>) = viewModelScope.launch {
         for (i in response.indices) {
             val user =
                 com.example.hideandseek.data.datasource.local.LocationData(0, relativeTime.toString().substring(0, 8), response[i].latitude, response[i].longitude, response[i].altitude, response[i].objId)
-            withContext(ioDispatcher) {
-                locationRepository.insert(user)
-            }
+            locationRepository.insert(user)
         }
     }
 
     fun postSpacetime(relativeTime: LocalTime, location: Location) {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             try {
                 val request = PostData.PostSpacetime(relativeTime.toString().substring(0, 8), location.latitude, location.longitude, location.altitude, 0)
                 val response = apiRepository.postSpacetime(request)
@@ -83,7 +78,7 @@ class MainActivityViewModel @Inject constructor(
     }
 
     fun getSpacetime(relativeTime: LocalTime) {
-        viewModelScope.launch(ioDispatcher) {
+        viewModelScope.launch {
             try {
                 val response = apiRepository.getSpacetime(relativeTime.toString().substring(0, 8))
                 if (response.isSuccessful) {
@@ -100,20 +95,14 @@ class MainActivityViewModel @Inject constructor(
 
     // Locationデータベースのデータを全消去
     fun deleteAllLocation() = viewModelScope.launch {
-        withContext(ioDispatcher) {
-            locationRepository.deleteAll()
-        }
+        locationRepository.deleteAll()
     }
 
     fun deleteAllUser() = viewModelScope.launch {
-        withContext(ioDispatcher) {
             userRepository.deleteAll()
-        }
     }
 
     fun deleteAllTrap() = viewModelScope.launch {
-        withContext(ioDispatcher) {
             trapRepository.deleteAll()
-        }
     }
 }
