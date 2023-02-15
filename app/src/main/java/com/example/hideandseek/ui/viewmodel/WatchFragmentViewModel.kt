@@ -30,7 +30,7 @@ class WatchFragmentViewModel @Inject constructor(
     private val _map = MutableLiveData<Bitmap>()
     val map: LiveData<Bitmap> = _map
 
-    fun setMap(p0: Bitmap) {
+    private fun setMap(p0: Bitmap) {
         _map.value = p0
     }
 
@@ -41,7 +41,10 @@ class WatchFragmentViewModel @Inject constructor(
         trapRepository.insert(trap)
     }
 
-    suspend fun fetchMap(url: String): Bitmap {
-        return mapRepository.fetchMap(url)
+    fun fetchMap(url: String) {
+        viewModelScope.launch {
+            val fetchedMap = mapRepository.fetchMap(url)
+            setMap(fetchedMap)
+        }
     }
 }
