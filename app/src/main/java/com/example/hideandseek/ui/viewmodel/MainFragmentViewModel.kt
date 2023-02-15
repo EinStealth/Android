@@ -32,8 +32,14 @@ class MainFragmentViewModel @Inject constructor(
     val allTrapsLive = trapRepository.allTraps.asLiveData()
     val userLive = userRepository.allUsers.asLiveData()
 
-    suspend fun getNowUser(): UserData {
-        return userRepository.getLatest()
+    private val _latestUser = MutableLiveData<UserData>()
+    val latestUser: LiveData<UserData> = _latestUser
+
+    fun getNowUser() {
+        viewModelScope.launch {
+            val latestUser = userRepository.getLatest()
+            _latestUser.value = latestUser
+        }
     }
 
     fun postTrapRoom(isMine: Int) = viewModelScope.launch {
@@ -130,7 +136,7 @@ class MainFragmentViewModel @Inject constructor(
     private val _map = MutableLiveData<Bitmap>()
     val map: LiveData<Bitmap> = _map
 
-    fun setMap(p0: Bitmap) {
+    private fun setMap(p0: Bitmap) {
         _map.value = p0
     }
 
@@ -150,8 +156,10 @@ class MainFragmentViewModel @Inject constructor(
             }
         }
     }
-
-    suspend fun fetchMap(url: String): Bitmap {
-        return mapRepository.fetchMap(url)
+    fun fetchMap(url: String) {
+        viewModelScope.launch {
+            val fetchedMap = mapRepository.fetchMap(url)
+            setMap(fetchedMap)
+        }
     }
 }

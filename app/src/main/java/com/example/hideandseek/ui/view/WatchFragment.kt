@@ -93,8 +93,7 @@ class WatchFragment(
                 if (userLive[userLive.size - 1].relativeTime.substring(7, 8) == "0") {
                     Log.d("fetchMAP", "Mapが更新されました")
                     coroutineScope.launch {
-                        val originalBitmap = viewModel.fetchMap(url)
-                        viewModel.setMap(originalBitmap)
+                        viewModel.fetchMap(url)
                     }
                 }
             }

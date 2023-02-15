@@ -188,8 +188,7 @@ class MainFragment(
                 if (userLive[userLive.size - 1].relativeTime.substring(7, 8) == "0") {
                     Log.d("fetchMAP", "Mapが更新されました")
                     coroutineScope.launch {
-                        val originalBitmap = viewModel.fetchMap(url)
-                        viewModel.setMap(originalBitmap)
+                        viewModel.fetchMap(url)
                     }
                 }
             }
@@ -215,7 +214,10 @@ class MainFragment(
         btSkillOn.setOnClickListener {
             // Userの最新情報から位置をとってきて、それを罠の位置とする
             coroutineScope.launch {
-                setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to viewModel.getNowUser().relativeTime))
+                viewModel.getNowUser()
+            }
+            viewModel.latestUser.observe(viewLifecycleOwner) {
+                setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to it.relativeTime))
             }
             viewModel.postTrapRoom(0)
             viewModel.postTrapSpacetime()
