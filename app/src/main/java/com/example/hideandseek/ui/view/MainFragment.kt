@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainFragment(
     mainDispatcher: CoroutineDispatcher = Dispatchers.Main
-): Fragment() {
+) : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val viewModel: MainFragmentViewModel by viewModels()
 

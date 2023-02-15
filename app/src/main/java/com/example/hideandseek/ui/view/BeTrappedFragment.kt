@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class BeTrappedFragment(
     mainDispatcher: CoroutineDispatcher = Dispatchers.Main
-): Fragment() {
+) : Fragment() {
     private var _binding: FragmentBeTrappedBinding? = null
     private val viewModel: BeTrappedFragmentViewModel by viewModels()
 

@@ -51,5 +51,4 @@ object CoroutineDispatcherModule {
     fun provideUnconfinedDispatcher(): CoroutineDispatcher {
         return Dispatchers.Unconfined
     }
-
 }
