@@ -63,6 +63,7 @@ task ktlintFormat(type: JavaExec, group: "formatting") {
     mainClass.set("com.pinterest.ktlint.Main")
     classpath = configurations.ktlint
     args "-F", "src/**/*.kt"
+    ignoreExitValue = true
 }
 
 dependencies {

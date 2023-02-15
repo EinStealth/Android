@@ -2,7 +2,6 @@ package com.example.hideandseek.data.repository
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import dagger.hilt.InstallIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
