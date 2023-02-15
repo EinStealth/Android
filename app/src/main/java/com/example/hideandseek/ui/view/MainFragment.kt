@@ -20,16 +20,19 @@ import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.databinding.FragmentMainBinding
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainFragment : Fragment() {
+class MainFragment(
+    mainDispatcher: CoroutineDispatcher = Dispatchers.Main
+) : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val viewModel: MainFragmentViewModel by viewModels()
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private val coroutineScope = CoroutineScope(mainDispatcher)
 
     private val binding get() = _binding!!
 

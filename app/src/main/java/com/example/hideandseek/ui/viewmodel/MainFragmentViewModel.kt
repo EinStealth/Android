@@ -15,8 +15,10 @@ import com.example.hideandseek.data.repository.LocationRepository
 import com.example.hideandseek.data.repository.MapRepository
 import com.example.hideandseek.data.repository.TrapRepository
 import com.example.hideandseek.data.repository.UserRepository
+import com.example.hideandseek.di.IODispatcher
+import com.example.hideandseek.di.MainDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -29,6 +31,8 @@ class MainFragmentViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val apiRepository: ApiRepository,
     private val mapRepository: MapRepository,
+    @IODispatcher private val ioDispatcher: CoroutineDispatcher,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     val allLocationsLive = locationRepository.allLocations.asLiveData()
     val allTrapsLive = trapRepository.allTraps.asLiveData()
@@ -39,7 +43,7 @@ class MainFragmentViewModel @Inject constructor(
     }
 
     fun postTrapRoom(isMine: Int) = viewModelScope.launch {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             Log.d("USER_TRAP", userRepository.getLatest().toString())
             val nowUser = userRepository.getLatest()
             val trap = TrapData(0, nowUser.latitude, nowUser.longitude, nowUser.altitude, isMine)
@@ -51,7 +55,7 @@ class MainFragmentViewModel @Inject constructor(
     val skillTime: LiveData<String> = _skillTime
 
     fun setSkillTime() = viewModelScope.launch {
-        withContext(Dispatchers.Main) {
+        withContext(mainDispatcher) {
             val nowUser = userRepository.getLatest()
             _skillTime.value = nowUser.relativeTime
         }
@@ -141,7 +145,7 @@ class MainFragmentViewModel @Inject constructor(
     }
 
     fun postTrapSpacetime() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(ioDispatcher) {
             val nowUser = userRepository.getLatest()
             try {
                 val request = PostData.PostSpacetime(nowUser.relativeTime.substring(0, 7) + "0", nowUser.latitude, nowUser.longitude, nowUser.altitude, 1)

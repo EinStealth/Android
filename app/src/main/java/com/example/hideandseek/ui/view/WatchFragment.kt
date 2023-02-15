@@ -13,16 +13,19 @@ import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.databinding.FragmentWatchBinding
 import com.example.hideandseek.ui.viewmodel.WatchFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class WatchFragment : Fragment() {
+class WatchFragment(
+    mainDispatcher: CoroutineDispatcher = Dispatchers.Main
+) : Fragment() {
     private var _binding: FragmentWatchBinding? = null
     private val viewModel: WatchFragmentViewModel by viewModels()
 
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
+    private val coroutineScope = CoroutineScope(mainDispatcher)
 
     private val binding get() = _binding!!
 
