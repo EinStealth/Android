@@ -101,14 +101,13 @@ class MainFragment(
             viewModel.setIsOverSkillTime(result)
         }
 
-        // 2重LiveData解消のために変数定義
-        // TODO: ここの変数を全てUiStateに置く
-        var limitTime = ""
-        var skillTime = ""
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { mainUiState ->
+                    tvLimitTime.text = mainUiState.limitTime
+                    val limitTime = mainUiState.limitTime
+                    val skillTime = mainUiState.skillTime
+
                     Log.d("UiState", "stateを更新しました")
                     val allLocation = mainUiState.allLocation
                     val allTraps    = mainUiState.allTrap
@@ -120,8 +119,10 @@ class MainFragment(
                         viewModel.setLimitTime(userLive[0].relativeTime)
                         tvRelativeTime.text = userLive[mainUiState.allUser.size - 1].relativeTime
                         // 制限時間になったかどうかの判定
-                        viewModel.compareTime(userLive[userLive.size - 1].relativeTime, limitTime)
-                        setFragmentResult("MainFragmentLimitTime", bundleOf("limitTime" to limitTime))
+                        if (limitTime != "") {
+                            viewModel.compareTime(userLive[userLive.size - 1].relativeTime, limitTime)
+                            setFragmentResult("MainFragmentLimitTime", bundleOf("limitTime" to limitTime))
+                        }
 
                         // 自分の位置情報のurl
                         val iconUrlHide = "https://onl.bz/dcMZVEa"
@@ -189,15 +190,6 @@ class MainFragment(
             }
         }
 
-        viewModel.limitTime.observe(viewLifecycleOwner) {
-            tvLimitTime.text = it
-            limitTime = it
-        }
-
-        viewModel.skillTime.observe(viewLifecycleOwner) {
-            skillTime = it
-        }
-
         viewModel.isOverLimitTime.observe(viewLifecycleOwner) {
             if (it) {
                 // クリアダイアログを表示
@@ -217,11 +209,14 @@ class MainFragment(
         // skillボタンが押された時の処理
         btSkillOn.setOnClickListener {
             // Userの最新情報から位置をとってきて、それを罠の位置とする
-            coroutineScope.launch {
-                viewModel.getNowUser()
-            }
-            viewModel.latestUser.observe(viewLifecycleOwner) {
-                setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to it.relativeTime))
+            viewModel.getNowUser()
+
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.uiState.collect { mainUiState ->
+                        setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to mainUiState.latestUser.relativeTime))
+                    }
+                }
             }
             viewModel.postTrapRoom(0)
             viewModel.postTrapSpacetime()

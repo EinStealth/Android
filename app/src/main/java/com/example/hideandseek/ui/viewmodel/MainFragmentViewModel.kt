@@ -26,6 +26,9 @@ data class MainUiState(
     val allLocation: List<LocationData> = listOf(),
     val allUser:     List<UserData>     = listOf(),
     val allTrap:     List<TrapData>     = listOf(),
+    val latestUser:  UserData           = UserData(0, "", 0.0, 0.0, 0.0),
+    val skillTime:   String             = "",
+    val limitTime:   String             = "",
 )
 
 @HiltViewModel
@@ -63,13 +66,12 @@ class MainFragmentViewModel @Inject constructor(
         }
     }
 
-    private val _latestUser = MutableLiveData<UserData>()
-    val latestUser: LiveData<UserData> = _latestUser
-
     fun getNowUser() {
         viewModelScope.launch {
             val latestUser = userRepository.getLatest()
-            _latestUser.value = latestUser
+            _uiState.update { mainUiState ->
+                mainUiState.copy(latestUser = latestUser)
+            }
         }
     }
 
@@ -80,20 +82,18 @@ class MainFragmentViewModel @Inject constructor(
         trapRepository.insert(trap)
     }
 
-    private val _skillTime = MutableLiveData<String>()
-    val skillTime: LiveData<String> = _skillTime
-
     fun setSkillTime() = viewModelScope.launch {
         val nowUser = userRepository.getLatest()
-        _skillTime.value = nowUser.relativeTime
+        _uiState.update { mainUiState ->
+            mainUiState.copy(skillTime = nowUser.relativeTime)
+        }
     }
 
     fun setSkillTImeString(skillTime: String) {
-        _skillTime.value = skillTime
+        _uiState.update { mainUiState ->
+            mainUiState.copy(skillTime = skillTime)
+        }
     }
-
-    private val _limitTime = MutableLiveData<String>()
-    val limitTime: LiveData<String> = _limitTime
 
     // RelativeTime+15分の時間を制限時間とする
     fun setLimitTime(relativeTime: String) {
@@ -117,7 +117,9 @@ class MainFragmentViewModel @Inject constructor(
                 "0" + (relativeTime.substring(0, 2).toInt() + 1).toString() + ":" + ((relativeTime.substring(3, 5).toInt() + 15) % 60).toString() + relativeTime.substring(5)
             }
         }
-        _limitTime.value = limitTime
+        _uiState.update { mainUiState ->
+            mainUiState.copy(limitTime = limitTime)
+        }
     }
 
     private val _isOverLimitTime = MutableLiveData<Boolean>()
