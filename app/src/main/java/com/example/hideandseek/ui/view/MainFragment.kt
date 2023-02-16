@@ -13,6 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.data.datasource.local.LocationData
@@ -103,8 +106,19 @@ class MainFragment(
         var limitTime = ""
         var skillTime = ""
 
-        viewModel.allLocationsLive.observe(viewLifecycleOwner) {
-            allLocation = it
+//        viewModel.getAllLocation()
+
+//        viewModel.allLocationsLive.observe(viewLifecycleOwner) {
+//            allLocation = it
+//        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    Log.d( "location","locationを取得しました")
+                    allLocation = it.allLocation
+                }
+            }
         }
 
         viewModel.allTrapsLive.observe(viewLifecycleOwner) {
