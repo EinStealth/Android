@@ -11,12 +11,20 @@ import com.example.hideandseek.data.repository.LocationRepository
 import com.example.hideandseek.data.repository.TrapRepository
 import com.example.hideandseek.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 import javax.inject.Inject
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
+
+data class MainActivityUiState(
+    val relativeTime: LocalTime? = null
+)
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
@@ -25,16 +33,21 @@ class MainActivityViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val apiRepository: ApiRepository,
 ) : ViewModel() {
-
-    lateinit var relativeTime: LocalTime
+    private val _uiState = MutableStateFlow(MainActivityUiState())
+    val uiState: StateFlow<MainActivityUiState> = _uiState.asStateFlow()
 
     // relativeTimeの初期値（アプリを起動したときのLocalTime）をセットする
     fun setUpRelativeTime(nowTime: LocalTime) {
-        relativeTime = nowTime
+        _uiState.update { mainActivityUiState ->
+            mainActivityUiState.copy(relativeTime = nowTime)
+        }
     }
 
     fun calculateRelativeTime(gap: Long) {
-        relativeTime = relativeTime.minusNanos(gap)?.plusSeconds(1)!!
+        _uiState.update { mainActivityUiState ->
+            mainActivityUiState.copy(relativeTime = mainActivityUiState.relativeTime?.minusNanos(gap)
+                ?.plusSeconds(1)!!)
+        }
     }
 
     // 特殊相対性理論によりずれを計算する
