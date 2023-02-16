@@ -24,6 +24,8 @@ import kotlin.math.abs
 
 data class MainUiState(
     val allLocation: List<LocationData> = listOf(),
+    val allUser:     List<UserData>     = listOf(),
+    val allTrap:     List<TrapData>     = listOf(),
 )
 
 @HiltViewModel
@@ -37,25 +39,29 @@ class MainFragmentViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
-//    val allLocationsLive = locationRepository.allLocations.asLiveData()
-    val allTrapsLive = trapRepository.allTraps.asLiveData()
-    val userLive = userRepository.allUsers.asLiveData()
-
     init {
         viewModelScope.launch {
             locationRepository.allLocations.collect { allLocations ->
-                _uiState.update {state ->
-                    state.copy(allLocation = allLocations)
+                _uiState.update { mainUiState ->
+                    mainUiState.copy(allLocation = allLocations)
+                }
+            }
+        }
+        viewModelScope.launch {
+            userRepository.allUsers.collect { allUsers ->
+                _uiState.update { mainUiState ->
+                    mainUiState.copy(allUser = allUsers)
+                }
+            }
+        }
+        viewModelScope.launch {
+            trapRepository.allTraps.collect { allTraps ->
+                _uiState.update { mainUiState ->
+                    mainUiState.copy(allTrap = allTraps)
                 }
             }
         }
     }
-//    private val allLocation = locationRepository.allLocations.asLiveData()
-//    fun getAllLocation() {
-//        _uiState.update {
-//            it.copy(allLocation = allLocation)
-//        }
-//    }
 
     private val _latestUser = MutableLiveData<UserData>()
     val latestUser: LiveData<UserData> = _latestUser

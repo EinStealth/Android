@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.data.datasource.local.LocationData
 import com.example.hideandseek.data.datasource.local.TrapData
+import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.databinding.FragmentMainBinding
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -101,28 +102,91 @@ class MainFragment(
         }
 
         // 2重LiveData解消のために変数定義
-        var allLocation: List<LocationData> = listOf()
-        var allTraps: List<TrapData> = listOf()
+        // TODO: ここの変数を全てUiStateに置く
         var limitTime = ""
         var skillTime = ""
 
-//        viewModel.getAllLocation()
-
-//        viewModel.allLocationsLive.observe(viewLifecycleOwner) {
-//            allLocation = it
-//        }
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    Log.d( "location","locationを取得しました")
-                    allLocation = it.allLocation
+                viewModel.uiState.collect { mainUiState ->
+                    Log.d("UiState", "stateを更新しました")
+                    val allLocation = mainUiState.allLocation
+                    val allTraps    = mainUiState.allTrap
+                    val userLive    = mainUiState.allUser
+
+                    // 自分の情報の表示
+                    Log.d("UserLive", userLive.toString())
+                    if (userLive.isNotEmpty()) {
+                        viewModel.setLimitTime(userLive[0].relativeTime)
+                        tvRelativeTime.text = userLive[mainUiState.allUser.size - 1].relativeTime
+                        // 制限時間になったかどうかの判定
+                        viewModel.compareTime(userLive[userLive.size - 1].relativeTime, limitTime)
+                        setFragmentResult("MainFragmentLimitTime", bundleOf("limitTime" to limitTime))
+
+                        // 自分の位置情報のurl
+                        val iconUrlHide = "https://onl.bz/dcMZVEa"
+                        var url = "https://maps.googleapis.com/maps/api/staticmap" +
+                                "?center=${userLive[userLive.size - 1].latitude},${userLive[userLive.size - 1].longitude}" +
+                                "&size=310x640&scale=1" +
+                                "&zoom=18" +
+                                "&key=AIzaSyA-cfLegBoleKaT2TbU5R4K1uRkzBR6vUQ" +
+                                "&markers=icon:" + iconUrlHide + "|${userLive[userLive.size - 1].latitude},${userLive[userLive.size - 1].longitude}"
+
+                        // 他人の位置を追加
+                        Log.d("ALL_Location", allLocation.toString())
+                        if (allLocation.isNotEmpty()) {
+                            // ユーザーの位置情報
+                            for (i in allLocation.indices) {
+                                if (allLocation[i].objId == 1) {
+                                    viewModel.postTrapRoom(1)
+                                } else {
+                                    url += "&markers=icon:" + iconUrlHide + "|${allLocation[i].latitude},${allLocation[i].longitude}"
+                                }
+                            }
+                        }
+
+                        // trapの位置情報
+                        if (allTraps.isNotEmpty()) {
+                            for (i in allTraps.indices) {
+                                if (allTraps[i].objId == 0) {
+                                    url += "&markers=icon:https://onl.bz/FetpS7Y|${allTraps[i].latitude},${allTraps[i].longitude}"
+                                }
+                                if (viewModel.checkCaughtTrap(userLive[userLive.size - 1], allTraps[i])) {
+                                    // TrapにかかったらFragmentを移動
+                                    setFragmentResult("MainFragmentTrapTime", bundleOf("trapTime" to userLive[userLive.size - 1].relativeTime))
+
+                                    findNavController().navigate(R.id.navigation_be_trapped)
+                                }
+                            }
+                        }
+
+                        // Skill Buttonの Progress Bar
+                        // スキルボタンを複数回押したとき、relativeが一旦最初の(skillTime+1)秒になって、本来のrelativeまで1秒ずつ足される
+                        // observeを二重にしてるせいで変な挙動していると思われる（放置するとメモリやばそう）
+                        // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
+                        if (skillTime != "") {
+                            viewModel.compareSkillTime(
+                                userLive[userLive.size - 1].relativeTime,
+                                skillTime,
+                            )
+                            progressSkill.progress = viewModel.howProgressSkillTime(
+                                userLive[userLive.size - 1].relativeTime,
+                                skillTime,
+                            )
+                            setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to skillTime))
+                        }
+
+                        // URLから画像を取得
+                        // 相対時間10秒おきに行う
+                        if (userLive[userLive.size - 1].relativeTime.substring(7, 8) == "0") {
+                            Log.d("fetchMAP", "Mapが更新されました")
+                            coroutineScope.launch {
+                                viewModel.fetchMap(url)
+                            }
+                        }
+                    }
                 }
             }
-        }
-
-        viewModel.allTrapsLive.observe(viewLifecycleOwner) {
-            allTraps = it
         }
 
         viewModel.limitTime.observe(viewLifecycleOwner) {
@@ -132,80 +196,6 @@ class MainFragment(
 
         viewModel.skillTime.observe(viewLifecycleOwner) {
             skillTime = it
-        }
-
-        // 自分の情報の表示
-        viewModel.userLive.observe(viewLifecycleOwner) { userLive ->
-            Log.d("UserLive", userLive.toString())
-            if (userLive.isNotEmpty()) {
-                viewModel.setLimitTime(userLive[0].relativeTime)
-                tvRelativeTime.text = userLive[userLive.size - 1].relativeTime
-                // 制限時間になったかどうかの判定
-                viewModel.compareTime(userLive[userLive.size - 1].relativeTime, limitTime)
-                setFragmentResult("MainFragmentLimitTime", bundleOf("limitTime" to limitTime))
-
-                // 自分の位置情報のurl
-                val iconUrlHide = "https://onl.bz/dcMZVEa"
-                var url = "https://maps.googleapis.com/maps/api/staticmap" +
-                    "?center=${userLive[userLive.size - 1].latitude},${userLive[userLive.size - 1].longitude}" +
-                    "&size=310x640&scale=1" +
-                    "&zoom=18" +
-                    "&key=AIzaSyA-cfLegBoleKaT2TbU5R4K1uRkzBR6vUQ" +
-                    "&markers=icon:" + iconUrlHide + "|${userLive[userLive.size - 1].latitude},${userLive[userLive.size - 1].longitude}"
-
-                // 他人の位置を追加
-                Log.d("ALL_Location", allLocation.toString())
-                if (allLocation.isNotEmpty()) {
-                    // ユーザーの位置情報
-                    for (i in allLocation.indices) {
-                        if (allLocation[i].objId == 1) {
-                            viewModel.postTrapRoom(1)
-                        } else {
-                            url += "&markers=icon:" + iconUrlHide + "|${allLocation[i].latitude},${allLocation[i].longitude}"
-                        }
-                    }
-                }
-
-                // trapの位置情報
-                if (allTraps.isNotEmpty()) {
-                    for (i in allTraps.indices) {
-                        if (allTraps[i].objId == 0) {
-                            url += "&markers=icon:https://onl.bz/FetpS7Y|${allTraps[i].latitude},${allTraps[i].longitude}"
-                        }
-                        if (viewModel.checkCaughtTrap(userLive[userLive.size - 1], allTraps[i])) {
-                            // TrapにかかったらFragmentを移動
-                            setFragmentResult("MainFragmentTrapTime", bundleOf("trapTime" to userLive[userLive.size - 1].relativeTime))
-
-                            findNavController().navigate(R.id.navigation_be_trapped)
-                        }
-                    }
-                }
-
-                // Skill Buttonの Progress Bar
-                // スキルボタンを複数回押したとき、relativeが一旦最初の(skillTime+1)秒になって、本来のrelativeまで1秒ずつ足される
-                // observeを二重にしてるせいで変な挙動していると思われる（放置するとメモリやばそう）
-                // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
-                if (skillTime != "") {
-                    viewModel.compareSkillTime(
-                        userLive[userLive.size - 1].relativeTime,
-                        skillTime,
-                    )
-                    progressSkill.progress = viewModel.howProgressSkillTime(
-                        userLive[userLive.size - 1].relativeTime,
-                        skillTime,
-                    )
-                    setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to skillTime))
-                }
-
-                // URLから画像を取得
-                // 相対時間10秒おきに行う
-                if (userLive[userLive.size - 1].relativeTime.substring(7, 8) == "0") {
-                    Log.d("fetchMAP", "Mapが更新されました")
-                    coroutineScope.launch {
-                        viewModel.fetchMap(url)
-                    }
-                }
-            }
         }
 
         viewModel.isOverLimitTime.observe(viewLifecycleOwner) {
