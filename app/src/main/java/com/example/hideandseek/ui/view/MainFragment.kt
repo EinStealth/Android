@@ -104,6 +104,19 @@ class MainFragment(
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { mainUiState ->
+
+                    ivMap.setImageBitmap(mainUiState.map)
+
+                    setFragmentResult("MainFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to mainUiState.isOverSkillTime))
+                    changeBtSkillVisible(mainUiState.isOverSkillTime)
+
+                    if (mainUiState.isOverLimitTime) {
+                        // クリアダイアログを表示
+                        val successEscapeDialogFragment = SuccessEscapeDialogFragment()
+                        val supportFragmentManager = childFragmentManager
+                        successEscapeDialogFragment.show(supportFragmentManager, "clear")
+                    }
+
                     tvLimitTime.text = mainUiState.limitTime
                     val limitTime = mainUiState.limitTime
                     val skillTime = mainUiState.skillTime
@@ -190,15 +203,6 @@ class MainFragment(
             }
         }
 
-        viewModel.isOverLimitTime.observe(viewLifecycleOwner) {
-            if (it) {
-                // クリアダイアログを表示
-                val successEscapeDialogFragment = SuccessEscapeDialogFragment()
-                val supportFragmentManager = childFragmentManager
-                successEscapeDialogFragment.show(supportFragmentManager, "clear")
-            }
-        }
-
         // 捕まったボタンが押された時の処理
         btCaptureOn.setOnClickListener {
             val captureDialogFragment = CaptureDialogFragment()
@@ -222,16 +226,6 @@ class MainFragment(
             viewModel.postTrapSpacetime()
             viewModel.setSkillTime()
             viewModel.setIsOverSkillTime(false)
-        }
-
-        viewModel.isOverSkillTime.observe(viewLifecycleOwner) {
-            setFragmentResult("MainFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to it))
-            changeBtSkillVisible(it)
-        }
-
-        // Mapに画像をセット
-        viewModel.map.observe(viewLifecycleOwner) {
-            ivMap.setImageBitmap(it)
         }
 
         return root

@@ -2,10 +2,7 @@ package com.example.hideandseek.ui.viewmodel
 
 import android.graphics.Bitmap
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.hideandseek.data.datasource.local.LocationData
 import com.example.hideandseek.data.datasource.local.TrapData
@@ -29,6 +26,9 @@ data class MainUiState(
     val latestUser:  UserData           = UserData(0, "", 0.0, 0.0, 0.0),
     val skillTime:   String             = "",
     val limitTime:   String             = "",
+    val isOverSkillTime: Boolean = true,
+    val isOverLimitTime: Boolean = false,
+    val map: Bitmap? = null
 )
 
 @HiltViewModel
@@ -122,21 +122,19 @@ class MainFragmentViewModel @Inject constructor(
         }
     }
 
-    private val _isOverLimitTime = MutableLiveData<Boolean>()
-    val isOverLimitTime: LiveData<Boolean> = _isOverLimitTime
-
     // 相対時間が制限時間を超えてたらtrueを返す
     fun compareTime(relativeTime: String, limitTime: String) {
-        _isOverLimitTime.value = relativeTime.substring(0, 2) == limitTime.substring(0, 2) && relativeTime.substring(3, 5) == limitTime.substring(3, 5) && relativeTime.substring(6) > limitTime.substring(6)
+        _uiState.update { mainUiState ->
+            mainUiState.copy(isOverLimitTime = relativeTime.substring(0, 2) == limitTime.substring(0, 2) && relativeTime.substring(3, 5) == limitTime.substring(3, 5) && relativeTime.substring(6) > limitTime.substring(6))
+        }
     }
-
-    private val _isOverSkillTime = MutableLiveData<Boolean>()
-    val isOverSkillTime: LiveData<Boolean> = _isOverSkillTime
 
     fun compareSkillTime(relativeTime: String, skillTime: String) {
         Log.d("CompareSkillTime", "relative: $relativeTime, skill: $skillTime")
         if (relativeTime.substring(6, 8) == skillTime.substring(6, 8)) {
-            _isOverSkillTime.value = relativeTime != skillTime
+            _uiState.update { mainUiState ->
+                mainUiState.copy(isOverSkillTime = relativeTime != skillTime)
+            }
         }
     }
 
@@ -163,14 +161,15 @@ class MainFragmentViewModel @Inject constructor(
     }
 
     fun setIsOverSkillTime(p0: Boolean) {
-        _isOverSkillTime.value = p0
+        _uiState.update { mainUiState ->
+            mainUiState.copy(isOverSkillTime = p0)
+        }
     }
 
-    private val _map = MutableLiveData<Bitmap>()
-    val map: LiveData<Bitmap> = _map
-
     private fun setMap(p0: Bitmap) {
-        _map.value = p0
+        _uiState.update { mainUiState ->
+            mainUiState.copy(map = p0)
+        }
     }
 
     fun postTrapSpacetime() {
