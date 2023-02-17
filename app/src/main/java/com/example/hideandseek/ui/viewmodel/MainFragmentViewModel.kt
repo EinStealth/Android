@@ -151,6 +151,12 @@ class MainFragmentViewModel @Inject constructor(
         return (abs(user.latitude - trap.latitude) < 0.000001 && abs(user.longitude - trap.longitude) < 0.000001)
     }
 
+    fun deleteTrap(trap: TrapData) {
+        viewModelScope.launch {
+            trapRepository.delete(trap)
+        }
+    }
+
     fun howProgressSkillTime(relativeTime: String, skillTime: String): Int {
         Log.d("HowProgress", ((60 + relativeTime.substring(6).toInt() - skillTime.substring(6).toInt()) % 60).toString())
         return if (relativeTime.substring(6).toInt() < skillTime.substring(6).toInt()) {

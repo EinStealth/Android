@@ -149,12 +149,14 @@ class MainFragment(
                             // ユーザーの位置情報
                             for (i in allLocation.indices) {
                                 if (allLocation[i].objId == 1) {
+                                    // 他人の罠をRoomにinsert
                                     viewModel.postTrapRoom(1)
                                 } else {
                                     url += "&markers=icon:" + iconUrlHide + "|${allLocation[i].latitude},${allLocation[i].longitude}"
                                 }
                             }
                         }
+                        Log.d("All_trap", allTraps.toString())
 
                         // trapの位置情報
                         if (allTraps.isNotEmpty()) {
@@ -163,6 +165,9 @@ class MainFragment(
                                     url += "&markers=icon:https://onl.bz/FetpS7Y|${allTraps[i].latitude},${allTraps[i].longitude}"
                                 }
                                 if (viewModel.checkCaughtTrap(userLive[userLive.size - 1], allTraps[i])) {
+                                    // かかったTrapの削除
+                                    viewModel.deleteTrap(allTraps[i])
+
                                     // TrapにかかったらFragmentを移動
                                     setFragmentResult("MainFragmentTrapTime", bundleOf("trapTime" to userLive[userLive.size - 1].relativeTime))
 
@@ -219,6 +224,7 @@ class MainFragment(
                     }
                 }
             }
+            // 自分の罠をRoomにinsert
             viewModel.postTrapRoom(0)
             viewModel.postTrapSpacetime()
             viewModel.setSkillTime()

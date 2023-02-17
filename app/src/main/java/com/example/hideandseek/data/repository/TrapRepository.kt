@@ -14,6 +14,8 @@ interface TrapRepository {
 
     suspend fun insert(trap: TrapData)
 
+    suspend fun delete(trap: TrapData)
+
     suspend fun deleteAll()
 }
 
@@ -30,6 +32,14 @@ class TrapRepositoryImpl @Inject constructor(
     override suspend fun insert(trap: TrapData) {
         withContext(ioDispatcher) {
             trapDao.insert(trap)
+        }
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    override suspend fun delete(trap: TrapData) {
+        withContext(ioDispatcher) {
+            trapDao.delete(trap)
         }
     }
 
