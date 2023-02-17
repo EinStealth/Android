@@ -17,7 +17,7 @@ interface LocationDao {
     fun update(user: LocationData)
 
     @Delete
-    fun delete(user: LocationData)
+    suspend fun delete(user: LocationData)
 
     @Query("SELECT * FROM location_table")
     fun getAll(): Flow<List<LocationData>>

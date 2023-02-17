@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
+import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.databinding.FragmentMainBinding
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -148,11 +149,27 @@ class MainFragment(
                         if (allLocation.isNotEmpty()) {
                             // ユーザーの位置情報
                             for (i in allLocation.indices) {
-                                if (allLocation[i].objId == 1) {
-                                    // 他人の罠をRoomにinsert
-                                    viewModel.postTrapRoom(1)
-                                } else {
-                                    url += "&markers=icon:" + iconUrlHide + "|${allLocation[i].latitude},${allLocation[i].longitude}"
+                                when (allLocation[i].objId) {
+                                    1 -> {
+                                        // 他人の罠をRoomにinsert
+                                        val trap = TrapData(0, allLocation[i].latitude, allLocation[i].longitude, allLocation[i].altitude, 1)
+                                        viewModel.postOthersTrap(trap)
+                                        viewModel.deleteLocation(allLocation[i])
+                                    }
+                                    -1 -> {
+                                        // 罠を削除
+                                        if (allTraps.isNotEmpty()) {
+                                            for (j in allTraps.indices) {
+                                                if (allTraps[j].latitude == allLocation[i].latitude) {
+                                                    viewModel.deleteTrap(allTraps[j])
+                                                }
+                                            }
+                                        }
+                                        viewModel.deleteLocation(allLocation[i])
+                                    }
+                                    else -> {
+                                        url += "&markers=icon:" + iconUrlHide + "|${allLocation[i].latitude},${allLocation[i].longitude}"
+                                    }
                                 }
                             }
                         }
@@ -165,8 +182,11 @@ class MainFragment(
                                     url += "&markers=icon:https://onl.bz/FetpS7Y|${allTraps[i].latitude},${allTraps[i].longitude}"
                                 }
                                 if (viewModel.checkCaughtTrap(userLive[userLive.size - 1], allTraps[i])) {
-                                    // かかったTrapの削除
+                                    // かかったTrapの削除(local)
                                     viewModel.deleteTrap(allTraps[i])
+
+                                    // かかったTrapの削除(remote)
+                                    viewModel.postTrapSpacetime("delete")
 
                                     // TrapにかかったらFragmentを移動
                                     setFragmentResult("MainFragmentTrapTime", bundleOf("trapTime" to userLive[userLive.size - 1].relativeTime))
@@ -226,7 +246,7 @@ class MainFragment(
             }
             // 自分の罠をRoomにinsert
             viewModel.postTrapRoom(0)
-            viewModel.postTrapSpacetime()
+            viewModel.postTrapSpacetime("post")
             viewModel.setSkillTime()
             viewModel.setIsOverSkillTime(false)
         }

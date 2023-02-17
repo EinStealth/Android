@@ -8,6 +8,6 @@ class PostData {
         @Json(name = "latitude") val latitude: Double,
         @Json(name = "longitude") val longitude: Double,
         @Json(name = "altitude") val altitude: Double,
-        @Json(name = "obj_id") val objId: Int,
+        @Json(name = "obj_id") var objId: Int,
     )
 }

@@ -66,7 +66,7 @@ class MainActivityViewModel @Inject constructor(
     private fun insertLocationAll(relativeTime: LocalTime, response: List<ResponseData.ResponseGetSpacetime>) = viewModelScope.launch {
         for (i in response.indices) {
             val user =
-                com.example.hideandseek.data.datasource.local.LocationData(0, relativeTime.toString().substring(0, 8), response[i].latitude, response[i].longitude, response[i].altitude, response[i].objId)
+                com.example.hideandseek.data.datasource.local.LocationData(0, relativeTime.toString().substring(0, 8), response[i].Latitude, response[i].Longtitude, response[i].Altitude, response[i].ObjId)
             locationRepository.insert(user)
         }
     }
