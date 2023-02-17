@@ -13,24 +13,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.databinding.FragmentBeTrappedBinding
 import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class BeTrappedFragment(
-    mainDispatcher: CoroutineDispatcher = Dispatchers.Main
-) : Fragment() {
+class BeTrappedFragment : Fragment() {
     private var _binding: FragmentBeTrappedBinding? = null
     private val viewModel: BeTrappedFragmentViewModel by viewModels()
-
-    private val coroutineScope = CoroutineScope(mainDispatcher)
 
     private val binding get() = _binding!!
 
@@ -71,7 +67,6 @@ class BeTrappedFragment(
 
         // 2重LiveData解消のために変数定義
         var limitTime = ""
-        var skillTime = ""
         var trapTime = ""
 
         // Trapが解除されるまでのプログレスバー
@@ -109,37 +104,57 @@ class BeTrappedFragment(
             viewModel.setIsOverSkillTime(result)
         }
 
-        viewModel.skillTime.observe(viewLifecycleOwner) {
-            skillTime = it
-        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { beTrappedUiState ->
+                    val skillTime = beTrappedUiState.skillTime
 
-        // 自分の情報の表示
-        viewModel.userLive.observe(viewLifecycleOwner) { userLive ->
-            Log.d("UserLive", userLive.toString())
-            if (userLive.isNotEmpty()) {
-                tvRelativeTime.text = userLive[userLive.size - 1].relativeTime
-                // 制限時間になったかどうかの判定
-                viewModel.compareTime(userLive[userLive.size - 1].relativeTime, limitTime)
+                    // Skillを使ってからの時間を監視
+                    setFragmentResult("BeTrappedFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to beTrappedUiState.isOverSkillTime))
+                    changeBtSkillVisible(beTrappedUiState.isOverSkillTime)
 
-                // trapにかかっている時間を計測
-                viewModel.compareTrapTime(userLive[userLive.size - 1].relativeTime, trapTime)
-                val howProgressTrap = viewModel.howProgressTrapTime(userLive[userLive.size - 1].relativeTime, trapTime)
-                progressTrap.progress = howProgressTrap
+                    // 罠にかかっている時間の監視
+                    if (beTrappedUiState.isOverTrapTime) {
+                        findNavController().navigate(R.id.navigation_main)
+                    }
 
-                // Skill Buttonの Progress Bar
-                // スキルボタンを複数回押したとき、relativeが一旦最初の(skillTime+1)秒になって、本来のrelativeまで1秒ずつ足される
-                // observeを二重にしてるせいで変な挙動していると思われる（放置するとメモリやばそう）
-                // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
-                if (skillTime != "") {
-                    viewModel.compareSkillTime(
-                        userLive[userLive.size - 1].relativeTime,
-                        skillTime,
-                    )
-                    progressSkill.progress = viewModel.howProgressSkillTime(
-                        userLive[userLive.size - 1].relativeTime,
-                        skillTime,
-                    )
-                    setFragmentResult("BeTrappedFragmentSkillTime", bundleOf("skillTime" to skillTime))
+                    // 制限時間と相対時間の監視
+                    if (beTrappedUiState.isOverLimitTime) {
+                        // クリアダイアログを表示
+                        val successEscapeDialogFragment = SuccessEscapeDialogFragment()
+                        val supportFragmentManager = childFragmentManager
+                        successEscapeDialogFragment.show(supportFragmentManager, "clear")
+                    }
+
+                    val userLive    = beTrappedUiState.allUser
+
+                    Log.d("UserLive", userLive.toString())
+                    if (userLive.isNotEmpty()) {
+                        tvRelativeTime.text = userLive[userLive.size - 1].relativeTime
+                        // 制限時間になったかどうかの判定
+                        viewModel.compareTime(userLive[userLive.size - 1].relativeTime, limitTime)
+
+                        // trapにかかっている時間を計測
+                        viewModel.compareTrapTime(userLive[userLive.size - 1].relativeTime, trapTime)
+                        val howProgressTrap = viewModel.howProgressTrapTime(userLive[userLive.size - 1].relativeTime, trapTime)
+                        progressTrap.progress = howProgressTrap
+
+                        // Skill Buttonの Progress Bar
+                        // スキルボタンを複数回押したとき、relativeが一旦最初の(skillTime+1)秒になって、本来のrelativeまで1秒ずつ足される
+                        // observeを二重にしてるせいで変な挙動していると思われる（放置するとメモリやばそう）
+                        // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
+                        if (skillTime != "") {
+                            viewModel.compareSkillTime(
+                                userLive[userLive.size - 1].relativeTime,
+                                skillTime,
+                            )
+                            progressSkill.progress = viewModel.howProgressSkillTime(
+                                userLive[userLive.size - 1].relativeTime,
+                                skillTime,
+                            )
+                            setFragmentResult("BeTrappedFragmentSkillTime", bundleOf("skillTime" to skillTime))
+                        }
+                    }
                 }
             }
         }
@@ -154,34 +169,19 @@ class BeTrappedFragment(
         // skillボタンが押された時の処理
         btSkillOn.setOnClickListener {
             // Userの最新情報から位置をとってきて、それを罠の位置とする
-            coroutineScope.launch {
-                setFragmentResult("BeTrappedFragmentSkillTime", bundleOf("skillTime" to viewModel.getNowUser().relativeTime))
+            viewModel.getNowUser()
+
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.uiState.collect { beTrappedUiState ->
+                        setFragmentResult("BeTrappedFragmentSkillTime", bundleOf("skillTime" to beTrappedUiState.latestUser.relativeTime))
+                    }
+                }
             }
             viewModel.postTrapRoom(0)
             viewModel.postTrapSpacetime()
             viewModel.setSkillTime()
             viewModel.setIsOverSkillTime(false)
-        }
-
-        viewModel.isOverSkillTime.observe(viewLifecycleOwner) {
-            setFragmentResult("BeTrappedFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to it))
-            changeBtSkillVisible(it)
-        }
-
-        viewModel.isOverTrapTime.observe(viewLifecycleOwner) {
-            // TrapTimeが終われば、もとのFragmentに戻る
-            if (it) {
-                findNavController().navigate(R.id.navigation_main)
-            }
-        }
-
-        viewModel.isOverLimitTime.observe(viewLifecycleOwner) {
-            if (it) {
-                // クリアダイアログを表示
-                val successEscapeDialogFragment = SuccessEscapeDialogFragment()
-                val supportFragmentManager = childFragmentManager
-                successEscapeDialogFragment.show(supportFragmentManager, "clear")
-            }
         }
 
         return root

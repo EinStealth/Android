@@ -1,10 +1,7 @@
 package com.example.hideandseek.ui.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.data.datasource.local.UserData
@@ -13,8 +10,23 @@ import com.example.hideandseek.data.repository.ApiRepository
 import com.example.hideandseek.data.repository.TrapRepository
 import com.example.hideandseek.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+data class BeTrappedUiState(
+    val allUser:     List<UserData>     = listOf(),
+    val allTrap:     List<TrapData>     = listOf(),
+    val latestUser:  UserData           = UserData(0, "", 0.0, 0.0, 0.0),
+    val skillTime:   String             = "",
+    val limitTime:   String             = "",
+    val isOverSkillTime: Boolean = true,
+    val isOverLimitTime: Boolean = false,
+    val isOverTrapTime:  Boolean = false
+)
 
 @HiltViewModel
 class BeTrappedFragmentViewModel @Inject constructor(
@@ -22,15 +34,33 @@ class BeTrappedFragmentViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val apiRepository: ApiRepository,
 ) : ViewModel() {
-    val userLive = userRepository.allUsers.asLiveData()
+    private val _uiState = MutableStateFlow(BeTrappedUiState())
+    val uiState: StateFlow<BeTrappedUiState> = _uiState.asStateFlow()
 
-    fun getNowUser(): UserData {
-        var user: UserData = UserData(0, "", 0.0, 0.0, 0.0)
-
+    init {
         viewModelScope.launch {
-            user = userRepository.getLatest()
+            userRepository.allUsers.collect { allUsers ->
+                _uiState.update { beTrappedUiState ->
+                    beTrappedUiState.copy(allUser = allUsers)
+                }
+            }
         }
-        return user
+        viewModelScope.launch {
+            trapRepository.allTraps.collect { allTraps ->
+                _uiState.update { beTrappedUiState ->
+                    beTrappedUiState.copy(allTrap = allTraps)
+                }
+            }
+        }
+    }
+
+    fun getNowUser() {
+        viewModelScope.launch {
+            val latestUser = userRepository.getLatest()
+            _uiState.update { beTrappedUiState ->
+                beTrappedUiState.copy(latestUser = latestUser)
+            }
+        }
     }
 
     fun postTrapRoom(isMine: Int) = viewModelScope.launch {
@@ -40,43 +70,41 @@ class BeTrappedFragmentViewModel @Inject constructor(
         trapRepository.insert(trap)
     }
 
-    private val _skillTime = MutableLiveData<String>()
-    val skillTime: LiveData<String> = _skillTime
-
     fun setSkillTime() = viewModelScope.launch {
         val nowUser = userRepository.getLatest()
-        _skillTime.value = nowUser.relativeTime
+        _uiState.update { beTrappedUiState ->
+            beTrappedUiState.copy(skillTime = nowUser.relativeTime)
+        }
     }
 
     fun setSkillTimeInit(skillTime: String) {
-        _skillTime.value = skillTime
+        _uiState.update { beTrappedUiState ->
+            beTrappedUiState.copy(skillTime = skillTime)
+        }
     }
-
-    private val _isOverLimitTime = MutableLiveData<Boolean>()
-    val isOverLimitTime: LiveData<Boolean> = _isOverLimitTime
 
     // 相対時間が制限時間を超えてたらtrueを返す
     fun compareTime(relativeTime: String, limitTime: String) {
-        _isOverLimitTime.value = relativeTime.substring(0, 2) == limitTime.substring(0, 2) && relativeTime.substring(3, 5) == limitTime.substring(3, 5) && relativeTime.substring(6) > limitTime.substring(6)
+        _uiState.update { beTrappedUiState ->
+            beTrappedUiState.copy(isOverLimitTime = relativeTime.substring(0, 2) == limitTime.substring(0, 2) && relativeTime.substring(3, 5) == limitTime.substring(3, 5) && relativeTime.substring(6) > limitTime.substring(6))
+        }
     }
-
-    private val _isOverSkillTime = MutableLiveData<Boolean>()
-    val isOverSkillTime: LiveData<Boolean> = _isOverSkillTime
 
     fun compareSkillTime(relativeTime: String, skillTime: String) {
         Log.d("CompareSkillTime", "relative: $relativeTime, skill: $skillTime")
         if (relativeTime.substring(6, 8) == skillTime.substring(6, 8)) {
-            _isOverSkillTime.value = relativeTime != skillTime
+            _uiState.update { beTrappedUiState ->
+                beTrappedUiState.copy(isOverSkillTime = relativeTime != skillTime)
+            }
         }
     }
-
-    private val _isOverTrapTime = MutableLiveData<Boolean>()
-    val isOverTrapTime: LiveData<Boolean> = _isOverTrapTime
 
     fun compareTrapTime(relativeTime: String, trapTime: String) {
         Log.d("CompareTrapTime", "relative: $relativeTime, trap: $trapTime")
         if (relativeTime.substring(6, 8) == trapTime.substring(6, 8)) {
-            _isOverTrapTime.value = relativeTime != trapTime
+            _uiState.update { beTrappedUiState ->
+                beTrappedUiState.copy(isOverTrapTime = relativeTime != trapTime)
+            }
         }
     }
 
@@ -99,7 +127,9 @@ class BeTrappedFragmentViewModel @Inject constructor(
     }
 
     fun setIsOverSkillTime(p0: Boolean) {
-        _isOverSkillTime.value = p0
+        _uiState.update { beTrappedUiState ->
+            beTrappedUiState.copy(isOverSkillTime = p0)
+        }
     }
 
     fun postTrapSpacetime() {

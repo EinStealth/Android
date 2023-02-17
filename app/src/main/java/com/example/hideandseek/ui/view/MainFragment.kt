@@ -18,9 +18,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
-import com.example.hideandseek.data.datasource.local.LocationData
-import com.example.hideandseek.data.datasource.local.TrapData
-import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.databinding.FragmentMainBinding
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
