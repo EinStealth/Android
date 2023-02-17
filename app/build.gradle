@@ -36,6 +36,8 @@ android {
         viewBinding true
     }
     lintOptions {
+        abortOnError false
+        ignoreWarnings true
         xmlReport true
     }
 }

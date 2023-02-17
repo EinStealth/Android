@@ -2,11 +2,9 @@ package com.example.hideandseek.ui.viewmodel
 
 import android.graphics.Bitmap
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.hideandseek.data.datasource.local.LocationData
 import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.data.datasource.remote.PostData
@@ -16,29 +14,64 @@ import com.example.hideandseek.data.repository.MapRepository
 import com.example.hideandseek.data.repository.TrapRepository
 import com.example.hideandseek.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 
+data class MainUiState(
+    val allLocation: List<LocationData> = listOf(),
+    val allUser:     List<UserData>     = listOf(),
+    val allTrap:     List<TrapData>     = listOf(),
+    val latestUser:  UserData           = UserData(0, "", 0.0, 0.0, 0.0),
+    val skillTime:   String             = "",
+    val limitTime:   String             = "",
+    val isOverSkillTime: Boolean = true,
+    val isOverLimitTime: Boolean = false,
+    val map: Bitmap? = null
+)
+
 @HiltViewModel
 class MainFragmentViewModel @Inject constructor(
-    locationRepository: LocationRepository,
+    private val locationRepository: LocationRepository,
     private val trapRepository: TrapRepository,
     private val userRepository: UserRepository,
     private val apiRepository: ApiRepository,
     private val mapRepository: MapRepository,
 ) : ViewModel() {
-    val allLocationsLive = locationRepository.allLocations.asLiveData()
-    val allTrapsLive = trapRepository.allTraps.asLiveData()
-    val userLive = userRepository.allUsers.asLiveData()
+    private val _uiState = MutableStateFlow(MainUiState())
+    val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
-    private val _latestUser = MutableLiveData<UserData>()
-    val latestUser: LiveData<UserData> = _latestUser
+    init {
+        viewModelScope.launch {
+            locationRepository.allLocations.collect { allLocations ->
+                _uiState.update { mainUiState ->
+                    mainUiState.copy(allLocation = allLocations)
+                }
+            }
+        }
+        viewModelScope.launch {
+            userRepository.allUsers.collect { allUsers ->
+                _uiState.update { mainUiState ->
+                    mainUiState.copy(allUser = allUsers)
+                }
+            }
+        }
+        viewModelScope.launch {
+            trapRepository.allTraps.collect { allTraps ->
+                _uiState.update { mainUiState ->
+                    mainUiState.copy(allTrap = allTraps)
+                }
+            }
+        }
+    }
 
     fun getNowUser() {
         viewModelScope.launch {
             val latestUser = userRepository.getLatest()
-            _latestUser.value = latestUser
+            _uiState.update { mainUiState ->
+                mainUiState.copy(latestUser = latestUser)
+            }
         }
     }
 
@@ -49,20 +82,18 @@ class MainFragmentViewModel @Inject constructor(
         trapRepository.insert(trap)
     }
 
-    private val _skillTime = MutableLiveData<String>()
-    val skillTime: LiveData<String> = _skillTime
-
     fun setSkillTime() = viewModelScope.launch {
         val nowUser = userRepository.getLatest()
-        _skillTime.value = nowUser.relativeTime
+        _uiState.update { mainUiState ->
+            mainUiState.copy(skillTime = nowUser.relativeTime)
+        }
     }
 
     fun setSkillTImeString(skillTime: String) {
-        _skillTime.value = skillTime
+        _uiState.update { mainUiState ->
+            mainUiState.copy(skillTime = skillTime)
+        }
     }
-
-    private val _limitTime = MutableLiveData<String>()
-    val limitTime: LiveData<String> = _limitTime
 
     // RelativeTime+15分の時間を制限時間とする
     fun setLimitTime(relativeTime: String) {
@@ -86,24 +117,24 @@ class MainFragmentViewModel @Inject constructor(
                 "0" + (relativeTime.substring(0, 2).toInt() + 1).toString() + ":" + ((relativeTime.substring(3, 5).toInt() + 15) % 60).toString() + relativeTime.substring(5)
             }
         }
-        _limitTime.value = limitTime
+        _uiState.update { mainUiState ->
+            mainUiState.copy(limitTime = limitTime)
+        }
     }
-
-    private val _isOverLimitTime = MutableLiveData<Boolean>()
-    val isOverLimitTime: LiveData<Boolean> = _isOverLimitTime
 
     // 相対時間が制限時間を超えてたらtrueを返す
     fun compareTime(relativeTime: String, limitTime: String) {
-        _isOverLimitTime.value = relativeTime.substring(0, 2) == limitTime.substring(0, 2) && relativeTime.substring(3, 5) == limitTime.substring(3, 5) && relativeTime.substring(6) > limitTime.substring(6)
+        _uiState.update { mainUiState ->
+            mainUiState.copy(isOverLimitTime = relativeTime.substring(0, 2) == limitTime.substring(0, 2) && relativeTime.substring(3, 5) == limitTime.substring(3, 5) && relativeTime.substring(6) > limitTime.substring(6))
+        }
     }
-
-    private val _isOverSkillTime = MutableLiveData<Boolean>()
-    val isOverSkillTime: LiveData<Boolean> = _isOverSkillTime
 
     fun compareSkillTime(relativeTime: String, skillTime: String) {
         Log.d("CompareSkillTime", "relative: $relativeTime, skill: $skillTime")
         if (relativeTime.substring(6, 8) == skillTime.substring(6, 8)) {
-            _isOverSkillTime.value = relativeTime != skillTime
+            _uiState.update { mainUiState ->
+                mainUiState.copy(isOverSkillTime = relativeTime != skillTime)
+            }
         }
     }
 
@@ -130,14 +161,15 @@ class MainFragmentViewModel @Inject constructor(
     }
 
     fun setIsOverSkillTime(p0: Boolean) {
-        _isOverSkillTime.value = p0
+        _uiState.update { mainUiState ->
+            mainUiState.copy(isOverSkillTime = p0)
+        }
     }
 
-    private val _map = MutableLiveData<Bitmap>()
-    val map: LiveData<Bitmap> = _map
-
     private fun setMap(p0: Bitmap) {
-        _map.value = p0
+        _uiState.update { mainUiState ->
+            mainUiState.copy(map = p0)
+        }
     }
 
     fun postTrapSpacetime() {

@@ -9,6 +9,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -28,6 +31,7 @@ import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 @AndroidEntryPoint
@@ -155,14 +159,22 @@ class MainActivity : AppCompatActivity() {
         // ずれとを計算
         val gap = viewModel.calculateGap(location)
         // 相対時間を計算
+        var relativeTime: LocalTime = LocalTime.MIN
         viewModel.calculateRelativeTime(gap)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    relativeTime = it.relativeTime!!
+                }
+            }
+        }
         // Roomに相対時間と座標を送る
-        viewModel.insertUser(viewModel.relativeTime, location)
+        viewModel.insertUser(relativeTime, location)
         // 10秒おきにAPI通信をする
-        if (viewModel.relativeTime.second % 10 == 0) {
+        if (relativeTime.second % 10 == 0) {
             viewModel.deleteAllLocation()
-            viewModel.postSpacetime(viewModel.relativeTime, location)
-            viewModel.getSpacetime(viewModel.relativeTime)
+            viewModel.postSpacetime(relativeTime, location)
+            viewModel.getSpacetime(relativeTime)
         }
     }
 

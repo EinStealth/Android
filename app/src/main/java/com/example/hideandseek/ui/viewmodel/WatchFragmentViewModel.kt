@@ -2,19 +2,29 @@ package com.example.hideandseek.ui.viewmodel
 
 import android.graphics.Bitmap
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.hideandseek.data.datasource.local.LocationData
 import com.example.hideandseek.data.datasource.local.TrapData
+import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.data.repository.LocationRepository
 import com.example.hideandseek.data.repository.MapRepository
 import com.example.hideandseek.data.repository.TrapRepository
 import com.example.hideandseek.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+data class WatchUiState(
+    val allLocation: List<LocationData> = listOf(),
+    val allUser:     List<UserData>     = listOf(),
+    val allTrap:     List<TrapData>     = listOf(),
+    val map: Bitmap? = null
+)
 
 @HiltViewModel
 class WatchFragmentViewModel @Inject constructor(
@@ -23,15 +33,37 @@ class WatchFragmentViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val mapRepository: MapRepository,
 ) : ViewModel() {
-    val allLocationsLive = locationRepository.allLocations.asLiveData()
-    val allTrapsLive = trapRepository.allTraps.asLiveData()
-    val userLive = userRepository.allUsers.asLiveData()
+    private val _uiState = MutableStateFlow(WatchUiState())
+    val uiState: StateFlow<WatchUiState> = _uiState.asStateFlow()
 
-    private val _map = MutableLiveData<Bitmap>()
-    val map: LiveData<Bitmap> = _map
+    init {
+        viewModelScope.launch {
+            locationRepository.allLocations.collect { allLocations ->
+                _uiState.update { mainUiState ->
+                    mainUiState.copy(allLocation = allLocations)
+                }
+            }
+        }
+        viewModelScope.launch {
+            userRepository.allUsers.collect { allUsers ->
+                _uiState.update { mainUiState ->
+                    mainUiState.copy(allUser = allUsers)
+                }
+            }
+        }
+        viewModelScope.launch {
+            trapRepository.allTraps.collect { allTraps ->
+                _uiState.update { mainUiState ->
+                    mainUiState.copy(allTrap = allTraps)
+                }
+            }
+        }
+    }
 
     private fun setMap(p0: Bitmap) {
-        _map.value = p0
+        _uiState.update { mainUiState ->
+            mainUiState.copy(map = p0)
+        }
     }
 
     fun postTrapRoom(isMine: Int) = viewModelScope.launch {
