@@ -105,7 +105,7 @@ class BeTrappedFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { beTrappedUiState ->
                     val skillTime = beTrappedUiState.skillTime
 
@@ -126,7 +126,7 @@ class BeTrappedFragment : Fragment() {
                         successEscapeDialogFragment.show(supportFragmentManager, "clear")
                     }
 
-                    val userLive    = beTrappedUiState.allUser
+                    val userLive = beTrappedUiState.allUser
 
                     Log.d("UserLive", userLive.toString())
                     if (userLive.isNotEmpty()) {
@@ -172,7 +172,7 @@ class BeTrappedFragment : Fragment() {
             viewModel.getNowUser()
 
             lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.uiState.collect { beTrappedUiState ->
                         setFragmentResult("BeTrappedFragmentSkillTime", bundleOf("skillTime" to beTrappedUiState.latestUser.relativeTime))
                     }

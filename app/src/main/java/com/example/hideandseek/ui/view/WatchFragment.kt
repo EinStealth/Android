@@ -43,7 +43,7 @@ class WatchFragment(
         val ivMap: ImageView = binding.ivMap
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { watchUiState ->
 
                     // Mapに画像をセット
