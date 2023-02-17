@@ -17,7 +17,7 @@ interface TrapDao {
     fun update(trap: TrapData)
 
     @Delete
-    fun delete(trap: TrapData)
+    suspend fun delete(trap: TrapData)
 
     @Query("SELECT * FROM trap_table")
     fun getAll(): Flow<List<TrapData>>
