@@ -14,6 +14,8 @@ interface LocationRepository {
 
     suspend fun insert(location: LocationData)
 
+    suspend fun delete(location: LocationData)
+
     suspend fun deleteAll()
 }
 
@@ -30,6 +32,14 @@ class LocationRepositoryImpl @Inject constructor(
     override suspend fun insert(user: LocationData) {
         withContext(ioDispatcher) {
             locationDao.insert(user)
+        }
+    }
+
+    @Suppress("RedundantSuspendModifier")
+    @WorkerThread
+    override suspend fun delete(location: LocationData) {
+        withContext(ioDispatcher) {
+            locationDao.delete(location)
         }
     }
 

@@ -151,9 +151,21 @@ class MainFragmentViewModel @Inject constructor(
         return (abs(user.latitude - trap.latitude) < 0.000001 && abs(user.longitude - trap.longitude) < 0.000001)
     }
 
+    fun postOthersTrap(trap: TrapData) {
+        viewModelScope.launch {
+            trapRepository.insert(trap)
+        }
+    }
+
     fun deleteTrap(trap: TrapData) {
         viewModelScope.launch {
             trapRepository.delete(trap)
+        }
+    }
+
+    fun deleteLocation(location: LocationData) {
+        viewModelScope.launch {
+            locationRepository.delete(location)
         }
     }
 
@@ -178,11 +190,15 @@ class MainFragmentViewModel @Inject constructor(
         }
     }
 
-    fun postTrapSpacetime() {
+    fun postTrapSpacetime(type: String) {
         viewModelScope.launch {
             val nowUser = userRepository.getLatest()
             try {
-                val request = PostData.PostSpacetime(nowUser.relativeTime.substring(0, 7) + "0", nowUser.latitude, nowUser.longitude, nowUser.altitude, 1)
+                var request = PostData.PostSpacetime(nowUser.relativeTime.substring(0, 7) + "0", nowUser.latitude, nowUser.longitude, nowUser.altitude, 1)
+                if (type == "delete") {
+                    request.objId = -1
+                }
+                Log.d("POST_TEST", request.toString())
                 val response = apiRepository.postSpacetime(request)
                 if (response.isSuccessful) {
                     Log.d("POST_TEST", "${response}\n${response.body()}")
