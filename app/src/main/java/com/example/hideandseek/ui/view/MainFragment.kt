@@ -21,6 +21,7 @@ import com.example.hideandseek.R
 import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.databinding.FragmentMainBinding
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -31,6 +32,9 @@ import kotlinx.coroutines.launch
 class MainFragment(
     mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : Fragment() {
+    // 直近の現在地情報を取得するためのクライアント
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     private var _binding: FragmentMainBinding? = null
     private val viewModel: MainFragmentViewModel by viewModels()
 
@@ -132,7 +136,9 @@ class MainFragment(
                     // 自分の情報の表示
                     Log.d("UserLive", userLive.toString())
                     if (userLive.isNotEmpty()) {
-                        viewModel.setLimitTime(userLive[0].relativeTime)
+                        if (limitTime == "") {
+                            viewModel.setLimitTime(userLive[userLive.size - 1].relativeTime)
+                        }
                         tvRelativeTime.text = userLive[mainUiState.allUser.size - 1].relativeTime
                         // 制限時間になったかどうかの判定
                         if (limitTime != "") {
