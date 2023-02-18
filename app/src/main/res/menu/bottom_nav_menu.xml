@@ -23,4 +23,10 @@
         android:icon="@drawable/ic_launcher_background"
         android:title="result"
         />
+
+    <item
+        android:id="@+id/navigation_user_register"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="userRegister"
+        />
 </menu>
