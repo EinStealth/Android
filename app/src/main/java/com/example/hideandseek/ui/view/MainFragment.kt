@@ -22,7 +22,6 @@ import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.databinding.FragmentMainBinding
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -138,7 +137,7 @@ class MainFragment(
                     Log.d("UserLive", userLive.toString())
                     if (userLive.isNotEmpty()) {
                         if (limitTime == "") {
-                            viewModel.setLimitTime(userLive[userLive.size-1].relativeTime)
+                            viewModel.setLimitTime(userLive[userLive.size - 1].relativeTime)
                         }
                         tvRelativeTime.text = userLive[mainUiState.allUser.size - 1].relativeTime
                         // 制限時間になったかどうかの判定
