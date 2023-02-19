@@ -55,9 +55,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Viewの取得
-        val navView: BottomNavigationView = binding.navView
-
+        // fragmentのnavGraph
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -66,6 +64,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_be_trapped,
                 R.id.navigation_result,
                 R.id.navigation_watch,
+                R.id.navigation_room_type_select,
             ),
         )
 
@@ -73,7 +72,6 @@ class MainActivity : AppCompatActivity() {
 
         // BottomNavigationのセットアップ
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
 
         // 位置情報の権限をリクエスト
         // 正確な位置情報、おおよその位置情報どちらを許可しますか？というダイアログが出る。

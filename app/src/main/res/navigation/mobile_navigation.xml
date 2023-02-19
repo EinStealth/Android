@@ -35,4 +35,10 @@
         android:label="UserRegister"
         tools:layout="@layout/fragment_user_register"/>
 
+    <fragment
+        android:id="@+id/navigation_room_type_select"
+        android:name="com.example.hideandseek.ui.view.RoomTypeSelectFragment"
+        android:label="RoomTypeSelect"
+        tools:layout="@layout/fragment_room_type_select"/>
+
 </navigation>
