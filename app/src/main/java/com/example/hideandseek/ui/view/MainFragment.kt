@@ -103,11 +103,6 @@ class MainFragment(
             viewModel.setIsOverSkillTime(result)
         }
 
-        setFragmentResultListener("UserRegisterFragmentName") { _, bundle ->
-            val result = bundle.getString("name")
-            Log.d("nameRegisterTest", result.toString())
-        }
-
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { mainUiState ->

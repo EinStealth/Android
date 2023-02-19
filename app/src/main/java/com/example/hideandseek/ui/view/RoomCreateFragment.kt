@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.bundleOf
@@ -14,12 +15,13 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
+import com.example.hideandseek.databinding.FragmentRoomCreateBinding
 import com.example.hideandseek.databinding.FragmentRoomTypeSelectBinding
 import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
 
-class RoomTypeSelectFragment: Fragment() {
-    private var _binding: FragmentRoomTypeSelectBinding? = null
-    private val viewModel: RoomTypeSelectFragmentViewModel by viewModels()
+class RoomCreateFragment: Fragment() {
+    private var _binding: FragmentRoomCreateBinding? = null
+//    private val viewModel: RoomCreateFragmentViewModel by viewModels()
 
     private val binding get() = _binding!!
 
@@ -28,24 +30,16 @@ class RoomTypeSelectFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentRoomTypeSelectBinding.inflate(inflater, container, false)
+        _binding = FragmentRoomCreateBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         // Viewの取得
         val btCreate: ImageView = binding.btCreate
-        val btSearch: ImageView = binding.btSearch
-        val textName: TextView = binding.textName
-
-        setFragmentResultListener("UserRegisterFragmentName") { _, bundle ->
-            val result = bundle.getString("name")
-            textName.text = result.toString()
-        }
+        val editSecretWord: EditText = binding.editSecretWord
 
         btCreate.setOnClickListener {
-            findNavController().navigate(R.id.navigation_room_create)
-        }
-        btSearch.setOnClickListener {
-            // TODO: 部屋のリストを表示する画面に移動
+            setFragmentResult("RoomCreateFragment", bundleOf("secretWord" to editSecretWord.text.toString()))
+            findNavController().navigate(R.id.navigation_stand_by_room)
         }
 
         return root
