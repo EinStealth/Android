@@ -4,9 +4,9 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/p2hacks2022/post-team05/internal/model/player"
-	"github.com/p2hacks2022/post-team05/internal/model/spacetime"
-	"github.com/p2hacks2022/post-team05/internal/model/room"
+	"github.com/EinStealth/Android/internal/model/player"
+	"github.com/EinStealth/Android/internal/model/spacetime"
+	"github.com/EinStealth/Android/internal/model/room"
 )
 
 // @Summary     test api
