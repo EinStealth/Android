@@ -16,7 +16,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.databinding.FragmentRoomTypeSelectBinding
 import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RoomTypeSelectFragment: Fragment() {
     private var _binding: FragmentRoomTypeSelectBinding? = null
     private val viewModel: RoomTypeSelectFragmentViewModel by viewModels()
@@ -42,6 +44,7 @@ class RoomTypeSelectFragment: Fragment() {
         }
 
         btCreate.setOnClickListener {
+            setFragmentResult("RoomTypeSelectFragment", bundleOf("name" to textName.text.toString()))
             findNavController().navigate(R.id.navigation_room_create)
         }
         btSearch.setOnClickListener {
