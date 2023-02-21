@@ -1,6 +1,6 @@
 package main
 
-import "github.com/p2hacks2022/post-team05/internal/controller"
+import "github.com/EinStealth/Android/internal/controller"
 
 // @title          Swagger Example API
 // @version        1.0
