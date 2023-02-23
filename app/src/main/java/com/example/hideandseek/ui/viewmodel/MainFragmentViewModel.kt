@@ -1,6 +1,7 @@
 package com.example.hideandseek.ui.viewmodel
 
 import android.graphics.Bitmap
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,11 +9,7 @@ import com.example.hideandseek.data.datasource.local.LocationData
 import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.data.datasource.remote.PostData
-import com.example.hideandseek.data.repository.ApiRepository
-import com.example.hideandseek.data.repository.LocationRepository
-import com.example.hideandseek.data.repository.MapRepository
-import com.example.hideandseek.data.repository.TrapRepository
-import com.example.hideandseek.data.repository.UserRepository
+import com.example.hideandseek.data.repository.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -23,6 +20,7 @@ data class MainUiState(
     val allLocation: List<LocationData> = listOf(),
     val allUser:     List<UserData>     = listOf(),
     val allTrap:     List<TrapData>     = listOf(),
+    val myLocation:  Location?           = null,
     val latestUser:  UserData           = UserData(0, "", 0.0, 0.0, 0.0),
     val skillTime:   String             = "",
     val limitTime:   String             = "",
@@ -38,6 +36,7 @@ class MainFragmentViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val apiRepository: ApiRepository,
     private val mapRepository: MapRepository,
+    private val myLocationRepository: MyLocationRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
@@ -64,6 +63,9 @@ class MainFragmentViewModel @Inject constructor(
                 }
             }
         }
+        viewModelScope.launch {
+            myLocationRepository.start()
+        }
     }
 
     fun getNowUser() {
@@ -71,6 +73,14 @@ class MainFragmentViewModel @Inject constructor(
             val latestUser = userRepository.getLatest()
             _uiState.update { mainUiState ->
                 mainUiState.copy(latestUser = latestUser)
+            }
+        }
+    }
+
+    fun fetchLatestLocation() {
+        viewModelScope.launch {
+            _uiState.update { mainUiState ->
+                mainUiState.copy(myLocation = myLocationRepository.latestLocation)
             }
         }
     }

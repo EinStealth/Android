@@ -108,9 +108,14 @@ class MainFragment(
             Log.d("nameRegisterTest", result.toString())
         }
 
+
+
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { mainUiState ->
+
+                    viewModel.fetchLatestLocation()
+                    Log.d("MyLocationCheck", mainUiState.myLocation.toString())
 
                     ivMap.setImageBitmap(mainUiState.map)
 
