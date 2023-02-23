@@ -65,6 +65,11 @@ class MainFragmentViewModel @Inject constructor(
         }
         viewModelScope.launch {
             myLocationRepository.start()
+            myLocationRepository.flowLatestLocation.collect {
+                _uiState.update { mainUiState ->
+                    mainUiState.copy(myLocation = it)
+                }
+            }
         }
     }
 

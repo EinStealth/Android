@@ -9,7 +9,9 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -22,6 +24,15 @@ class MyLocationRepository @Inject constructor(
     // 現在地を更新するためのコールバック
     private lateinit var locationCallback: LocationCallback
 
+    val flowLatestLocation: Flow<Location> = flow {
+        while (true) {
+            val flowLatestLocation = latestLocation
+            if (flowLatestLocation != null) {
+                emit(flowLatestLocation)
+            }
+            delay(1000)
+        }
+    }
     var latestLocation: Location? = null
 
     fun start() {
