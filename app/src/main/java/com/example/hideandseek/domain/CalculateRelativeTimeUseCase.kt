@@ -10,7 +10,8 @@ import com.example.hideandseek.data.repository.LocationRepository
 import com.example.hideandseek.data.repository.MyLocationRepository
 import com.example.hideandseek.di.IODispatcher
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import java.time.LocalTime
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class CalculateRelativeTimeUseCase @Inject constructor(
     private val apiRepository: ApiRepository,
     private val locationRepository: LocationRepository,
     @IODispatcher private val ioDispatcher: CoroutineDispatcher
-){
+) {
     suspend operator fun invoke(): Flow<UserData> =
         withContext(ioDispatcher) {
             myLocationRepository.start()
