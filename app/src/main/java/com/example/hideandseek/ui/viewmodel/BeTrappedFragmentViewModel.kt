@@ -8,7 +8,7 @@ import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.data.datasource.remote.PostData
 import com.example.hideandseek.data.repository.ApiRepository
 import com.example.hideandseek.data.repository.TrapRepository
-import com.example.hideandseek.data.repository.UserRepository
+import com.example.hideandseek.domain.CalculateRelativeTimeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,9 +18,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class BeTrappedUiState(
-    val allUser:     List<UserData>     = listOf(),
-    val allTrap:     List<TrapData>     = listOf(),
     val latestUser:  UserData           = UserData(0, "", 0.0, 0.0, 0.0),
+    val allTrap:     List<TrapData>     = listOf(),
     val skillTime:   String             = "",
     val limitTime:   String             = "",
     val isOverSkillTime: Boolean = true,
@@ -31,17 +30,17 @@ data class BeTrappedUiState(
 @HiltViewModel
 class BeTrappedFragmentViewModel @Inject constructor(
     private val trapRepository: TrapRepository,
-    private val userRepository: UserRepository,
     private val apiRepository: ApiRepository,
+    private val calculateRelativeTimeUseCase: CalculateRelativeTimeUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(BeTrappedUiState())
     val uiState: StateFlow<BeTrappedUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            userRepository.allUsers.collect { allUsers ->
-                _uiState.update { beTrappedUiState ->
-                    beTrappedUiState.copy(allUser = allUsers)
+            calculateRelativeTimeUseCase().collect{ userData ->
+                _uiState.update { mainUiState ->
+                    mainUiState.copy(latestUser = userData)
                 }
             }
         }
@@ -54,26 +53,15 @@ class BeTrappedFragmentViewModel @Inject constructor(
         }
     }
 
-    fun getNowUser() {
-        viewModelScope.launch {
-            val latestUser = userRepository.getLatest()
-            _uiState.update { beTrappedUiState ->
-                beTrappedUiState.copy(latestUser = latestUser)
-            }
-        }
-    }
-
-    fun postTrapRoom(isMine: Int) = viewModelScope.launch {
-        Log.d("USER_TRAP", userRepository.getLatest().toString())
-        val nowUser = userRepository.getLatest()
-        val trap = TrapData(0, nowUser.latitude, nowUser.longitude, nowUser.altitude, isMine)
+    fun postTrapRoom(isMine: Int, latestUser: UserData) = viewModelScope.launch {
+        Log.d("USER_TRAP", latestUser.toString())
+        val trap = TrapData(0, latestUser.latitude, latestUser.longitude, latestUser.altitude, isMine)
         trapRepository.insert(trap)
     }
 
-    fun setSkillTime() = viewModelScope.launch {
-        val nowUser = userRepository.getLatest()
+    fun setSkillTime(latestUser: UserData) = viewModelScope.launch {
         _uiState.update { beTrappedUiState ->
-            beTrappedUiState.copy(skillTime = nowUser.relativeTime)
+            beTrappedUiState.copy(skillTime = latestUser.relativeTime)
         }
     }
 
@@ -132,11 +120,10 @@ class BeTrappedFragmentViewModel @Inject constructor(
         }
     }
 
-    fun postTrapSpacetime() {
+    fun postTrapSpacetime(latestUser: UserData) {
         viewModelScope.launch {
-            val nowUser = userRepository.getLatest()
             try {
-                val request = PostData.PostSpacetime(nowUser.relativeTime.substring(0, 7) + "0", nowUser.latitude, nowUser.longitude, nowUser.altitude, 1)
+                val request = PostData.PostSpacetime(latestUser.relativeTime.substring(0, 7) + "0", latestUser.latitude, latestUser.longitude, latestUser.altitude, 1)
                 val response = apiRepository.postSpacetime(request)
                 if (response.isSuccessful) {
                     Log.d("POST_TEST", "${response}\n${response.body()}")

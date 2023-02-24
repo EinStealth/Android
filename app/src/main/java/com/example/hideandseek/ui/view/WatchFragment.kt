@@ -52,19 +52,19 @@ class WatchFragment(
                     Log.d("UiState", "stateを更新しました")
                     val allLocation = watchUiState.allLocation
                     val allTraps    = watchUiState.allTrap
-                    val userLive    = watchUiState.allUser
+                    val latestUser  = watchUiState.latestUser
 
                     // 自分の情報の表示
-                    Log.d("UserLive", userLive.toString())
-                    if (userLive.isNotEmpty()) {
+                    Log.d("UserLive", latestUser.toString())
+                    if (latestUser.relativeTime != "") {
                         // 自分の位置情報のurl
                         val iconUrlHide = "https://onl.bz/dcMZVEa"
                         var url = "https://maps.googleapis.com/maps/api/staticmap" +
-                                "?center=${userLive[userLive.size - 1].latitude},${userLive[userLive.size - 1].longitude}" +
+                                "?center=${latestUser.latitude},${latestUser.longitude}" +
                                 "&size=310x640&scale=1" +
                                 "&zoom=18" +
                                 "&key=AIzaSyA-cfLegBoleKaT2TbU5R4K1uRkzBR6vUQ" +
-                                "&markers=icon:" + iconUrlHide + "|${userLive[userLive.size - 1].latitude},${userLive[userLive.size - 1].longitude}"
+                                "&markers=icon:" + iconUrlHide + "|${latestUser.latitude},${latestUser.longitude}"
 
                         // 他人の位置を追加
                         Log.d("ALL_Location", allLocation.toString())
@@ -72,7 +72,7 @@ class WatchFragment(
                             // ユーザーの位置情報
                             for (i in allLocation.indices) {
                                 if (allLocation[i].objId == 1) {
-                                    viewModel.postTrapRoom(1)
+                                    viewModel.postTrapRoom(1, latestUser)
                                 } else {
                                     url += "&markers=icon:" + iconUrlHide + "|${allLocation[i].latitude},${allLocation[i].longitude}"
                                 }
@@ -90,7 +90,7 @@ class WatchFragment(
 
                         // URLから画像を取得
                         // 相対時間10秒おきに行う
-                        if (userLive[userLive.size - 1].relativeTime.substring(7, 8) == "0") {
+                        if (latestUser.relativeTime.substring(7, 8) == "0") {
                             Log.d("fetchMAP", "Mapが更新されました")
                             coroutineScope.launch {
                                 viewModel.fetchMap(url)

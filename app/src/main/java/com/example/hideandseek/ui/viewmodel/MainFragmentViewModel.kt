@@ -1,7 +1,6 @@
 package com.example.hideandseek.ui.viewmodel
 
 import android.graphics.Bitmap
-import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,9 +18,7 @@ import kotlin.math.abs
 
 data class MainUiState(
     val allLocation: List<LocationData> = listOf(),
-    val allUser:     List<UserData>     = listOf(),
     val allTrap:     List<TrapData>     = listOf(),
-    val myLocation:  Location?           = null,
     val latestUser:  UserData           = UserData(0, "", 0.0, 0.0, 0.0),
     val skillTime:   String             = "",
     val limitTime:   String             = "",
@@ -34,10 +31,8 @@ data class MainUiState(
 class MainFragmentViewModel @Inject constructor(
     private val locationRepository: LocationRepository,
     private val trapRepository: TrapRepository,
-    private val userRepository: UserRepository,
     private val apiRepository: ApiRepository,
     private val mapRepository: MapRepository,
-    private val myLocationRepository: MyLocationRepository,
     private val calculateRelativeTimeUseCase: CalculateRelativeTimeUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainUiState())
@@ -48,13 +43,6 @@ class MainFragmentViewModel @Inject constructor(
             locationRepository.allLocations.collect { allLocations ->
                 _uiState.update { mainUiState ->
                     mainUiState.copy(allLocation = allLocations)
-                }
-            }
-        }
-        viewModelScope.launch {
-            userRepository.allUsers.collect { allUsers ->
-                _uiState.update { mainUiState ->
-                    mainUiState.copy(allUser = allUsers)
                 }
             }
         }
@@ -71,35 +59,18 @@ class MainFragmentViewModel @Inject constructor(
                     mainUiState.copy(latestUser = userData)
                 }
             }
-//            myLocationRepository.start()
-//            myLocationRepository.flowLatestLocation.collect { myLocation ->
-//                _uiState.update { mainUiState ->
-//                    mainUiState.copy(myLocation = myLocation)
-//                }
-//            }
         }
     }
 
-    fun getNowUser() {
-        viewModelScope.launch {
-            val latestUser = userRepository.getLatest()
-            _uiState.update { mainUiState ->
-                mainUiState.copy(latestUser = latestUser)
-            }
-        }
-    }
-
-    fun postTrapRoom(isMine: Int) = viewModelScope.launch {
-        Log.d("USER_TRAP", userRepository.getLatest().toString())
-        val nowUser = userRepository.getLatest()
-        val trap = TrapData(0, nowUser.latitude, nowUser.longitude, nowUser.altitude, isMine)
+    fun postTrapRoom(isMine: Int, latestUser: UserData) = viewModelScope.launch {
+        Log.d("USER_TRAP", latestUser.toString())
+        val trap = TrapData(0, latestUser.latitude, latestUser.longitude, latestUser.altitude, isMine)
         trapRepository.insert(trap)
     }
 
-    fun setSkillTime() = viewModelScope.launch {
-        val nowUser = userRepository.getLatest()
+    fun setSkillTime(latestUser: UserData) = viewModelScope.launch {
         _uiState.update { mainUiState ->
-            mainUiState.copy(skillTime = nowUser.relativeTime)
+            mainUiState.copy(skillTime = latestUser.relativeTime)
         }
     }
 
@@ -204,11 +175,10 @@ class MainFragmentViewModel @Inject constructor(
         }
     }
 
-    fun postTrapSpacetime(type: String) {
+    fun postTrapSpacetime(type: String, latestUser: UserData) {
         viewModelScope.launch {
-            val nowUser = userRepository.getLatest()
             try {
-                var request = PostData.PostSpacetime(nowUser.relativeTime.substring(0, 7) + "0", nowUser.latitude, nowUser.longitude, nowUser.altitude, 1)
+                val request = PostData.PostSpacetime(latestUser.relativeTime.substring(0, 7) + "0", latestUser.latitude, latestUser.longitude, latestUser.altitude, 1)
                 if (type == "delete") {
                     request.objId = -1
                 }

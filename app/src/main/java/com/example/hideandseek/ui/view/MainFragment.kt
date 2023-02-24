@@ -21,7 +21,6 @@ import com.example.hideandseek.R
 import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.databinding.FragmentMainBinding
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
-import com.google.android.gms.location.FusedLocationProviderClient
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -32,9 +31,6 @@ import kotlinx.coroutines.launch
 class MainFragment(
     mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : Fragment() {
-    // 直近の現在地情報を取得するためのクライアント
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
     private var _binding: FragmentMainBinding? = null
     private val viewModel: MainFragmentViewModel by viewModels()
 
@@ -108,14 +104,11 @@ class MainFragment(
             Log.d("nameRegisterTest", result.toString())
         }
 
-
-
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { mainUiState ->
 
-//                    viewModel.fetchLatestLocation()
-                    Log.d("UsecaseTest", mainUiState.latestUser.toString())
+                    Log.d("UseCaseTest", mainUiState.latestUser.toString())
 
                     ivMap.setImageBitmap(mainUiState.map)
 
@@ -136,29 +129,31 @@ class MainFragment(
                     Log.d("UiState", "stateを更新しました")
                     val allLocation = mainUiState.allLocation
                     val allTraps    = mainUiState.allTrap
-                    val userLive    = mainUiState.allUser
+                    val latestUser    = mainUiState.latestUser
 
                     // 自分の情報の表示
-                    Log.d("UserLive", userLive.toString())
-                    if (userLive.isNotEmpty()) {
-                        if (limitTime == "") {
-                            viewModel.setLimitTime(userLive[userLive.size - 1].relativeTime)
-                        }
-                        tvRelativeTime.text = userLive[mainUiState.allUser.size - 1].relativeTime
+                    Log.d("UserLive", latestUser.toString())
+                    if (limitTime == "" && latestUser.relativeTime != "") {
+                        viewModel.setLimitTime(latestUser.relativeTime)
+                    }
+                    tvRelativeTime.text = latestUser.relativeTime
+
+                    if (latestUser.relativeTime != "") {
+
                         // 制限時間になったかどうかの判定
                         if (limitTime != "") {
-                            viewModel.compareTime(userLive[userLive.size - 1].relativeTime, limitTime)
+                            viewModel.compareTime(latestUser.relativeTime, limitTime)
                             setFragmentResult("MainFragmentLimitTime", bundleOf("limitTime" to limitTime))
                         }
 
                         // 自分の位置情報のurl
                         val iconUrlHide = "https://onl.bz/dcMZVEa"
                         var url = "https://maps.googleapis.com/maps/api/staticmap" +
-                                "?center=${userLive[userLive.size - 1].latitude},${userLive[userLive.size - 1].longitude}" +
+                                "?center=${latestUser.latitude},${latestUser.longitude}" +
                                 "&size=310x640&scale=1" +
                                 "&zoom=18" +
                                 "&key=AIzaSyA-cfLegBoleKaT2TbU5R4K1uRkzBR6vUQ" +
-                                "&markers=icon:" + iconUrlHide + "|${userLive[userLive.size - 1].latitude},${userLive[userLive.size - 1].longitude}"
+                                "&markers=icon:" + iconUrlHide + "|${latestUser.latitude},${latestUser.longitude}"
 
                         // 他人の位置を追加
                         Log.d("ALL_Location", allLocation.toString())
@@ -197,15 +192,15 @@ class MainFragment(
                                 if (allTraps[i].objId == 0) {
                                     url += "&markers=icon:https://onl.bz/FetpS7Y|${allTraps[i].latitude},${allTraps[i].longitude}"
                                 }
-                                if (viewModel.checkCaughtTrap(userLive[userLive.size - 1], allTraps[i])) {
+                                if (viewModel.checkCaughtTrap(latestUser, allTraps[i])) {
                                     // かかったTrapの削除(local)
                                     viewModel.deleteTrap(allTraps[i])
 
                                     // かかったTrapの削除(remote)
-                                    viewModel.postTrapSpacetime("delete")
+                                    viewModel.postTrapSpacetime("delete", latestUser)
 
                                     // TrapにかかったらFragmentを移動
-                                    setFragmentResult("MainFragmentTrapTime", bundleOf("trapTime" to userLive[userLive.size - 1].relativeTime))
+                                    setFragmentResult("MainFragmentTrapTime", bundleOf("trapTime" to latestUser.relativeTime))
 
                                     findNavController().navigate(R.id.navigation_be_trapped)
                                 }
@@ -217,25 +212,30 @@ class MainFragment(
                         // observeを二重にしてるせいで変な挙動していると思われる（放置するとメモリやばそう）
                         // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
                         if (skillTime != "") {
-                            viewModel.compareSkillTime(
-                                userLive[userLive.size - 1].relativeTime,
-                                skillTime,
-                            )
-                            progressSkill.progress = viewModel.howProgressSkillTime(
-                                userLive[userLive.size - 1].relativeTime,
-                                skillTime,
-                            )
+                            viewModel.compareSkillTime(latestUser.relativeTime, skillTime)
+                            progressSkill.progress = viewModel.howProgressSkillTime(latestUser.relativeTime, skillTime)
                             setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to skillTime))
                         }
 
                         // URLから画像を取得
                         // 相対時間10秒おきに行う
-                        if (userLive[userLive.size - 1].relativeTime.substring(7, 8) == "0") {
+                        if (latestUser.relativeTime.substring(7, 8) == "0") {
                             Log.d("fetchMAP", "Mapが更新されました")
                             coroutineScope.launch {
                                 viewModel.fetchMap(url)
                             }
                         }
+                    }
+
+                    // skillボタンが押された時の処理
+                    btSkillOn.setOnClickListener {
+                        Log.d("skill button", "skill buttonが呼ばれました")
+                        setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to mainUiState.latestUser.relativeTime))
+                        // 自分の罠をRoomにinsert
+                        viewModel.postTrapRoom(0, latestUser)
+                        viewModel.postTrapSpacetime("post", latestUser)
+                        viewModel.setSkillTime(latestUser)
+                        viewModel.setIsOverSkillTime(false)
                     }
                 }
             }
@@ -246,25 +246,6 @@ class MainFragment(
             val captureDialogFragment = CaptureDialogFragment()
             val supportFragmentManager = childFragmentManager
             captureDialogFragment.show(supportFragmentManager, "capture")
-        }
-
-        // skillボタンが押された時の処理
-        btSkillOn.setOnClickListener {
-            // Userの最新情報から位置をとってきて、それを罠の位置とする
-            viewModel.getNowUser()
-
-            lifecycleScope.launch {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.uiState.collect { mainUiState ->
-                        setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to mainUiState.latestUser.relativeTime))
-                    }
-                }
-            }
-            // 自分の罠をRoomにinsert
-            viewModel.postTrapRoom(0)
-            viewModel.postTrapSpacetime("post")
-            viewModel.setSkillTime()
-            viewModel.setIsOverSkillTime(false)
         }
 
         return root
