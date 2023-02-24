@@ -10,6 +10,7 @@ import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.data.datasource.remote.PostData
 import com.example.hideandseek.data.repository.*
+import com.example.hideandseek.domain.CalculateRelativeTimeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -36,7 +37,8 @@ class MainFragmentViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val apiRepository: ApiRepository,
     private val mapRepository: MapRepository,
-    private val myLocationRepository: MyLocationRepository
+    private val myLocationRepository: MyLocationRepository,
+    private val calculateRelativeTimeUseCase: CalculateRelativeTimeUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
@@ -64,12 +66,17 @@ class MainFragmentViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            myLocationRepository.start()
-            myLocationRepository.flowLatestLocation.collect {
+            calculateRelativeTimeUseCase().collect{ userData ->
                 _uiState.update { mainUiState ->
-                    mainUiState.copy(myLocation = it)
+                    mainUiState.copy(latestUser = userData)
                 }
             }
+//            myLocationRepository.start()
+//            myLocationRepository.flowLatestLocation.collect { myLocation ->
+//                _uiState.update { mainUiState ->
+//                    mainUiState.copy(myLocation = myLocation)
+//                }
+//            }
         }
     }
 
@@ -78,14 +85,6 @@ class MainFragmentViewModel @Inject constructor(
             val latestUser = userRepository.getLatest()
             _uiState.update { mainUiState ->
                 mainUiState.copy(latestUser = latestUser)
-            }
-        }
-    }
-
-    fun fetchLatestLocation() {
-        viewModelScope.launch {
-            _uiState.update { mainUiState ->
-                mainUiState.copy(myLocation = myLocationRepository.latestLocation)
             }
         }
     }
