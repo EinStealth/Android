@@ -171,12 +171,6 @@ class MainActivity : AppCompatActivity() {
         }
         // Roomに相対時間と座標を送る
         viewModel.insertUser(relativeTime, location)
-        // 10秒おきにAPI通信をする
-        if (relativeTime.second % 10 == 0) {
-            viewModel.deleteAllLocation()
-            viewModel.postSpacetime(relativeTime, location)
-            viewModel.getSpacetime(relativeTime)
-        }
     }
 
     // 位置情報の権限があるかどうかを確認する関数
