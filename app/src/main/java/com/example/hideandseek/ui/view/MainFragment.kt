@@ -115,7 +115,7 @@ class MainFragment(
                 viewModel.uiState.collect { mainUiState ->
 
 //                    viewModel.fetchLatestLocation()
-                    Log.d("MyLocationCheck", mainUiState.myLocation.toString())
+                    Log.d("UsecaseTest", mainUiState.latestUser.toString())
 
                     ivMap.setImageBitmap(mainUiState.map)
 
