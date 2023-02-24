@@ -22,94 +22,14 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
-data class MainActivityUiState(
-    val relativeTime: LocalTime? = null
-)
-
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val locationRepository: LocationRepository,
     private val trapRepository: TrapRepository,
-    private val userRepository: UserRepository,
-    private val apiRepository: ApiRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(MainActivityUiState())
-    val uiState: StateFlow<MainActivityUiState> = _uiState.asStateFlow()
-
-    // relativeTimeの初期値（アプリを起動したときのLocalTime）をセットする
-    fun setUpRelativeTime(nowTime: LocalTime) {
-        _uiState.update { mainActivityUiState ->
-            mainActivityUiState.copy(relativeTime = nowTime)
-        }
-    }
-
-    fun calculateRelativeTime(gap: Long) {
-        _uiState.update { mainActivityUiState ->
-            mainActivityUiState.copy(relativeTime = mainActivityUiState.relativeTime?.minusNanos(gap)
-                ?.plusSeconds(1)!!)
-        }
-    }
-
-    // 特殊相対性理論によりずれを計算する
-    fun calculateGap(location: Location): Long {
-        Log.d("GAP", "speed: ${location.speed}, calc: ${(1000000000 * (1 - sqrt(1 - (location.speed / 10).pow(2)))).roundToInt().toLong()}")
-        return (1000000000 * (1 - sqrt(1 - (location.speed / 10).pow(2)))).roundToInt().toLong()
-    }
-
-    // ActivityからrelativeTimeとlocationを受け取り、Roomデータベースにuserデータとして送信
-    fun insertUser(relativeTime: LocalTime, location: Location) = viewModelScope.launch {
-        val user =
-            com.example.hideandseek.data.datasource.local.UserData(0, relativeTime.toString().substring(0, 8), location.latitude, location.longitude, location.altitude)
-        userRepository.insert(user)
-    }
-
-    private fun insertLocationAll(relativeTime: LocalTime, response: List<ResponseData.ResponseGetSpacetime>) = viewModelScope.launch {
-        for (i in response.indices) {
-            val user =
-                com.example.hideandseek.data.datasource.local.LocationData(0, relativeTime.toString().substring(0, 8), response[i].Latitude, response[i].Longtitude, response[i].Altitude, response[i].ObjId)
-            locationRepository.insert(user)
-        }
-    }
-
-    fun postSpacetime(relativeTime: LocalTime, location: Location) {
-        viewModelScope.launch {
-            try {
-                val request = PostData.PostSpacetime(relativeTime.toString().substring(0, 8), location.latitude, location.longitude, location.altitude, 0)
-                val response = apiRepository.postSpacetime(request)
-                if (response.isSuccessful) {
-                    Log.d("POST_TEST", "${response}\n${response.body()}")
-                } else {
-                    Log.d("POST_TEST", "$response")
-                }
-            } catch (e: java.lang.Exception) {
-                Log.d("POST_TEST", "$e")
-            }
-        }
-    }
-
-    fun getSpacetime(relativeTime: LocalTime) {
-        viewModelScope.launch {
-            try {
-                val response = apiRepository.getSpacetime(relativeTime.toString().substring(0, 8))
-                if (response.isSuccessful) {
-                    Log.d("GET_TEST", "${response}\n${response.body()}")
-                    response.body()?.let { insertLocationAll(relativeTime, it) }
-                } else {
-                    Log.d("GET_TEST", "$response")
-                }
-            } catch (e: java.lang.Exception) {
-                Log.d("GET_TEST", "$e")
-            }
-        }
-    }
-
     // Locationデータベースのデータを全消去
     fun deleteAllLocation() = viewModelScope.launch {
         locationRepository.deleteAll()
-    }
-
-    fun deleteAllUser() = viewModelScope.launch {
-        userRepository.deleteAll()
     }
 
     fun deleteAllTrap() = viewModelScope.launch {

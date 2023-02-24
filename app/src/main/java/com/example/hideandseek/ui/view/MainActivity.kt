@@ -37,15 +37,6 @@ import java.time.LocalTime
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    // 直近の現在地情報を取得するためのクライアント
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
-    // 位置情報の設定をするためのパラメータを格納するRequest
-    private lateinit var locationRequest: LocationRequest
-
-    // 現在地を更新するためのコールバック
-    private lateinit var locationCallback: LocationCallback
-
     private val viewModel: MainActivityViewModel by viewModels()
 
     private lateinit var binding: ActivityMainBinding
@@ -101,106 +92,8 @@ class MainActivity : AppCompatActivity() {
             ),
         )
 
-        // 位置情報を取得する
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        // 位置情報の権限があるか確認する
-        checkLocationPermission()
-
-        // 直近の位置情報を取得
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                // Got last known location. In some rare situations this can be null
-                if (location != null) {
-                    // 相対時間の初期化
-                    viewModel.setUpRelativeTime(LocalTime.now())
-                    // User情報の初期化はアプリの起動時にのみ行う
-                    viewModel.deleteAllUser()
-                    viewModel.deleteAllTrap()
-                    postCalculatedRelativeTime(location)
-                }
-            }
-
-        // 位置情報リクエストの設定
-        locationRequest = LocationRequest.Builder(1000)
-            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-            .build()
-
-        // 現在の位置情報を取得する
-        val builder = LocationSettingsRequest.Builder()
-            .addLocationRequest(locationRequest)
-
-        val client: SettingsClient = LocationServices.getSettingsClient(this)
-        val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
-
-        // 位置情報更新コールバックを定義する
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                super.onLocationResult(locationResult)
-                for (location in locationResult.locations) {
-                    postCalculatedRelativeTime(location)
-                }
-            }
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        // 位置情報の更新を停止する
-        stopLocationUpdates()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        startLocationUpdates()
-    }
-
-    // 相対時間を計算し、Roomにinsertする関数
-    private fun postCalculatedRelativeTime(location: Location) {
-        // ずれとを計算
-        val gap = viewModel.calculateGap(location)
-        // 相対時間を計算
-        var relativeTime: LocalTime = LocalTime.MIN
-        viewModel.calculateRelativeTime(gap)
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    relativeTime = it.relativeTime!!
-                }
-            }
-        }
-        // Roomに相対時間と座標を送る
-        viewModel.insertUser(relativeTime, location)
-    }
-
-    // 位置情報の権限があるかどうかを確認する関数
-    private fun checkLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION,
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-    }
-
-    // 位置情報の更新をする関数
-    private fun startLocationUpdates() {
-        // 位置情報の権限があるか確認する
-        checkLocationPermission()
-        // 位置情報の更新
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper(),
-        )
-    }
-
-    // 位置情報の更新を止める関数
-    private fun stopLocationUpdates() {
-        fusedLocationClient.removeLocationUpdates(locationCallback)
+        // データベースの初期化
+        viewModel.deleteAllTrap()
+        viewModel.deleteAllLocation()
     }
 }
