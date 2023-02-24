@@ -126,17 +126,17 @@ class BeTrappedFragment : Fragment() {
                         successEscapeDialogFragment.show(supportFragmentManager, "clear")
                     }
 
-                    val userLive = beTrappedUiState.allUser
+                    val latestUser = beTrappedUiState.latestUser
 
-                    Log.d("UserLive", userLive.toString())
-                    if (userLive.isNotEmpty()) {
-                        tvRelativeTime.text = userLive[userLive.size - 1].relativeTime
+                    Log.d("UserLive", latestUser.toString())
+                    if (latestUser.relativeTime != "") {
+                        tvRelativeTime.text = latestUser.relativeTime
                         // 制限時間になったかどうかの判定
-                        viewModel.compareTime(userLive[userLive.size - 1].relativeTime, limitTime)
+                        viewModel.compareTime(latestUser.relativeTime, limitTime)
 
                         // trapにかかっている時間を計測
-                        viewModel.compareTrapTime(userLive[userLive.size - 1].relativeTime, trapTime)
-                        val howProgressTrap = viewModel.howProgressTrapTime(userLive[userLive.size - 1].relativeTime, trapTime)
+                        viewModel.compareTrapTime(latestUser.relativeTime, trapTime)
+                        val howProgressTrap = viewModel.howProgressTrapTime(latestUser.relativeTime, trapTime)
                         progressTrap.progress = howProgressTrap
 
                         // Skill Buttonの Progress Bar
@@ -145,14 +145,23 @@ class BeTrappedFragment : Fragment() {
                         // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
                         if (skillTime != "") {
                             viewModel.compareSkillTime(
-                                userLive[userLive.size - 1].relativeTime,
+                                latestUser.relativeTime,
                                 skillTime,
                             )
                             progressSkill.progress = viewModel.howProgressSkillTime(
-                                userLive[userLive.size - 1].relativeTime,
+                                latestUser.relativeTime,
                                 skillTime,
                             )
                             setFragmentResult("BeTrappedFragmentSkillTime", bundleOf("skillTime" to skillTime))
+                        }
+
+                        // skillボタンが押された時の処理
+                        btSkillOn.setOnClickListener {
+                            setFragmentResult("BeTrappedFragmentSkillTime", bundleOf("skillTime" to latestUser.relativeTime))
+                            viewModel.postTrapRoom(0, latestUser)
+                            viewModel.postTrapSpacetime(latestUser)
+                            viewModel.setSkillTime(latestUser)
+                            viewModel.setIsOverSkillTime(false)
                         }
                     }
                 }
@@ -164,24 +173,6 @@ class BeTrappedFragment : Fragment() {
             val captureDialogFragment = CaptureDialogFragment()
             val supportFragmentManager = childFragmentManager
             captureDialogFragment.show(supportFragmentManager, "capture")
-        }
-
-        // skillボタンが押された時の処理
-        btSkillOn.setOnClickListener {
-            // Userの最新情報から位置をとってきて、それを罠の位置とする
-            viewModel.getNowUser()
-
-            lifecycleScope.launch {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.uiState.collect { beTrappedUiState ->
-                        setFragmentResult("BeTrappedFragmentSkillTime", bundleOf("skillTime" to beTrappedUiState.latestUser.relativeTime))
-                    }
-                }
-            }
-            viewModel.postTrapRoom(0)
-            viewModel.postTrapSpacetime()
-            viewModel.setSkillTime()
-            viewModel.setIsOverSkillTime(false)
         }
 
         return root
