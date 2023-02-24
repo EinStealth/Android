@@ -1,7 +1,9 @@
 package com.example.hideandseek.ui.view
 
 import android.Manifest
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowInsets
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -41,7 +43,8 @@ class MainActivity : AppCompatActivity() {
             ),
         )
 
-        supportActionBar?.hide()
+        // フルスクリーンにするために、TitleBarなどを隠す
+        hideSystemUI()
 
         // BottomNavigationのセットアップ
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -76,5 +79,19 @@ class MainActivity : AppCompatActivity() {
         // データベースの初期化
         viewModel.deleteAllTrap()
         viewModel.deleteAllLocation()
+    }
+
+    private fun hideSystemUI() {
+        supportActionBar?.hide()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.decorView.windowInsetsController?.hide(
+                WindowInsets.Type.statusBars() or WindowInsets.Type.navigationBars()
+            )
+        }
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) hideSystemUI()
     }
 }
