@@ -19,13 +19,17 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
-class CalculateRelativeTimeUseCase @Inject constructor(
+interface CalculateRelativeTimeUseCase {
+    suspend operator fun invoke(): Flow<UserData>
+}
+
+class CalculateRelativeTimeUseCaseImpl @Inject constructor(
     private val myLocationRepository: MyLocationRepository,
     private val apiRepository: ApiRepository,
     private val locationRepository: LocationRepository,
     @IODispatcher private val ioDispatcher: CoroutineDispatcher
-) {
-    suspend operator fun invoke(): Flow<UserData> =
+): CalculateRelativeTimeUseCase {
+    override suspend operator fun invoke(): Flow<UserData> =
         withContext(ioDispatcher) {
             myLocationRepository.start()
             val result = flow {

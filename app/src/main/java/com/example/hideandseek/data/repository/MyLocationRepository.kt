@@ -1,9 +1,9 @@
 package com.example.hideandseek.data.repository
 
-import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.Manifest
 import android.os.Looper
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -20,14 +20,22 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class MyLocationRepository @Inject constructor(
+interface MyLocationRepository {
+    val flowLatestLocation: Flow<Location>
+
+    fun start()
+
+    fun stop()
+}
+
+class MyLocationRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val fusedLocationProviderClient: FusedLocationProviderClient
-) {
+): MyLocationRepository {
     // 現在地を更新するためのコールバック
     private lateinit var locationCallback: LocationCallback
 
-    val flowLatestLocation: Flow<Location> = flow {
+    override val flowLatestLocation: Flow<Location> = flow {
         while (true) {
             val flowLatestLocation = latestLocation
             if (flowLatestLocation != null) {
@@ -38,7 +46,7 @@ class MyLocationRepository @Inject constructor(
     }
     var latestLocation: Location? = null
 
-    fun start() {
+    override fun start() {
         // permission check
         if (ActivityCompat.checkSelfPermission(
                 context,
@@ -88,7 +96,7 @@ class MyLocationRepository @Inject constructor(
         )
     }
 
-    fun stop() {
+    override fun stop() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback)
     }
 }
