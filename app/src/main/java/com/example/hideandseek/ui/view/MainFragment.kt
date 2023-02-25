@@ -110,7 +110,7 @@ class MainFragment(
         var width: Int? = 100
         var height: Int? = 100
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            width = activity?.windowManager?.currentWindowMetrics?.bounds?.width()?.div(4)
+            width = activity?.windowManager?.currentWindowMetrics?.bounds?.width()?.div(4)?.plus(10)
             height = activity?.windowManager?.currentWindowMetrics?.bounds?.height()?.div(4)
         }
 
