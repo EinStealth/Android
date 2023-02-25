@@ -194,9 +194,9 @@ class MainFragmentViewModel @Inject constructor(
             }
         }
     }
-    fun fetchMap(url: String) {
+    fun fetchMap(latestUser: UserData, width: Int, height: Int, allLocation: List<LocationData>, allTraps: List<TrapData>) {
         viewModelScope.launch {
-            val fetchedMap = mapRepository.fetchMap(url)
+            val fetchedMap = mapRepository.fetchMap(latestUser, width, height, allLocation, allTraps)
             setMap(fetchedMap)
         }
     }

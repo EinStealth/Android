@@ -1,5 +1,6 @@
 package com.example.hideandseek.ui.view
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -42,6 +43,14 @@ class WatchFragment(
         // Map
         val ivMap: ImageView = binding.ivMap
 
+        // 画面サイズの取得
+        var width: Int? = 100
+        var height: Int? = 100
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            width = activity?.windowManager?.currentWindowMetrics?.bounds?.width()?.div(4)?.plus(10)
+            height = activity?.windowManager?.currentWindowMetrics?.bounds?.height()?.div(4)
+        }
+
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { watchUiState ->
@@ -57,15 +66,6 @@ class WatchFragment(
                     // 自分の情報の表示
                     Log.d("UserLive", latestUser.toString())
                     if (latestUser.relativeTime != "") {
-                        // 自分の位置情報のurl
-                        val iconUrlHide = "https://onl.bz/dcMZVEa"
-                        var url = "https://maps.googleapis.com/maps/api/staticmap" +
-                                "?center=${latestUser.latitude},${latestUser.longitude}" +
-                                "&size=310x640&scale=1" +
-                                "&zoom=18" +
-                                "&key=AIzaSyA-cfLegBoleKaT2TbU5R4K1uRkzBR6vUQ" +
-                                "&markers=icon:" + iconUrlHide + "|${latestUser.latitude},${latestUser.longitude}"
-
                         // 他人の位置を追加
                         Log.d("ALL_Location", allLocation.toString())
                         if (allLocation.isNotEmpty()) {
@@ -73,17 +73,6 @@ class WatchFragment(
                             for (i in allLocation.indices) {
                                 if (allLocation[i].objId == 1) {
                                     viewModel.postTrapRoom(1, latestUser)
-                                } else {
-                                    url += "&markers=icon:" + iconUrlHide + "|${allLocation[i].latitude},${allLocation[i].longitude}"
-                                }
-                            }
-                        }
-
-                        // trapの位置情報
-                        if (allTraps.isNotEmpty()) {
-                            for (i in allTraps.indices) {
-                                if (allTraps[i].objId == 0) {
-                                    url += "&markers=icon:https://onl.bz/FetpS7Y|${allTraps[i].latitude},${allTraps[i].longitude}"
                                 }
                             }
                         }
@@ -93,7 +82,9 @@ class WatchFragment(
                         if (latestUser.relativeTime.substring(7, 8) == "0") {
                             Log.d("fetchMAP", "Mapが更新されました")
                             coroutineScope.launch {
-                                viewModel.fetchMap(url)
+                                if (width != null && height != null) {
+                                    viewModel.fetchMap(latestUser, width, height, allLocation, allTraps)
+                                }
                             }
                         }
                     }
