@@ -1,6 +1,8 @@
 package com.example.hideandseek.ui.view
 
+import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -104,6 +106,14 @@ class MainFragment(
             Log.d("nameRegisterTest", result.toString())
         }
 
+        // 画面サイズの取得
+        var width: Int? = 100
+        var height: Int? = 100
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            width = activity?.windowManager?.currentWindowMetrics?.bounds?.width()?.div(4)
+            height = activity?.windowManager?.currentWindowMetrics?.bounds?.height()?.div(4)
+        }
+
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { mainUiState ->
@@ -150,7 +160,7 @@ class MainFragment(
                         val iconUrlHide = "https://onl.bz/dcMZVEa"
                         var url = "https://maps.googleapis.com/maps/api/staticmap" +
                                 "?center=${latestUser.latitude},${latestUser.longitude}" +
-                                "&size=310x640&scale=1" +
+                                "&size=${width}x${height}&scale=1" +
                                 "&zoom=18" +
                                 "&key=AIzaSyA-cfLegBoleKaT2TbU5R4K1uRkzBR6vUQ" +
                                 "&markers=icon:" + iconUrlHide + "|${latestUser.latitude},${latestUser.longitude}"
