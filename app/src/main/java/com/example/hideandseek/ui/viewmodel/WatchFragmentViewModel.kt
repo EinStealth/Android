@@ -45,7 +45,7 @@ class WatchFragmentViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            calculateRelativeTimeUseCase().collect{ userData ->
+            calculateRelativeTimeUseCase().collect { userData ->
                 _uiState.update { mainUiState ->
                     mainUiState.copy(latestUser = userData)
                 }

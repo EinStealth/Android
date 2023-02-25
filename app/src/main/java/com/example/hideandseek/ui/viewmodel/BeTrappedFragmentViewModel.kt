@@ -38,7 +38,7 @@ class BeTrappedFragmentViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            calculateRelativeTimeUseCase().collect{ userData ->
+            calculateRelativeTimeUseCase().collect { userData ->
                 _uiState.update { mainUiState ->
                     mainUiState.copy(latestUser = userData)
                 }

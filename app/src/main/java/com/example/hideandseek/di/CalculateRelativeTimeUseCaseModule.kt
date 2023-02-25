@@ -13,5 +13,5 @@ abstract class CalculateRelativeTimeUseCaseModule {
     @Binds
     abstract fun bindCalculateRelativeTimeUseCase(
         impl: CalculateRelativeTimeUseCaseImpl
-    ): CalculateRelativeTimeUseCase
+    ) : CalculateRelativeTimeUseCase
 }
