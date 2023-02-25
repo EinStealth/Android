@@ -3,6 +3,8 @@ package com.example.hideandseek.ui.view
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.util.Log
 import android.view.WindowInsets
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
