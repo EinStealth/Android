@@ -8,11 +8,8 @@ import com.example.hideandseek.data.datasource.local.LocationData
 import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.data.datasource.remote.PostData
-import com.example.hideandseek.data.repository.ApiRepository
-import com.example.hideandseek.data.repository.LocationRepository
-import com.example.hideandseek.data.repository.MapRepository
-import com.example.hideandseek.data.repository.TrapRepository
-import com.example.hideandseek.data.repository.UserRepository
+import com.example.hideandseek.data.repository.*
+import com.example.hideandseek.domain.CalculateRelativeTimeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -21,7 +18,6 @@ import kotlin.math.abs
 
 data class MainUiState(
     val allLocation: List<LocationData> = listOf(),
-    val allUser:     List<UserData>     = listOf(),
     val allTrap:     List<TrapData>     = listOf(),
     val latestUser:  UserData           = UserData(0, "", 0.0, 0.0, 0.0),
     val skillTime:   String             = "",
@@ -35,9 +31,9 @@ data class MainUiState(
 class MainFragmentViewModel @Inject constructor(
     private val locationRepository: LocationRepository,
     private val trapRepository: TrapRepository,
-    private val userRepository: UserRepository,
     private val apiRepository: ApiRepository,
     private val mapRepository: MapRepository,
+    private val calculateRelativeTimeUseCase: CalculateRelativeTimeUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
@@ -51,41 +47,30 @@ class MainFragmentViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            userRepository.allUsers.collect { allUsers ->
-                _uiState.update { mainUiState ->
-                    mainUiState.copy(allUser = allUsers)
-                }
-            }
-        }
-        viewModelScope.launch {
             trapRepository.allTraps.collect { allTraps ->
                 _uiState.update { mainUiState ->
                     mainUiState.copy(allTrap = allTraps)
                 }
             }
         }
-    }
-
-    fun getNowUser() {
         viewModelScope.launch {
-            val latestUser = userRepository.getLatest()
-            _uiState.update { mainUiState ->
-                mainUiState.copy(latestUser = latestUser)
+            calculateRelativeTimeUseCase().collect { userData ->
+                _uiState.update { mainUiState ->
+                    mainUiState.copy(latestUser = userData)
+                }
             }
         }
     }
 
-    fun postTrapRoom(isMine: Int) = viewModelScope.launch {
-        Log.d("USER_TRAP", userRepository.getLatest().toString())
-        val nowUser = userRepository.getLatest()
-        val trap = TrapData(0, nowUser.latitude, nowUser.longitude, nowUser.altitude, isMine)
+    fun postTrapRoom(isMine: Int, latestUser: UserData) = viewModelScope.launch {
+        Log.d("USER_TRAP", latestUser.toString())
+        val trap = TrapData(0, latestUser.latitude, latestUser.longitude, latestUser.altitude, isMine)
         trapRepository.insert(trap)
     }
 
-    fun setSkillTime() = viewModelScope.launch {
-        val nowUser = userRepository.getLatest()
+    fun setSkillTime(latestUser: UserData) = viewModelScope.launch {
         _uiState.update { mainUiState ->
-            mainUiState.copy(skillTime = nowUser.relativeTime)
+            mainUiState.copy(skillTime = latestUser.relativeTime)
         }
     }
 
@@ -190,11 +175,10 @@ class MainFragmentViewModel @Inject constructor(
         }
     }
 
-    fun postTrapSpacetime(type: String) {
+    fun postTrapSpacetime(type: String, latestUser: UserData) {
         viewModelScope.launch {
-            val nowUser = userRepository.getLatest()
             try {
-                var request = PostData.PostSpacetime(nowUser.relativeTime.substring(0, 7) + "0", nowUser.latitude, nowUser.longitude, nowUser.altitude, 1)
+                val request = PostData.PostSpacetime(latestUser.relativeTime.substring(0, 7) + "0", latestUser.latitude, latestUser.longitude, latestUser.altitude, 1)
                 if (type == "delete") {
                     request.objId = -1
                 }
@@ -210,9 +194,9 @@ class MainFragmentViewModel @Inject constructor(
             }
         }
     }
-    fun fetchMap(url: String) {
+    fun fetchMap(latestUser: UserData, width: Int, height: Int, allLocation: List<LocationData>, allTraps: List<TrapData>) {
         viewModelScope.launch {
-            val fetchedMap = mapRepository.fetchMap(url)
+            val fetchedMap = mapRepository.fetchMap(latestUser, width, height, allLocation, allTraps)
             setMap(fetchedMap)
         }
     }

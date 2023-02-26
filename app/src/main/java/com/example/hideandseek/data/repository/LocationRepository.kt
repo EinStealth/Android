@@ -29,9 +29,9 @@ class LocationRepositoryImpl @Inject constructor(
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    override suspend fun insert(user: LocationData) {
+    override suspend fun insert(location: LocationData) {
         withContext(ioDispatcher) {
-            locationDao.insert(user)
+            locationDao.insert(location)
         }
     }
 

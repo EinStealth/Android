@@ -45,7 +45,7 @@ object ApiModule {
                 Params.BASE_URL_EMULATOR
             } else {
 //                Params.BASE_URL_REAL
-                "http://192.168.190.131:8080/"
+                "http://192.168.1.5:8080/"
             }
         }
 
