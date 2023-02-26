@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_be_trapped,
                 R.id.navigation_result,
                 R.id.navigation_watch,
+                R.id.navigation_start,
             ),
         )
 
