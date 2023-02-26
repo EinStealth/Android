@@ -1,5 +1,6 @@
 package com.example.hideandseek.ui.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -36,8 +37,13 @@ class UserRegisterFragment: Fragment() {
 
         // 決定ボタンが押されたら名前を次のフラグメントに送る
         btDecide.setOnClickListener {
-            setFragmentResult("UserRegisterFragmentName", bundleOf("name" to editName.text.toString()))
-            Log.d("nameRegisterTest", editName.text.toString())
+            // 名前の保存
+            val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
+            with (sharedPref?.edit()) {
+                this?.putString("name", editName.text.toString())
+                this?.apply()
+            }
+
             findNavController().navigate(R.id.navigation_room_type_select)
         }
 

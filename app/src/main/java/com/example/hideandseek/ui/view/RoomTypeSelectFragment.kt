@@ -1,5 +1,6 @@
 package com.example.hideandseek.ui.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -38,13 +39,13 @@ class RoomTypeSelectFragment: Fragment() {
         val btSearch: ImageView = binding.btSearch
         val textName: TextView = binding.textName
 
-        setFragmentResultListener("UserRegisterFragmentName") { _, bundle ->
-            val result = bundle.getString("name")
-            textName.text = result.toString()
-        }
+        // 名前の読み込み
+        val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
+        val name = sharedPref?.getString("name", "")
+
+        textName.text = name
 
         btCreate.setOnClickListener {
-            setFragmentResult("RoomTypeSelectFragment", bundleOf("name" to textName.text.toString()))
             findNavController().navigate(R.id.navigation_room_create)
         }
         btSearch.setOnClickListener {
