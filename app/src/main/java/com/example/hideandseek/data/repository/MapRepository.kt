@@ -3,22 +3,16 @@ package com.example.hideandseek.data.repository
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
-import androidx.navigation.fragment.findNavController
-import com.example.hideandseek.R
 import com.example.hideandseek.data.datasource.local.LocationData
 import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.di.IODispatcher
-import com.example.hideandseek.domain.CalculateRelativeTimeUseCase
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
 import java.net.URL
 import javax.inject.Inject
 
 interface MapRepository {
-    suspend fun fetchMap(latestUser: UserData, width: Int, height: Int, allLocation: List<LocationData>, allTraps: List<TrapData>): Bitmap
+    suspend fun fetchMap(latestUser: UserData, allLocation: List<LocationData>, allTraps: List<TrapData>): Bitmap
 }
 
 class MapRepositoryImpl @Inject constructor(
@@ -26,9 +20,9 @@ class MapRepositoryImpl @Inject constructor(
     @IODispatcher private val ioDispatcher: CoroutineDispatcher
 ) : MapRepository {
 
-    override suspend fun fetchMap(latestUser: UserData, width: Int, height: Int, allLocation: List<LocationData>, allTraps: List<TrapData>): Bitmap {
+    override suspend fun fetchMap(latestUser: UserData, allLocation: List<LocationData>, allTraps: List<TrapData>): Bitmap {
         Log.d("MapRepository", "fetchMapが呼ばれました")
-        val url: String = makeUrl(latestUser, width, height, allLocation, allTraps)
+        val url: String = makeUrl(latestUser, allLocation, allTraps)
         val originalDeferred = coroutineScope.async(ioDispatcher) {
             getOriginalBitmap(url)
         }
@@ -40,13 +34,13 @@ class MapRepositoryImpl @Inject constructor(
             BitmapFactory.decodeStream(it)
         }
 
-    private fun makeUrl(latestUser: UserData, width: Int, height: Int, allLocation: List<LocationData>, allTraps: List<TrapData>): String {
+    private fun makeUrl(latestUser: UserData, allLocation: List<LocationData>, allTraps: List<TrapData>): String {
         // 自分の位置情報のurl
         val iconUrlHide = "https://lh3.googleusercontent.com/fTB0kRIlKDrQjTC1tiQC4VNIxcfRCKkuWLQec-sqIvtDrZhQ_kLS5PC5MILszDwMED_-kHW4vuuRQM71SLQnAqHnkboIeiFA69ws5xzuEMmOdy3NcsIFxSpIIBYYe7-9MkXX9Zpful9GfZ-_Ufvda5hrEMjTRKOdhg9fHtlRfdA5-SxXeUcl_bw1xOPj5Jg7pI-A0f1soN1G2wsbXmWlIk2F8zQ6_6_zaQ0WQPkaXShsnRXZJNPB078BZNOpzETx1KdvwCbH2uqnHPLLkiQBCvAnSbt-FHc_Y7UTZZ8KHCG6KIdnnwxfQlZn4joJaO5dJpC9kQMZoUn1cs_sJ-PF5h5PDOA26s-CKwgxifSaqVlmctqPupXmXoXfduLNaJm_z9CILnWAqCV6U5NOf8NZV0waqPQmhenk_8ANc2fNtgltz4--JxolPTz27PhRrXk4rADQEVLEJ1AWfpmWF93R94rkeDhKo39RCpndm52cWA0oqC6x_aWQj6F9KTukrb_nYyNZqUt14nWYUc8dzU22GYirIJcQBDHG4yLy8pv7DUuzd140emlx4SMBv4p919ubZi6qUc9gNPzRPql0BixKgGrwLg0SXCwyKUhM6a5WS-vBBAyCTSJCybfQ2QfsMGmCNuB437B8G1e9i581VBGymHLPBxq0vHPTrilYrag3EZWhjrLnIShW4h7coRf6DUdgZb-UyZsrQzhtV27R_dtXjfiNFggmRsDLh5jJgLQ1GHb_qZBistDosQ8da7wsLi0pQiKwfr68G_MTncpARwGREhjLeAuh1vPC2JFm7Oc7KIUtGOgCErB6u44Skbf-_w9tapn1uyFRqUlnMk0Rqww6sT5_dndLgXMo17KI893xKbA3VDXMmO4NtfCOH4mjdMPVBs8rtoE9yVnjRi0JhLoFAymituMyycwFC3aQq-Zejg6c16EkxUGS9oB0nKbeEcA-AqET8eaVJeKKx_hxmHqEagXA1a2bT6TokgE6WRyBUXjqu1eZaksGww6gG4UfaoSX9vYIGWG5PrugqMlzMV-XE27ddRh9Be6kf3X7ToEe7nF7CS8p7vV-BfaX3ms=s32-no?authuser=0"
 
         var url = "https://maps.googleapis.com/maps/api/staticmap" +
                 "?center=${latestUser.latitude},${latestUser.longitude}" +
-                "&size=${width}x${height}&scale=1" +
+                "&size=640x640&scale=1" +
                 "&zoom=18" +
                 "&key=AIzaSyA-cfLegBoleKaT2TbU5R4K1uRkzBR6vUQ" +
                 "&markers=icon:" + iconUrlHide + "|${latestUser.latitude},${latestUser.longitude}"
