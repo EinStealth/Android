@@ -43,14 +43,6 @@ class WatchFragment(
         // Map
         val ivMap: ImageView = binding.ivMap
 
-        // 画面サイズの取得
-        var width: Int? = 100
-        var height: Int? = 100
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            width = activity?.windowManager?.currentWindowMetrics?.bounds?.width()?.div(4)?.plus(10)
-            height = activity?.windowManager?.currentWindowMetrics?.bounds?.height()?.div(4)
-        }
-
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { watchUiState ->
@@ -82,9 +74,7 @@ class WatchFragment(
                         if (latestUser.relativeTime.substring(7, 8) == "0") {
                             Log.d("fetchMAP", "Mapが更新されました")
                             coroutineScope.launch {
-                                if (width != null && height != null) {
-                                    viewModel.fetchMap(latestUser, width, height, allLocation, allTraps)
-                                }
+                                viewModel.fetchMap(latestUser, allLocation, allTraps)
                             }
                         }
                     }
