@@ -1,5 +1,6 @@
 package com.example.hideandseek.ui.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -33,9 +34,18 @@ class StartFragment: Fragment() {
         // Viewの取得
         val background: ImageView = binding.background
 
+        // 名前の読み込み
+        val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
+        val name = sharedPref?.getString("name", "")
+
         // 画面が押されたときの処理
         background.setOnClickListener {
-            findNavController().navigate(R.id.navigation_user_register)
+            Log.d("StartFragment", name.toString())
+            if (name != null && name.toString() != "") {
+                findNavController().navigate(R.id.navigation_room_type_select)
+            } else {
+                findNavController().navigate(R.id.navigation_user_register)
+            }
         }
 
         return root
