@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_user_register">
+    app:startDestination="@+id/navigation_start">
 
     <fragment
         android:id="@+id/navigation_main"
@@ -34,5 +34,11 @@
         android:name="com.example.hideandseek.ui.view.UserRegisterFragment"
         android:label="UserRegister"
         tools:layout="@layout/fragment_user_register"/>
+
+    <fragment
+        android:id="@+id/navigation_start"
+        android:name="com.example.hideandseek.ui.view.StartFragment"
+        android:label="Start"
+        tools:layout="@layout/fragment_start"/>
 
 </navigation>
