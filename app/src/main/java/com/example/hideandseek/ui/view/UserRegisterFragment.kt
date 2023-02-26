@@ -38,7 +38,7 @@ class UserRegisterFragment: Fragment() {
         btDecide.setOnClickListener {
             setFragmentResult("UserRegisterFragmentName", bundleOf("name" to editName.text.toString()))
             Log.d("nameRegisterTest", editName.text.toString())
-            findNavController().navigate(R.id.navigation_main)
+            findNavController().navigate(R.id.navigation_room_type_select)
         }
 
         return root

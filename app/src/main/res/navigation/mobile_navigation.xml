@@ -36,6 +36,24 @@
         tools:layout="@layout/fragment_user_register"/>
 
     <fragment
+        android:id="@+id/navigation_room_type_select"
+        android:name="com.example.hideandseek.ui.view.RoomTypeSelectFragment"
+        android:label="RoomTypeSelect"
+        tools:layout="@layout/fragment_room_type_select"/>
+
+    <fragment
+        android:id="@+id/navigation_room_create"
+        android:name="com.example.hideandseek.ui.view.RoomCreateFragment"
+        android:label="RoomCreate"
+        tools:layout="@layout/fragment_room_create"/>
+
+    <fragment
+        android:id="@+id/navigation_stand_by_room"
+        android:name="com.example.hideandseek.ui.view.StandByRoom"
+        android:label="StandByRoom"
+        tools:layout="@layout/fragment_stand_by_room"/>
+
+    <fragment
         android:id="@+id/navigation_start"
         android:name="com.example.hideandseek.ui.view.StartFragment"
         android:label="Start"

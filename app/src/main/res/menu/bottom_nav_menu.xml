@@ -29,4 +29,10 @@
         android:icon="@drawable/ic_launcher_background"
         android:title="userRegister"
         />
+
+    <item
+        android:id="@+id/navigation_room_type_select"
+        android:icon="@drawable/ic_launcher_background"
+        android:title="roomTypeSelect"
+        />
 </menu>

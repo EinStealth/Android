@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@drawable/background"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -18,29 +18,29 @@
         android:id="@+id/dialog_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/text_null"
+        android:src="@drawable/stand_by_room"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <EditText
-        android:id="@+id/edit_name"
-        android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:hint="名前を入力してください"
-        app:layout_constraintTop_toTopOf="@+id/dialog_background"
-        app:layout_constraintBottom_toBottomOf="@+id/dialog_background"
-        app:layout_constraintStart_toStartOf="@+id/dialog_background"
-        app:layout_constraintEnd_toEndOf="@+id/dialog_background"/>
-
-    <ImageView
-        android:id="@+id/bt_decide"
+    <TextView
+        android:id="@+id/text_secret_word"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/button_decide"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/edit_name"
+        android:layout_marginTop="56dp"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="@+id/dialog_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageView
+        android:id="@+id/bt_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/bt_start"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
