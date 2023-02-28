@@ -1,6 +1,7 @@
 package com.example.hideandseek.ui.view
 
 import android.content.Context
+import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -38,12 +39,28 @@ class RoomTypeSelectFragment: Fragment() {
         val btCreate: ImageView = binding.btCreate
         val btSearch: ImageView = binding.btSearch
         val textName: TextView = binding.textName
+        val userIcon: ImageView = binding.userIcon
 
         // 名前の読み込み
         val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
         val name = sharedPref?.getString("name", "")
+        val icon = sharedPref?.getInt("icon", 0)
 
         textName.text = name
+        when (icon) {
+            1 -> {
+                userIcon.setImageResource(R.drawable.user01_normal)
+            }
+            2 -> {
+                userIcon.setImageResource(R.drawable.user02_normal)
+            }
+            3 -> {
+                userIcon.setImageResource(R.drawable.user03_normal)
+            }
+            else -> {
+                userIcon.setImageResource(R.drawable.user04_normal)
+            }
+        }
 
         btCreate.setOnClickListener {
             findNavController().navigate(R.id.navigation_room_create)
