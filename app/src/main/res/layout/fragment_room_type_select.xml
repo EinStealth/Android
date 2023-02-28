@@ -44,6 +44,18 @@
         app:layout_constraintEnd_toEndOf="@+id/user_info_background"
         android:textSize="24dp"/>
 
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="@+id/user_info_background"
+        app:layout_constraintStart_toStartOf="@+id/user_info_background"
+        app:layout_constraintEnd_toEndOf="@+id/user_info_background"
+        android:textSize="24dp"/>
+
     <ImageView
         android:id="@+id/bt_create"
         android:layout_width="wrap_content"

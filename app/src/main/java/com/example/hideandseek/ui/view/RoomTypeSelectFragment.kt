@@ -3,10 +3,12 @@ package com.example.hideandseek.ui.view
 import android.content.Context
 import android.media.Image
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.bundleOf
@@ -39,13 +41,15 @@ class RoomTypeSelectFragment: Fragment() {
         val btCreate: ImageView = binding.btCreate
         val btSearch: ImageView = binding.btSearch
         val textName: TextView = binding.textName
+        val editName: EditText = binding.editName
         val userIcon: ImageView = binding.userIcon
 
-        // 名前の読み込み
+        // 名前・アイコンの読み込み
         val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
         val name = sharedPref?.getString("name", "")
         val icon = sharedPref?.getInt("icon", 0)
 
+        // 名前・アイコンの設定
         textName.text = name
         when (icon) {
             1 -> {
@@ -60,6 +64,15 @@ class RoomTypeSelectFragment: Fragment() {
             else -> {
                 userIcon.setImageResource(R.drawable.user04_normal)
             }
+        }
+
+        // 名前の編集
+        textName.setOnClickListener {
+            findNavController().navigate(R.id.navigation_register_user_name)
+        }
+        // アイコンの編集
+        userIcon.setOnClickListener {
+            findNavController().navigate(R.id.navigation_register_user_icon)
         }
 
         btCreate.setOnClickListener {

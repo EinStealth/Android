@@ -32,16 +32,29 @@ class RegisterUserNameFragment: Fragment() {
         val btDecide: ImageView = binding.btDecide
         val editName: EditText = binding.editName
 
+        // 名前の読み込み
+        val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
+        val name = sharedPref?.getString("name", "")
+
+        // RoomTypeSelectFragmentから遷移してきた場合true
+        var isEdit = false
+        if (name != "") {
+            isEdit = true
+        }
+
         // 決定ボタンが押されたら名前を次のフラグメントに送る
         btDecide.setOnClickListener {
             // 名前の保存
-            val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
             with (sharedPref?.edit()) {
                 this?.putString("name", editName.text.toString())
                 this?.apply()
             }
 
-            findNavController().navigate(R.id.navigation_register_user_icon)
+            if (isEdit) {
+                findNavController().navigate(R.id.navigation_room_type_select)
+            } else {
+                findNavController().navigate(R.id.navigation_register_user_icon)
+            }
         }
 
         return root
