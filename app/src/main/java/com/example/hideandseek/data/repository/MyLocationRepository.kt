@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.Manifest
 import android.os.Looper
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -15,14 +16,9 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 interface MyLocationRepository {
-    val flowLatestLocation: Flow<Location>
-
     fun start()
 
     fun stop()
@@ -30,21 +26,11 @@ interface MyLocationRepository {
 
 class MyLocationRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val myInfoRepository: MyInfoRepository,
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ): MyLocationRepository {
     // 現在地を更新するためのコールバック
     private lateinit var locationCallback: LocationCallback
-
-    override val flowLatestLocation: Flow<Location> = flow {
-        while (true) {
-            val flowLatestLocation = latestLocation
-            if (flowLatestLocation != null) {
-                emit(flowLatestLocation)
-            }
-            delay(1000)
-        }
-    }
-    var latestLocation: Location? = null
 
     override fun start() {
         // permission check
@@ -64,7 +50,8 @@ class MyLocationRepositoryImpl @Inject constructor(
             .addOnSuccessListener { location: Location? ->
                 // Got last known location. In some rare situations this can be null
                 if (location != null) {
-                    latestLocation = location
+                    Log.d("MyLocation", location.toString())
+                    myInfoRepository.writeLocation(location)
                 }
             }
 
@@ -83,7 +70,8 @@ class MyLocationRepositoryImpl @Inject constructor(
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
                 for (location in locationResult.locations) {
-                    latestLocation = location
+                    Log.d("MyLocation", location.toString())
+                    myInfoRepository.writeLocation(location)
                 }
             }
         }
