@@ -9,11 +9,18 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.databinding.FragmentRegisterUserNameBinding
 import com.example.hideandseek.ui.viewmodel.RegisterUserNameFragmentViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class RegisterUserNameFragment: Fragment() {
     private var _binding: FragmentRegisterUserNameBinding? = null
     private val viewModel: RegisterUserNameFragmentViewModel by viewModels()
@@ -31,24 +38,23 @@ class RegisterUserNameFragment: Fragment() {
         // Viewの取得
         val btDecide: ImageView = binding.btDecide
         val editName: EditText = binding.editName
-
-        // 名前の読み込み
-        val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
-        val name = sharedPref?.getString("name", "")
-
-        // RoomTypeSelectFragmentから遷移してきた場合true
         var isEdit = false
-        if (name != "") {
-            isEdit = true
+
+        // 既に名前が保存されているか確認する
+        viewModel.readUserInfo()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    isEdit = it.isEdit
+                }
+            }
         }
 
         // 決定ボタンが押されたら名前を次のフラグメントに送る
         btDecide.setOnClickListener {
             // 名前の保存
-            with (sharedPref?.edit()) {
-                this?.putString("name", editName.text.toString())
-                this?.apply()
-            }
+            viewModel.writeUserName(editName.text.toString())
 
             if (isEdit) {
                 findNavController().navigate(R.id.navigation_room_type_select)
