@@ -3,6 +3,7 @@ package com.example.hideandseek.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.hideandseek.data.repository.LocationRepository
+import com.example.hideandseek.data.repository.MyInfoRepository
 import com.example.hideandseek.data.repository.MyLocationRepository
 import com.example.hideandseek.data.repository.TrapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,9 @@ class MainActivityViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-        myLocationRepository.start()
+        viewModelScope.launch {
+            myLocationRepository.start()
+        }
     }
 
     // Locationデータベースのデータを全消去
