@@ -7,9 +7,11 @@ import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.data.datasource.remote.PostData
 import com.example.hideandseek.data.repository.ApiRepository
+import com.example.hideandseek.data.repository.MyInfoRepository
 import com.example.hideandseek.data.repository.TrapRepository
 import com.example.hideandseek.domain.CalculateRelativeTimeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,24 +33,30 @@ data class BeTrappedUiState(
 class BeTrappedFragmentViewModel @Inject constructor(
     private val trapRepository: TrapRepository,
     private val apiRepository: ApiRepository,
-    private val calculateRelativeTimeUseCase: CalculateRelativeTimeUseCase,
+    private val myInfoRepository: MyInfoRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(BeTrappedUiState())
     val uiState: StateFlow<BeTrappedUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            calculateRelativeTimeUseCase().collect { userData ->
-                _uiState.update { mainUiState ->
-                    mainUiState.copy(latestUser = userData)
-                }
-            }
-        }
-        viewModelScope.launch {
             trapRepository.allTraps.collect { allTraps ->
                 _uiState.update { beTrappedUiState ->
                     beTrappedUiState.copy(allTrap = allTraps)
                 }
+            }
+        }
+        viewModelScope.launch {
+            while (true) {
+                val relativeTime = myInfoRepository.readRelativeTime()
+                val location = myInfoRepository.raedLocation() // List<latitude, longitude, altitude, speed>
+                val userData = UserData(0, relativeTime, location[0].toDouble(), location[1].toDouble(), location[2].toDouble())
+                if (_uiState.value.latestUser != userData) {
+                    _uiState.update { mainUiState ->
+                        mainUiState.copy(latestUser = userData)
+                    }
+                }
+                delay(100)
             }
         }
     }

@@ -11,6 +11,7 @@ import com.example.hideandseek.data.datasource.remote.PostData
 import com.example.hideandseek.data.repository.*
 import com.example.hideandseek.domain.CalculateRelativeTimeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,7 +34,7 @@ class MainFragmentViewModel @Inject constructor(
     private val trapRepository: TrapRepository,
     private val apiRepository: ApiRepository,
     private val mapRepository: MapRepository,
-    private val calculateRelativeTimeUseCase: CalculateRelativeTimeUseCase,
+    private val myInfoRepository: MyInfoRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
@@ -54,10 +55,16 @@ class MainFragmentViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            calculateRelativeTimeUseCase().collect { userData ->
-                _uiState.update { mainUiState ->
-                    mainUiState.copy(latestUser = userData)
+            while (true) {
+                val relativeTime = myInfoRepository.readRelativeTime()
+                val location = myInfoRepository.raedLocation() // List<latitude, longitude, altitude, speed>
+                val userData = UserData(0, relativeTime, location[0].toDouble(), location[1].toDouble(), location[2].toDouble())
+                if (_uiState.value.latestUser != userData) {
+                    _uiState.update { mainUiState ->
+                        mainUiState.copy(latestUser = userData)
+                    }
                 }
+                delay(100)
             }
         }
     }

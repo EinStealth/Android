@@ -5,8 +5,6 @@ import android.location.Location
 import javax.inject.Inject
 
 interface MyInfoRepository {
-    fun start()
-
     fun writeName(name: String)
 
     fun writeIcon(icon: Int)
@@ -27,10 +25,6 @@ interface MyInfoRepository {
 class MyInfoRepositoryImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ): MyInfoRepository {
-    override fun start() {
-        // TODO("Not yet implemented")
-    }
-
     override fun writeName(name: String) {
         with (sharedPreferences.edit()) {
             this?.putString("name", name)
