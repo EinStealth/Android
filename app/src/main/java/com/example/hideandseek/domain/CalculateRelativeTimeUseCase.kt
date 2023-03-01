@@ -7,6 +7,7 @@ import com.example.hideandseek.data.datasource.remote.PostData
 import com.example.hideandseek.data.datasource.remote.ResponseData
 import com.example.hideandseek.data.repository.ApiRepository
 import com.example.hideandseek.data.repository.LocationRepository
+import com.example.hideandseek.data.repository.MyInfoRepository
 import com.example.hideandseek.data.repository.MyLocationRepository
 import com.example.hideandseek.di.IODispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -24,40 +25,39 @@ interface CalculateRelativeTimeUseCase {
 }
 
 class CalculateRelativeTimeUseCaseImpl @Inject constructor(
-    private val myLocationRepository: MyLocationRepository,
+    private val myInfoRepository: MyInfoRepository,
     private val apiRepository: ApiRepository,
     private val locationRepository: LocationRepository,
     @IODispatcher private val ioDispatcher: CoroutineDispatcher
 ): CalculateRelativeTimeUseCase {
     override suspend operator fun invoke(): Flow<UserData> =
         withContext(ioDispatcher) {
-            myLocationRepository.start()
             val result = flow {
-                val location = myLocationRepository.flowLatestLocation
-                var relativeTime: LocalTime = LocalTime.now()
-                Log.d("UseCaseRelativeTimeInit", relativeTime.toString())
-                location.collect {
-                    Log.d("UseCaseRelativeTime", relativeTime.toString())
+                while (true) {
+                    val location = myInfoRepository.raedLocation() // List<latitude, longitude, altitude, speed>
+                    Log.d("CalculateRelative", location.toString())
+                    var relativeTime: LocalTime = LocalTime.now()
                     // ずれとを計算
-                    val gap = calculateGap(it)
+                    val gap = calculateGap(location[3])
                     // 相対時間を計算
                     relativeTime = calculateRelativeTime(relativeTime, gap)
                     // 10秒おきにAPI通信をする
                     if (relativeTime.second % 10 == 0) {
                         deleteAllLocation()
-                        postSpacetime(relativeTime, it)
+                        postSpacetime(relativeTime, location[0], location[1], location[2])
                         getSpacetime(relativeTime)
                     }
-                    emit(UserData(0, relativeTime.toString().substring(0, 8), it.latitude, it.longitude, it.altitude))
+                    emit(UserData(0, relativeTime.toString().substring(0, 8), location[0].toDouble(), location[1].toDouble(), location[2].toDouble()))
+                    kotlinx.coroutines.delay(1000)
                 }
             }
             result
         }
 
     // 特殊相対性理論によりずれを計算する
-    private fun calculateGap(location: Location): Long {
-        Log.d("GAP", "speed: ${location.speed}, calc: ${(1000000000 * (1 - sqrt(1 - (location.speed / 10).pow(2)))).roundToInt().toLong()}")
-        return (1000000000 * (1 - sqrt(1 - (location.speed / 10).pow(2)))).roundToInt().toLong()
+    private fun calculateGap(speed: Float): Long {
+        Log.d("GAP", "speed: ${speed}, calc: ${(1000000000 * (1 - sqrt(1 - (speed / 10).pow(2)))).roundToInt().toLong()}")
+        return (1000000000 * (1 - sqrt(1 - (speed / 10).pow(2)))).roundToInt().toLong()
     }
 
     private fun calculateRelativeTime(relativeTime: LocalTime, gap: Long): LocalTime {
@@ -72,9 +72,10 @@ class CalculateRelativeTimeUseCaseImpl @Inject constructor(
         }
     }
 
-    private suspend fun postSpacetime(relativeTime: LocalTime, location: Location) {
+    private suspend fun postSpacetime(relativeTime: LocalTime, latitude: Float, longitude: Float, altitude: Float) {
         try {
-            val request = PostData.PostSpacetime(relativeTime.toString().substring(0, 8), location.latitude, location.longitude, location.altitude, 0)
+            val request = PostData.PostSpacetime(relativeTime.toString().substring(0, 8),
+                latitude.toDouble(), longitude.toDouble(), altitude.toDouble(), 0)
             val response = apiRepository.postSpacetime(request)
             if (response.isSuccessful) {
                 Log.d("POST_TEST", "${response}\n${response.body()}")

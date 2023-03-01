@@ -11,11 +11,15 @@ interface MyInfoRepository {
 
     fun writeIcon(icon: Int)
 
+    fun writeLocation(location: Location)
+
+    fun writeRelativeTime(relativeTime: String)
+
     fun readName(): String
 
     fun readIcon(): Int
 
-    fun raedLocation()
+    fun raedLocation(): List<Float>
 
     fun readRelativeTime(): String
 }
@@ -41,23 +45,41 @@ class MyInfoRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun writeLocation(location: Location) {
+        with (sharedPreferences.edit()) {
+            this?.putFloat("latitude", location.latitude.toFloat())
+            this?.putFloat("longitude", location.longitude.toFloat())
+            this?.putFloat("altitude", location.altitude.toFloat())
+            this?.putFloat("speed", location.speed)
+            this?.apply()
+        }
+    }
+
+    override fun writeRelativeTime(relativeTime: String) {
+        with (sharedPreferences.edit()) {
+            this?.putString("relativeTime", relativeTime)
+            this?.apply()
+        }
+    }
+
     override fun readName(): String {
-        val name = sharedPreferences.getString("name", "")
-        return name.toString()
+        return sharedPreferences.getString("name", "").toString()
     }
 
     override fun readIcon(): Int {
         return sharedPreferences.getInt("icon", 0)
     }
 
-    override fun raedLocation() {
-        // TODO("Not yet implemented")
-        return
+    override fun raedLocation(): List<Float> {
+        val latitude = sharedPreferences.getFloat("latitude", 0f)
+        val longitude = sharedPreferences.getFloat("longitude", 0f)
+        val altitude = sharedPreferences.getFloat("altitude", 0f)
+        val speed = sharedPreferences.getFloat("speed", 0f)
+        return listOf(latitude, longitude, altitude, speed)
     }
 
     override fun readRelativeTime(): String {
-        // TODO("Not yet implemented")
-        return ""
+        return sharedPreferences.getString("relativeTime", "").toString()
     }
 
 }
