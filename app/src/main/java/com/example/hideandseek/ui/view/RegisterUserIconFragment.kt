@@ -12,11 +12,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.databinding.FragmentRegisterUserIconBinding
+import com.example.hideandseek.ui.viewmodel.RegisterUserIconFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RegisterUserNameFragmentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RegisterUserIconFragment: Fragment() {
     private var _binding: FragmentRegisterUserIconBinding? = null
-    private val viewModel: RegisterUserNameFragmentViewModel by viewModels()
+    private val viewModel: RegisterUserIconFragmentViewModel by viewModels()
 
     private val binding get() = _binding!!
 
@@ -37,38 +40,22 @@ class RegisterUserIconFragment: Fragment() {
         // characterが選択されたときの処理
         character01.setOnClickListener {
             // アイコンの保存
-            val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
-            with (sharedPref?.edit()) {
-                this?.putInt("icon", 1)
-                this?.apply()
-            }
+            viewModel.writeUserIcon(1)
             findNavController().navigate(R.id.navigation_room_type_select)
         }
         character02.setOnClickListener {
             // アイコンの保存
-            val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
-            with (sharedPref?.edit()) {
-                this?.putInt("icon", 2)
-                this?.apply()
-            }
+            viewModel.writeUserIcon(2)
             findNavController().navigate(R.id.navigation_room_type_select)
         }
         character03.setOnClickListener {
             // アイコンの保存
-            val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
-            with (sharedPref?.edit()) {
-                this?.putInt("icon", 3)
-                this?.apply()
-            }
+            viewModel.writeUserIcon(3)
             findNavController().navigate(R.id.navigation_room_type_select)
         }
         character04.setOnClickListener {
             // アイコンの保存
-            val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
-            with (sharedPref?.edit()) {
-                this?.putInt("icon", 4)
-                this?.apply()
-            }
+            viewModel.writeUserIcon(4)
             findNavController().navigate(R.id.navigation_room_type_select)
         }
 

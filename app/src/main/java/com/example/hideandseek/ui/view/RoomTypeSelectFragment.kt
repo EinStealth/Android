@@ -16,11 +16,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.databinding.FragmentRoomTypeSelectBinding
 import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RoomTypeSelectFragment: Fragment() {
@@ -45,24 +50,28 @@ class RoomTypeSelectFragment: Fragment() {
         val userIcon: ImageView = binding.userIcon
 
         // 名前・アイコンの読み込み
-        val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
-        val name = sharedPref?.getString("name", "")
-        val icon = sharedPref?.getInt("icon", 0)
+        viewModel.readUserInfo()
 
         // 名前・アイコンの設定
-        textName.text = name
-        when (icon) {
-            1 -> {
-                userIcon.setImageResource(R.drawable.user01_normal)
-            }
-            2 -> {
-                userIcon.setImageResource(R.drawable.user02_normal)
-            }
-            3 -> {
-                userIcon.setImageResource(R.drawable.user03_normal)
-            }
-            else -> {
-                userIcon.setImageResource(R.drawable.user04_normal)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect {
+                    textName.text = it.userName
+                    when (it.userIcon) {
+                        1 -> {
+                            userIcon.setImageResource(R.drawable.user01_normal)
+                        }
+                        2 -> {
+                            userIcon.setImageResource(R.drawable.user02_normal)
+                        }
+                        3 -> {
+                            userIcon.setImageResource(R.drawable.user03_normal)
+                        }
+                        else -> {
+                            userIcon.setImageResource(R.drawable.user04_normal)
+                        }
+                    }
+                }
             }
         }
 
