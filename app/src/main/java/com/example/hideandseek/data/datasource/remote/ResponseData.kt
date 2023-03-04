@@ -17,4 +17,9 @@ class ResponseData {
         @Json(name = "Altitude") val Altitude: Double,
         @Json(name = "ObjId") val ObjId: Int,
     )
+
+    data class ResponseGetRoom(
+        @Json(name = "SecretWords") val SecretWords: String,
+        @Json(name = "IsStart") val IsStart: Int,
+    )
 }

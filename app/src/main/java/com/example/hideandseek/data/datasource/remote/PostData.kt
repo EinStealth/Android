@@ -10,4 +10,9 @@ class PostData {
         @Json(name = "altitude") val altitude: Double,
         @Json(name = "obj_id") var objId: Int,
     )
+
+    data class PostRoom(
+        @Json(name = "secret_words") val secret_words: String,
+        @Json(name = "is_start") val is_start: Int,
+    )
 }

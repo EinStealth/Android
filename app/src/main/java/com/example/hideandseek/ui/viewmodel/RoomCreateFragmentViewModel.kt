@@ -1,8 +1,9 @@
 package com.example.hideandseek.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.hideandseek.data.datasource.local.RoomData
+import com.example.hideandseek.data.datasource.remote.PostData
 import com.example.hideandseek.data.repository.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,32 +13,24 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class RoomCreateUiState(
-    val allRoom: List<RoomData> = listOf(),
-)
-
 @HiltViewModel
 class RoomCreateFragmentViewModel @Inject constructor(
-    private val roomRepository: RoomRepository,
+    private val apiRepository: ApiRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(RoomCreateUiState())
-    val uiState: StateFlow<RoomCreateUiState> = _uiState.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-            roomRepository.allRoom.collect { allRoom ->
-                _uiState.update { roomCreateUiState ->
-                    roomCreateUiState.copy(allRoom = allRoom)
-                }
-            }
-        }
-    }
-
     fun postRoom(secretWords: String) {
-        // TODO:　同じ合言葉の部屋が無いか確認する
         viewModelScope.launch {
-            val room = RoomData(0, secretWords, false)
-            roomRepository.insert(room)
+            try {
+                val request = PostData.PostRoom(secretWords, 0)
+                Log.d("POST_TEST_ROOM", request.toString())
+                val response = apiRepository.postRoom(request)
+                if (response.isSuccessful) {
+                    Log.d("POST_TEST_ROOM", "${response}\n${response.body()}")
+                } else {
+                    Log.d("POST_TEST_ROOM", "$response")
+                }
+            } catch (e: java.lang.Exception) {
+                Log.d("POST_TEST_ROOM", "$e")
+            }
         }
     }
 }

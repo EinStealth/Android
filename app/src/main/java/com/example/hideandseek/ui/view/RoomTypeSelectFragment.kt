@@ -84,6 +84,7 @@ class RoomTypeSelectFragment: Fragment() {
             findNavController().navigate(R.id.navigation_register_user_icon)
         }
 
+        // 部屋の作成
         btCreate.setOnClickListener {
             findNavController().navigate(R.id.navigation_room_create)
         }
