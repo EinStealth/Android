@@ -13,10 +13,27 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class RoomCreateUiState(
+    val userName: String = "",
+    val userIcon: Int = 0,
+)
+
 @HiltViewModel
 class RoomCreateFragmentViewModel @Inject constructor(
     private val apiRepository: ApiRepository,
+    private val myInfoRepository: MyInfoRepository,
 ) : ViewModel() {
+    private val _uiState = MutableStateFlow(RoomCreateUiState())
+    val uiState: StateFlow<RoomCreateUiState> = _uiState.asStateFlow()
+    fun readUserInfo() {
+        val name = myInfoRepository.readName()
+        val icon = myInfoRepository.readIcon()
+        viewModelScope.launch {
+            _uiState.update { roomTypeSelectUiState ->
+                roomTypeSelectUiState.copy(userName = name, userIcon = icon)
+            }
+        }
+    }
     fun postRoom(secretWords: String) {
         viewModelScope.launch {
             try {
@@ -30,6 +47,23 @@ class RoomCreateFragmentViewModel @Inject constructor(
                 }
             } catch (e: java.lang.Exception) {
                 Log.d("POST_TEST_ROOM", "$e")
+            }
+        }
+    }
+
+    fun postPlayer(secretWords: String, name: String, icon: Int) {
+        viewModelScope.launch {
+            try {
+                val request = PostData.PostPlayer(secretWords, name, icon, 0)
+                Log.d("POST_TEST_PLAYER", request.toString())
+                val response = apiRepository.postPlayer(request)
+                if (response.isSuccessful) {
+                    Log.d("POST_TEST_PLAYER", "${response}\n${response.body()}")
+                } else {
+                    Log.d("POST_TEST_PLAYER", "$response")
+                }
+            } catch (e: java.lang.Exception) {
+                Log.d("POST_TEST_PLAYER", "$e")
             }
         }
     }

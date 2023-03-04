@@ -15,4 +15,11 @@ class PostData {
         @Json(name = "secret_words") val secret_words: String,
         @Json(name = "is_start") val is_start: Int,
     )
+
+    data class PostPlayer(
+        @Json(name = "secret_words") val secret_words: String,
+        @Json(name = "name") val name: String,
+        @Json(name = "icon") val icon: Int,
+        @Json(name = "status") val status: Int,
+    )
 }
