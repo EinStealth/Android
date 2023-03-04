@@ -22,4 +22,11 @@ class ResponseData {
         @Json(name = "SecretWords") val SecretWords: String,
         @Json(name = "IsStart") val IsStart: Int,
     )
+
+    data class ResponseGetPlayer(
+        @Json(name = "secret_words") val secret_words: String,
+        @Json(name = "name") val name: String,
+        @Json(name = "icon") val icon: Int,
+        @Json(name = "status") val status: Int,
+    )
 }

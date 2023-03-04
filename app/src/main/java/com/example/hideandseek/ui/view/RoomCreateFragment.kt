@@ -11,11 +11,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.databinding.FragmentRoomCreateBinding
 import com.example.hideandseek.ui.viewmodel.RoomCreateFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RoomCreateFragment: Fragment() {
@@ -35,16 +40,19 @@ class RoomCreateFragment: Fragment() {
         // Viewの取得
         val btCreate: ImageView = binding.btCreate
         val editSecretWord: EditText = binding.editSecretWord
-        var userName = "a"
-        val userIcon = 0
 
-        setFragmentResultListener("UserRegisterFragmentName") { _, bundle ->
-            val result = bundle.getString("name")
-            userName = result.toString()
-        }
+        // 名前・アイコンの読み込み
+        viewModel.readUserInfo()
 
         btCreate.setOnClickListener {
             viewModel.postRoom(editSecretWord.text.toString())
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.uiState.collect {
+                        viewModel.postPlayer(editSecretWord.text.toString(), it.userName, it.userIcon)
+                    }
+                }
+            }
             setFragmentResult("RoomCreateFragment", bundleOf("secretWord" to editSecretWord.text.toString()))
             findNavController().navigate(R.id.navigation_stand_by_room)
         }

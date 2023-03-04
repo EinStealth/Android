@@ -14,6 +14,10 @@ interface ApiRepository {
 
     suspend fun postStatus(id: Int, status: Int): Response<ResponseData.ResponsePost>
 
+    suspend fun getPlayer(secretWords: String): Response<List<ResponseData.ResponseGetPlayer>>
+
+    suspend fun postPlayer(request: PostData.PostPlayer): Response<ResponseData.ResponsePost>
+
     suspend fun getSpacetime(time: String): Response<List<ResponseData.ResponseGetSpacetime>>
 
     suspend fun postSpacetime(request: PostData.PostSpacetime): Response<ResponseData.ResponsePost>
@@ -35,6 +39,16 @@ class ApiRepositoryImpl @Inject constructor(
     override suspend fun postStatus(id: Int, status: Int): Response<ResponseData.ResponsePost> =
         withContext(ioDispatcher) {
             restApiService.postStatus(id, status)
+        }
+
+    override suspend fun getPlayer(secretWords: String): Response<List<ResponseData.ResponseGetPlayer>> =
+        withContext(ioDispatcher) {
+            restApiService.getPlayer(secretWords)
+        }
+
+    override suspend fun postPlayer(request: PostData.PostPlayer): Response<ResponseData.ResponsePost> =
+        withContext(ioDispatcher) {
+            restApiService.postPlayer(request)
         }
 
     override suspend fun getSpacetime(time: String): Response<List<ResponseData.ResponseGetSpacetime>> =
