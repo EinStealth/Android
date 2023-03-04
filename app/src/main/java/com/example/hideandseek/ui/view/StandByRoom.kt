@@ -44,14 +44,6 @@ class StandByRoom: Fragment() {
             textSecretWord.text = "合言葉: $result"
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    Log.d("RoomDatabase", it.allRoom.toString())
-                }
-            }
-        }
-
         btStart.setOnClickListener {
             findNavController().navigate(R.id.navigation_main)
         }

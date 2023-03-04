@@ -14,9 +14,15 @@ interface RestApi {
     @POST("api/v1/players/{id}/status/{status}")
     suspend fun postStatus(@Path("id") id: Int, @Path("status") status: Int): Response<ResponseData.ResponsePost>
 
-    @GET("api/v1/spacetimes")
+    @GET("api/v1/locations")
     suspend fun getSpacetime(@Query("time") time: String): Response<List<ResponseData.ResponseGetSpacetime>>
 
-    @POST("api/v1/spacetimes")
+    @POST("api/v1/locations")
     suspend fun postSpacetime(@Body request: PostData.PostSpacetime): Response<ResponseData.ResponsePost>
+
+    @GET("api/v1/rooms")
+    suspend fun getRoom(@Query("secret_words") secret_words: String): Response<List<ResponseData.ResponseGetRoom>>
+
+    @POST("api/v1/rooms")
+    suspend fun postRoom(@Body request: PostData.PostRoom): Response<ResponseData.ResponsePost>
 }
