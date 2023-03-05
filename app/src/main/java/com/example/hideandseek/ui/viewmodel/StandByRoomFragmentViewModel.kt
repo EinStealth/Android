@@ -24,11 +24,13 @@ data class StandByRoomUiState (
 @HiltViewModel
 class StandByRoomFragmentViewModel @Inject constructor(
     private val apiRepository: ApiRepository,
+    private val myInfoRepository: MyInfoRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(StandByRoomUiState())
     val uiState: StateFlow<StandByRoomUiState> = _uiState.asStateFlow()
 
     init {
+        setSecretWords()
         viewModelScope.launch {
             while (true) {
                 getPlayer(uiState.value.secretWords)
@@ -37,10 +39,14 @@ class StandByRoomFragmentViewModel @Inject constructor(
         }
     }
 
-    fun setSecretWords(secretWords: String) {
+    private fun readSecretWords(): String {
+        return myInfoRepository.readSecretWords()
+    }
+
+    private fun setSecretWords() {
         viewModelScope.launch {
             _uiState.update { standByRoomUiState ->
-                standByRoomUiState.copy(secretWords = secretWords)
+                standByRoomUiState.copy(secretWords = readSecretWords())
             }
         }
     }
