@@ -34,6 +34,7 @@ class RoomCreateFragmentViewModel @Inject constructor(
             }
         }
     }
+
     fun postRoom(secretWords: String) {
         viewModelScope.launch {
             try {
