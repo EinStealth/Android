@@ -18,6 +18,8 @@ import com.example.hideandseek.R
 import com.example.hideandseek.databinding.FragmentStandByRoomBinding
 import com.example.hideandseek.ui.viewmodel.StandByRoomFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -38,10 +40,56 @@ class StandByRoom: Fragment() {
         // Viewの取得
         val btStart: ImageView = binding.btStart
         val textSecretWord: TextView = binding.textSecretWord
+        val user1Icon: ImageView = binding.user1Icon
+        val user1Name: TextView = binding.user1Name
+        val user2Icon: ImageView = binding.user2Icon
+        val user2Name: TextView = binding.user2Name
+        val user3Icon: ImageView = binding.user3Icon
+        val user3Name: TextView = binding.user3Name
+        val user4Icon: ImageView = binding.user4Icon
+        val user4Name: TextView = binding.user4Name
+
 
         setFragmentResultListener("RoomCreateFragment") { _, bundle ->
             val result = bundle.getString("secretWord")
             textSecretWord.text = "合言葉: $result"
+            viewModel.setSecretWords(result.toString())
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { standByRoomUiState ->
+                    val allPlayer = standByRoomUiState.allPlayer
+                    if (allPlayer.isNotEmpty()) {
+                        for (i in allPlayer.indices) {
+                            if (i == 0) {
+                                user1Icon.setImageResource(selectDrawable(allPlayer[i].icon))
+                                user1Name.text = allPlayer[i].name
+                                user1Icon.visibility = View.VISIBLE
+                                user1Name.visibility = View.VISIBLE
+                            }
+                            if (i == 1) {
+                                user2Icon.setImageResource(selectDrawable(allPlayer[i].icon))
+                                user2Name.text = allPlayer[i].name
+                                user2Icon.visibility = View.VISIBLE
+                                user2Name.visibility = View.VISIBLE
+                            }
+                            if (i == 2) {
+                                user3Icon.setImageResource(selectDrawable(allPlayer[i].icon))
+                                user3Name.text = allPlayer[i].name
+                                user3Icon.visibility = View.VISIBLE
+                                user3Name.visibility = View.VISIBLE
+                            }
+                            if (i == 3) {
+                                user4Icon.setImageResource(selectDrawable(allPlayer[i].icon))
+                                user4Name.text = allPlayer[i].name
+                                user4Icon.visibility = View.VISIBLE
+                                user4Name.visibility = View.VISIBLE
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         btStart.setOnClickListener {
@@ -49,5 +97,22 @@ class StandByRoom: Fragment() {
         }
 
         return root
+    }
+
+    fun selectDrawable(icon: Int): Int {
+        return when (icon) {
+            1 -> {
+                R.drawable.user01_normal
+            }
+            2 -> {
+                R.drawable.user02_normal
+            }
+            3 -> {
+                R.drawable.user03_normal
+            }
+            else -> {
+                R.drawable.user04_normal
+            }
+        }
     }
 }
