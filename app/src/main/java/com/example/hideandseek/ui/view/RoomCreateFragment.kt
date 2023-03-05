@@ -45,10 +45,12 @@ class RoomCreateFragment: Fragment() {
         viewModel.readUserInfo()
 
         btCreate.setOnClickListener {
+            // 部屋の作成
             viewModel.postRoom(editSecretWord.text.toString())
             viewLifecycleOwner.lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     viewModel.uiState.collect {
+                        // player情報のpost
                         viewModel.postPlayer(editSecretWord.text.toString(), it.userName, it.userIcon)
                     }
                 }
