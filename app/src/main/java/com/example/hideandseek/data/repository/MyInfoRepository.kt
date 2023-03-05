@@ -13,6 +13,8 @@ interface MyInfoRepository {
 
     fun writeRelativeTime(relativeTime: String)
 
+    fun writeSecretWords(secretWords: String)
+
     fun readName(): String
 
     fun readIcon(): Int
@@ -20,6 +22,8 @@ interface MyInfoRepository {
     fun raedLocation(): List<Float>
 
     fun readRelativeTime(): String
+
+    fun readSecretWords(): String
 }
 
 class MyInfoRepositoryImpl @Inject constructor(
@@ -56,6 +60,13 @@ class MyInfoRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun writeSecretWords(secretWords: String) {
+        with (sharedPreferences.edit()) {
+            this?.putString("secretWords", secretWords)
+            this?.apply()
+        }
+    }
+
     override fun readName(): String {
         return sharedPreferences.getString("name", "").toString()
     }
@@ -74,6 +85,10 @@ class MyInfoRepositoryImpl @Inject constructor(
 
     override fun readRelativeTime(): String {
         return sharedPreferences.getString("relativeTime", "").toString()
+    }
+
+    override fun readSecretWords(): String {
+        return sharedPreferences.getString("secretWords", "").toString()
     }
 
 }

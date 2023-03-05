@@ -53,7 +53,8 @@ class RoomCreateFragment: Fragment() {
                     }
                 }
             }
-            setFragmentResult("RoomCreateFragment", bundleOf("secretWord" to editSecretWord.text.toString()))
+            // secret_wordsの保存
+            viewModel.writeSecretWords(editSecretWord.text.toString())
             findNavController().navigate(R.id.navigation_stand_by_room)
         }
 

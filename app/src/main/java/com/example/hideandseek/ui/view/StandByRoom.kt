@@ -49,16 +49,10 @@ class StandByRoom: Fragment() {
         val user4Icon: ImageView = binding.user4Icon
         val user4Name: TextView = binding.user4Name
 
-
-        setFragmentResultListener("RoomCreateFragment") { _, bundle ->
-            val result = bundle.getString("secretWord")
-            textSecretWord.text = "合言葉: $result"
-            viewModel.setSecretWords(result.toString())
-        }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { standByRoomUiState ->
+                    textSecretWord.text = standByRoomUiState.secretWords
                     val allPlayer = standByRoomUiState.allPlayer
                     if (allPlayer.isNotEmpty()) {
                         for (i in allPlayer.indices) {
@@ -99,7 +93,7 @@ class StandByRoom: Fragment() {
         return root
     }
 
-    fun selectDrawable(icon: Int): Int {
+    private fun selectDrawable(icon: Int): Int {
         return when (icon) {
             1 -> {
                 R.drawable.user01_normal
