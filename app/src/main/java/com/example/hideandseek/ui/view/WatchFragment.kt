@@ -63,7 +63,7 @@ class WatchFragment(
                         if (allLocation.isNotEmpty()) {
                             // ユーザーの位置情報
                             for (i in allLocation.indices) {
-                                if (allLocation[i].objId == 1) {
+                                if (allLocation[i].status == 1) {
                                     viewModel.postTrapRoom(1, latestUser)
                                 }
                             }

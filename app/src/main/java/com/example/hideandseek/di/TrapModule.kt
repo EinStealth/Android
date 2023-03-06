@@ -22,7 +22,7 @@ object TrapModule {
         return Room.databaseBuilder(
             context,
             TrapRoomDatabase::class.java,
-            "trap_db"
+            "trap_db1"
         ).build()
     }
 

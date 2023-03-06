@@ -57,7 +57,6 @@ class MyLocationRepositoryImpl @Inject constructor(
             return
         }
 
-        var secretWords: String = ""
         var relativeTime: LocalTime = LocalTime.now()
 
         // 直近の位置情報を取得
@@ -76,7 +75,7 @@ class MyLocationRepositoryImpl @Inject constructor(
                     if (relativeTime.second % 10 == 0) {
                         coroutineScope.launch {
                             withContext(ioDispatcher) {
-                                secretWords = myInfoRepository.readSecretWords()
+                                val secretWords = myInfoRepository.readSecretWords()
                                 deleteAllLocation()
                                 postLocation(secretWords, relativeTime, location)
                                 getLocation(secretWords, relativeTime)
@@ -112,7 +111,7 @@ class MyLocationRepositoryImpl @Inject constructor(
                     if (relativeTime.second % 10 == 0) {
                         coroutineScope.launch {
                             withContext(ioDispatcher) {
-                                secretWords = myInfoRepository.readSecretWords()
+                                val secretWords = myInfoRepository.readSecretWords()
                                 deleteAllLocation()
                                 postLocation(secretWords, relativeTime, location)
                                 getLocation(secretWords, relativeTime)
@@ -148,7 +147,7 @@ class MyLocationRepositoryImpl @Inject constructor(
     private suspend fun insertLocationAll(relativeTime: LocalTime, response: List<ResponseData.ResponseGetLocation>) {
         for (i in response.indices) {
             val user =
-                com.example.hideandseek.data.datasource.local.LocationData(0, relativeTime.toString().substring(0, 8), response[i].latitude, response[i].longitude, 0.0, response[i].status)
+                com.example.hideandseek.data.datasource.local.LocationData(0, relativeTime.toString().substring(0, 8), response[i].latitude, response[i].longitude, response[i].status)
             locationRepository.insert(user)
         }
     }

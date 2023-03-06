@@ -1,8 +1,6 @@
 package com.example.hideandseek.ui.view
 
-import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -153,10 +151,10 @@ class MainFragment(
                         if (allLocation.isNotEmpty()) {
                             // ユーザーの位置情報
                             for (i in allLocation.indices) {
-                                when (allLocation[i].objId) {
+                                when (allLocation[i].status) {
                                     1 -> {
                                         // 他人の罠をRoomにinsert
-                                        val trap = TrapData(0, allLocation[i].latitude, allLocation[i].longitude, allLocation[i].altitude, 1)
+                                        val trap = TrapData(0, allLocation[i].latitude, allLocation[i].longitude, 1)
                                         viewModel.postOthersTrap(trap)
                                         viewModel.deleteLocation(allLocation[i])
                                     }

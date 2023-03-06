@@ -22,7 +22,7 @@ object LocationModule {
         return Room.databaseBuilder(
             context,
             LocationRoomDatabase::class.java,
-            "location_db"
+            "location_db1"
         ).build()
     }
 
