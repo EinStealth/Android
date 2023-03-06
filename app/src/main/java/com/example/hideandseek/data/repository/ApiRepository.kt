@@ -22,6 +22,8 @@ interface ApiRepository {
 
     suspend fun postSpacetime(request: PostData.PostSpacetime): Response<ResponseData.ResponsePost>
 
+    suspend fun postRoomIsStart(secretWords: String, isStart: Int): Response<ResponseData.ResponsePost>
+
     suspend fun getRoom(secretWords: String): Response<List<ResponseData.ResponseGetRoom>>
 
     suspend fun postRoom(request: PostData.PostRoom): Response<ResponseData.ResponsePost>
@@ -59,6 +61,11 @@ class ApiRepositoryImpl @Inject constructor(
     override suspend fun postSpacetime(request: PostData.PostSpacetime): Response<ResponseData.ResponsePost> =
         withContext(ioDispatcher) {
             restApiService.postSpacetime(request)
+        }
+
+    override suspend fun postRoomIsStart(secretWords: String, isStart: Int): Response<ResponseData.ResponsePost> =
+        withContext(ioDispatcher) {
+            restApiService.postRoomIsStart(secretWords, isStart)
         }
 
     override suspend fun getRoom(secretWords: String): Response<List<ResponseData.ResponseGetRoom>> =

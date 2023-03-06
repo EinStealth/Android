@@ -89,7 +89,7 @@ class RoomTypeSelectFragment: Fragment() {
             findNavController().navigate(R.id.navigation_room_create)
         }
         btSearch.setOnClickListener {
-            // TODO: 部屋のリストを表示する画面に移動
+            findNavController().navigate(R.id.navigation_room_search)
         }
 
         return root

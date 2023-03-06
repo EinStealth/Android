@@ -54,6 +54,12 @@
         tools:layout="@layout/fragment_room_create"/>
 
     <fragment
+        android:id="@+id/navigation_room_search"
+        android:name="com.example.hideandseek.ui.view.RoomSearchFragment"
+        android:label="RoomSearch"
+        tools:layout="@layout/fragment_room_search"/>
+
+    <fragment
         android:id="@+id/navigation_stand_by_room"
         android:name="com.example.hideandseek.ui.view.StandByRoom"
         android:label="StandByRoom"
