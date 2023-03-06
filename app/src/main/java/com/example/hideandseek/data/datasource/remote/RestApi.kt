@@ -11,8 +11,8 @@ interface RestApi {
     @GET("ping")
     suspend fun getTest(): Response<ResponseData.ResponseGetTest>
 
-    @POST("api/v1/players/{id}/status/{status}")
-    suspend fun postStatus(@Path("id") id: Int, @Path("status") status: Int): Response<ResponseData.ResponsePost>
+    @POST("api/v1/players/{name}/status/{status}")
+    suspend fun postPlayerStatus(@Path("name") name: String, @Path("status") status: Int): Response<ResponseData.ResponsePost>
 
     @GET("api/v1/players")
     suspend fun getPlayer(@Query("secret_words") secret_words: String): Response<List<ResponseData.ResponseGetPlayer>>
@@ -21,10 +21,10 @@ interface RestApi {
     suspend fun postPlayer(@Body request: PostData.PostPlayer): Response<ResponseData.ResponsePost>
 
     @GET("api/v1/locations")
-    suspend fun getSpacetime(@Query("time") time: String): Response<List<ResponseData.ResponseGetSpacetime>>
+    suspend fun getLocation(@Query("secret_words") secret_words: String, @Query("relative_time") relative_time: String): Response<List<ResponseData.ResponseGetLocation>>
 
     @POST("api/v1/locations")
-    suspend fun postSpacetime(@Body request: PostData.PostSpacetime): Response<ResponseData.ResponsePost>
+    suspend fun postLocation(@Body request: PostData.PostLocation): Response<ResponseData.ResponsePost>
 
     @POST("api/v1/rooms/{secret_words}/is_start/{is_start}")
     suspend fun postRoomIsStart(@Path("secret_words") secret_words: String, @Path("is_start") is_start: Int): Response<ResponseData.ResponsePost>

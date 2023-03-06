@@ -91,6 +91,7 @@ class StandByRoom: Fragment() {
         }
 
         btStart.setOnClickListener {
+            findNavController().navigate(R.id.navigation_main)
             viewModel.updateIsStart()
         }
 

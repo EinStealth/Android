@@ -11,7 +11,6 @@ import com.example.hideandseek.data.repository.LocationRepository
 import com.example.hideandseek.data.repository.MapRepository
 import com.example.hideandseek.data.repository.MyInfoRepository
 import com.example.hideandseek.data.repository.TrapRepository
-import com.example.hideandseek.domain.CalculateRelativeTimeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
