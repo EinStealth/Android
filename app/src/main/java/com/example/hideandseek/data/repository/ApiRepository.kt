@@ -12,15 +12,15 @@ import javax.inject.Inject
 interface ApiRepository {
     suspend fun getTest(): Response<ResponseData.ResponseGetTest>
 
-    suspend fun postStatus(id: Int, status: Int): Response<ResponseData.ResponsePost>
+    suspend fun postPlayerStatus(name: String, status: Int): Response<ResponseData.ResponsePost>
 
     suspend fun getPlayer(secretWords: String): Response<List<ResponseData.ResponseGetPlayer>>
 
     suspend fun postPlayer(request: PostData.PostPlayer): Response<ResponseData.ResponsePost>
 
-    suspend fun getSpacetime(time: String): Response<List<ResponseData.ResponseGetSpacetime>>
+    suspend fun getLocation(secretWords: String, relativeTime: String): Response<List<ResponseData.ResponseGetLocation>>
 
-    suspend fun postSpacetime(request: PostData.PostSpacetime): Response<ResponseData.ResponsePost>
+    suspend fun postLocation(request: PostData.PostLocation): Response<ResponseData.ResponsePost>
 
     suspend fun postRoomIsStart(secretWords: String, isStart: Int): Response<ResponseData.ResponsePost>
 
@@ -38,9 +38,9 @@ class ApiRepositoryImpl @Inject constructor(
             restApiService.getTest()
         }
 
-    override suspend fun postStatus(id: Int, status: Int): Response<ResponseData.ResponsePost> =
+    override suspend fun postPlayerStatus(name: String, status: Int): Response<ResponseData.ResponsePost> =
         withContext(ioDispatcher) {
-            restApiService.postStatus(id, status)
+            restApiService.postPlayerStatus(name, status)
         }
 
     override suspend fun getPlayer(secretWords: String): Response<List<ResponseData.ResponseGetPlayer>> =
@@ -53,14 +53,14 @@ class ApiRepositoryImpl @Inject constructor(
             restApiService.postPlayer(request)
         }
 
-    override suspend fun getSpacetime(time: String): Response<List<ResponseData.ResponseGetSpacetime>> =
+    override suspend fun getLocation(secretWords: String, relativeTime: String): Response<List<ResponseData.ResponseGetLocation>> =
         withContext(ioDispatcher) {
-            restApiService.getSpacetime(time)
+            restApiService.getLocation(secretWords, relativeTime)
         }
 
-    override suspend fun postSpacetime(request: PostData.PostSpacetime): Response<ResponseData.ResponsePost> =
+    override suspend fun postLocation(request: PostData.PostLocation): Response<ResponseData.ResponsePost> =
         withContext(ioDispatcher) {
-            restApiService.postSpacetime(request)
+            restApiService.postLocation(request)
         }
 
     override suspend fun postRoomIsStart(secretWords: String, isStart: Int): Response<ResponseData.ResponsePost> =

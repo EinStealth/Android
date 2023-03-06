@@ -11,11 +11,12 @@ class ResponseData {
         @Json(name = "message") val message: String,
     )
 
-    data class ResponseGetSpacetime(
-        @Json(name = "Latitude") val Latitude: Double,
-        @Json(name = "Longtitude") val Longtitude: Double,
-        @Json(name = "Altitude") val Altitude: Double,
-        @Json(name = "ObjId") val ObjId: Int,
+    data class ResponseGetLocation(
+        @Json(name = "secret_words") val secret_words: String,
+        @Json(name = "relative_time") val relative_time: String,
+        @Json(name = "latitude") val latitude: Double,
+        @Json(name = "longitude") val longitude: Double,
+        @Json(name = "status") var status: Int,
     )
 
     data class ResponseGetRoom(

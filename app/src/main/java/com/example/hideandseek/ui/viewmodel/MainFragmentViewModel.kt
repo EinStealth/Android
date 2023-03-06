@@ -9,7 +9,6 @@ import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.data.datasource.remote.PostData
 import com.example.hideandseek.data.repository.*
-import com.example.hideandseek.domain.CalculateRelativeTimeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -185,12 +184,12 @@ class MainFragmentViewModel @Inject constructor(
     fun postTrapSpacetime(type: String, latestUser: UserData) {
         viewModelScope.launch {
             try {
-                val request = PostData.PostSpacetime(latestUser.relativeTime.substring(0, 7) + "0", latestUser.latitude, latestUser.longitude, latestUser.altitude, 1)
+                val request = PostData.PostLocation("", latestUser.relativeTime.substring(0, 7) + "0", latestUser.latitude, latestUser.longitude, 1)
                 if (type == "delete") {
-                    request.objId = -1
+                    request.status = -1
                 }
                 Log.d("POST_TEST", request.toString())
-                val response = apiRepository.postSpacetime(request)
+                val response = apiRepository.postLocation(request)
                 if (response.isSuccessful) {
                     Log.d("POST_TEST", "${response}\n${response.body()}")
                 } else {
