@@ -26,6 +26,9 @@ interface RestApi {
     @POST("api/v1/locations")
     suspend fun postSpacetime(@Body request: PostData.PostSpacetime): Response<ResponseData.ResponsePost>
 
+    @POST("api/v1/rooms/{secret_words}/is_start/{is_start}")
+    suspend fun postRoomIsStart(@Path("secret_words") secret_words: String, @Path("is_start") is_start: Int): Response<ResponseData.ResponsePost>
+
     @GET("api/v1/rooms")
     suspend fun getRoom(@Query("secret_words") secret_words: String): Response<List<ResponseData.ResponseGetRoom>>
 

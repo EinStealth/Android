@@ -52,6 +52,10 @@ class StandByRoom: Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { standByRoomUiState ->
+                    Log.d("StandByRoom", "secret_words: ${standByRoomUiState.secretWords}, is_start: ${standByRoomUiState.isStart}")
+                    if (standByRoomUiState.isStart == 1) {
+                        findNavController().navigate(R.id.navigation_main)
+                    }
                     textSecretWord.text = standByRoomUiState.secretWords
                     val allPlayer = standByRoomUiState.allPlayer
                     if (allPlayer.isNotEmpty()) {
@@ -87,7 +91,7 @@ class StandByRoom: Fragment() {
         }
 
         btStart.setOnClickListener {
-            findNavController().navigate(R.id.navigation_main)
+            viewModel.updateIsStart()
         }
 
         return root
