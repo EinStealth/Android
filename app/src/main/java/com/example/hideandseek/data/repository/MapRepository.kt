@@ -49,7 +49,7 @@ class MapRepositoryImpl @Inject constructor(
         if (allLocation.isNotEmpty()) {
             // ユーザーの位置情報
             for (i in allLocation.indices) {
-                if (allLocation[i].objId != 1 && allLocation[i].objId != -1) {
+                if (allLocation[i].status != 1 && allLocation[i].status != -1) {
                     url += "&markers=icon:" + iconUrlHide + "|${allLocation[i].latitude},${allLocation[i].longitude}"
                 }
             }
@@ -58,7 +58,7 @@ class MapRepositoryImpl @Inject constructor(
         // trapの位置情報
         if (allTraps.isNotEmpty()) {
             for (i in allTraps.indices) {
-                if (allTraps[i].objId == 0) {
+                if (allTraps[i].status == 0) {
                     val iconUrlTrap = "https://lh3.googleusercontent.com/6B1VLkjCpGk8BtAZfVfpSHxLlfHi1UI0Pry1DdgCi7PPrNr1846g818b2Qq1SjT6_-ntECnAFgQEsmEDT7x4LDC5Tgxhk9P9KwoyAFWnI2G6J2FIFRNfjDgMZe83SXZr4FK0lzsOO4VpcQD-bWRiLJ9NFx_Xk4qR68NihN7ZU9zm8c4Kopy7KrsZZLTOlasbLauicoLB3Et98RDiI23q79h6i1Ui-l8mqieUH29mTfOistvaLbVx8S0RuNW1qKlm_LJdW8btMli0SN9BUao_IwuHXf0CbPv2gCxJDK7pz4RoKEz3WYLnEZG-tC12UQrWIE8b4YA7EwHqOCXiePmRITZqAU-4_8HjNrN-ZZJd12nov_FjMWRLtaDk6lU3ZMctlBlSz-_0ep63SZJ9Gbo59mwV1VhM7ZrWj648fMX_l_15W4Si7W7t1BdcjkIOKAL1ORdQ1A-51OgVNjdBoucUip7U2I20vJQ1SlWjfNs2bb0fxO3ue8kEMko1RlbVgYyYBTWf2CkUJXPA05MSCSRYZ8-7goG01K2dsL-az12K664_zQF0_E5X2zR5X7BqiYC_bV2uYIVYyYn4geLDa-cxVmPFVA6AjyTfG8SpEoPoZwRTZ648hdkbYi7dnaYHEzDNyTxdCnzfi620RfQKMuLsKF5vhIIaSfHhmWPpy_ADHNezNH2oHHWgYmT-kuJ2HIR99MHvOlEsU30NGh-bNfkfWqmdoGFivR8IoQqzaaA-wZu23SyaFsXZ9Z4WTRWqhXRwrrGNqCByDiZgqiFUDpnvsaQ-dqe33HGduap7vYnbikhyMsBql-gShf53hr78-bTouQeVweWXc5xNPBXRl4FXsxyt-L7VlJPSwSu6eJzuQBzrAjLGLZdmwF-U03Sx1k-dl5_X2EE0b3CXkvywms9v0sCb9m4gDbIUQXZ9g3stn31ftdsF4SHaAgmoLIo7PCDosnRwf5AkcrkK-VSiByb8dyjVCzvZnfkWLN5eMDPHO2P36nLWMO81lA2xwUlYbTtodPA3E9IDd2oDQQLZJJxMsURqZTltaSDJK4dmcj-RGmzscfXISTTRmV8VIsY=w24-h33-no?authuser=0"
                     url += "&markers=icon:$iconUrlTrap|${allTraps[i].latitude},${allTraps[i].longitude}"
                 }

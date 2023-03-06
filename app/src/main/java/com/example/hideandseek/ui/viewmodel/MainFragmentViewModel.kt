@@ -70,7 +70,7 @@ class MainFragmentViewModel @Inject constructor(
 
     fun postTrapRoom(isMine: Int, latestUser: UserData) = viewModelScope.launch {
         Log.d("USER_TRAP", latestUser.toString())
-        val trap = TrapData(0, latestUser.latitude, latestUser.longitude, latestUser.altitude, isMine)
+        val trap = TrapData(0, latestUser.latitude, latestUser.longitude, isMine)
         trapRepository.insert(trap)
     }
 
@@ -133,7 +133,7 @@ class MainFragmentViewModel @Inject constructor(
         // UserがTrapと一定の距離に来たかどうかを返す
         Log.d("checkCaughtTrap", (abs(user.latitude - trap.latitude) + abs(user.longitude - trap.longitude)).toString())
         // 自分の罠の場合は当たり判定を行わない
-        if (trap.objId == 0) {
+        if (trap.status == 0) {
             return false
         }
         // 緯度・経度1どの違いで約100kmの差
