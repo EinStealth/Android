@@ -108,6 +108,24 @@ class MainFragment(
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { mainUiState ->
 
+                    val allPlayer = mainUiState.allPlayer
+                    if (allPlayer.isNotEmpty()) {
+                        for (i in allPlayer.indices) {
+                            if (i == 0) {
+                                user1Normal.setImageResource(selectDrawable(allPlayer[i].icon))
+                            }
+                            if (i == 1) {
+                                user2Normal.setImageResource(selectDrawable(allPlayer[i].icon))
+                            }
+                            if (i == 2) {
+                                user3Normal.setImageResource(selectDrawable(allPlayer[i].icon))
+                            }
+                            if (i == 3) {
+                                user4Demon.setImageResource(selectDrawable(allPlayer[i].icon))
+                            }
+                        }
+                    }
+
                     Log.d("UseCaseTest", mainUiState.latestUser.toString())
 
                     ivMap.setImageBitmap(mainUiState.map)
@@ -234,5 +252,22 @@ class MainFragment(
         }
 
         return root
+    }
+
+    private fun selectDrawable(icon: Int): Int {
+        return when (icon) {
+            1 -> {
+                R.drawable.user01_normal
+            }
+            2 -> {
+                R.drawable.user02_normal
+            }
+            3 -> {
+                R.drawable.user03_normal
+            }
+            else -> {
+                R.drawable.user04_normal
+            }
+        }
     }
 }
