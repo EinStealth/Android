@@ -27,6 +27,7 @@ data class MainUiState(
     val isOverLimitTime: Boolean = false,
     val map: Bitmap? = null,
     val allPlayer: List<ResponseData.ResponseGetPlayer> = listOf(),
+    val myName: String = "",
 )
 
 @HiltViewModel
@@ -75,6 +76,12 @@ class MainFragmentViewModel @Inject constructor(
                 delay(100)
             }
         }
+        viewModelScope.launch {
+            val myName = myInfoRepository.readName()
+            _uiState.update { mainUiState ->
+                mainUiState.copy(myName = myName)
+            }
+        }
     }
 
     private fun getPlayer(secretWords: String) {
@@ -95,6 +102,21 @@ class MainFragmentViewModel @Inject constructor(
                 }
             } catch (e: java.lang.Exception) {
                 Log.d("GET_TEST_PLAYER", "$e")
+            }
+        }
+    }
+
+    fun updatePlayerStatus(status: Int) {
+        viewModelScope.launch {
+            try {
+                val response = apiRepository.postPlayerStatus(uiState.value.myName, status)
+                if (response.isSuccessful) {
+                    Log.d("UPDATE_TEST_PLAYER", "${response}\n${response.body()}")
+                } else {
+                    Log.d("UPDATE_TEST_PLAYER", "$response")
+                }
+            } catch (e: java.lang.Exception) {
+                Log.d("UPDATE_TEST_PLAYER", "$e")
             }
         }
     }

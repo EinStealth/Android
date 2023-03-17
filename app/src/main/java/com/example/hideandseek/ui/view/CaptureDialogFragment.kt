@@ -4,18 +4,29 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import com.example.hideandseek.R
+import com.example.hideandseek.data.repository.ApiRepository
+import com.example.hideandseek.data.repository.MyInfoRepository
 import com.example.hideandseek.databinding.FragmentCaptureDialogBinding
+import com.example.hideandseek.ui.viewmodel.CaptureDialogViewModel
+import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CaptureDialogFragment : DialogFragment() {
     private var _binding: FragmentCaptureDialogBinding? = null
+    private val viewModel: CaptureDialogViewModel by viewModels()
 
     private val binding get() = _binding!!
 
@@ -35,6 +46,8 @@ class CaptureDialogFragment : DialogFragment() {
 
         btCaptureYes.setOnClickListener {
             flag = true
+            //　ステータスを捕まったに変更
+            viewModel.updatePlayerStatus(3)
             dialog?.dismiss()
         }
 
