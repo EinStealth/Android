@@ -5,24 +5,6 @@ import com.example.hideandseek.data.datasource.remote.ResponseData
 import retrofit2.Response
 
 object FakeDataSource {
-    private const val latitudeOne = 0.0
-    private const val longitudeOne = 0.0
-    private const val altitudeOne = 0.0
-    private const val objIdOne = 0
-
-    private const val latitudeSecond = 0.3
-    private const val longitudeSecond = 0.3
-    private const val altitudeSecond = 0.0
-    private const val objIdSecond = 0
-
-    private val fakeGetSpacetimeList = listOf(
-        ResponseData.ResponseGetSpacetime(latitudeOne, longitudeOne, altitudeOne, objIdOne),
-        ResponseData.ResponseGetSpacetime(latitudeSecond, longitudeSecond, altitudeSecond, objIdSecond),
-    )
-
-    val fakeResponseGetSpacetime: Response<List<ResponseData.ResponseGetSpacetime>> = Response.success(
-        fakeGetSpacetimeList,
-    )
 
     private val fakeGetTest = ResponseData.ResponseGetTest("test")
 
@@ -36,11 +18,59 @@ object FakeDataSource {
         fakePost,
     )
 
-    val fakePostSpacetime = PostData.PostSpacetime(
-        "00:00:00",
-        latitudeOne,
-        longitudeOne,
-        altitudeOne,
-        objIdOne,
+    private val locationOne = ResponseData.ResponseGetLocation("fake", "00:00:00", 0.0, 0.0, 0)
+    private val locationSecond = ResponseData.ResponseGetLocation("fake", "00:00:00", 0.0, 0.0, 0)
+
+    private val fakeGetLocationList = listOf(
+        locationOne,
+        locationSecond
+    )
+
+    val fakeResponseGetLocation: Response<List<ResponseData.ResponseGetLocation>> = Response.success(
+        fakeGetLocationList,
+    )
+
+    val fakePostLocation = PostData.PostLocation(
+        locationOne.secret_words,
+        locationOne.relative_time,
+        locationOne.latitude,
+        locationOne.longitude,
+        locationOne.status
+    )
+
+    private val playerOne = ResponseData.ResponseGetPlayer("fake", "player1", 1, 1)
+    private val playerSecond = ResponseData.ResponseGetPlayer("fake", "player2", 2, 2)
+
+    private val fakeGetPlayerList = listOf(
+        playerOne,
+        playerSecond
+    )
+
+    val fakeResponseGetPlayer: Response<List<ResponseData.ResponseGetPlayer>> = Response.success(
+        fakeGetPlayerList,
+    )
+
+    val fakePostPlayer =  PostData.PostPlayer(
+        playerOne.secret_words,
+        playerOne.name,
+        playerOne.icon,
+        playerOne.status
+    )
+
+    private val roomOne = ResponseData.ResponseGetRoom("fake", 0)
+    private val roomSecond = ResponseData.ResponseGetRoom("fake2", 0)
+
+    private val fakeGetRoomList = listOf(
+        roomOne,
+        roomSecond
+    )
+
+    val fakeResponseGetRoom: Response<List<ResponseData.ResponseGetRoom>> = Response.success(
+        fakeGetRoomList
+    )
+
+    val fakePostRoom = PostData.PostRoom(
+        roomOne.secret_words,
+        roomOne.is_start
     )
 }

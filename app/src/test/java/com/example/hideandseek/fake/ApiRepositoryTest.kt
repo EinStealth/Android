@@ -1,40 +1,40 @@
 package com.example.hideandseek.fake
 
 import com.example.hideandseek.data.repository.ApiRepositoryImpl
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 class ApiRepositoryTest {
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun apiRepository_getTest_verifyFakeResponseGetTest() = runTest {
         val repository = ApiRepositoryImpl(
             FakeRestApi(),
+            StandardTestDispatcher(testScheduler)
         )
         assertEquals(FakeDataSource.fakeResponseGetTest, repository.getTest())
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun apiRepository_postStatus_verifyFakeResponsePost() = runTest {
+    fun apiRepository_getLocation_verifyFakeResponseGetSpacetime() = runTest {
         val repository = ApiRepositoryImpl(
             FakeRestApi(),
+            StandardTestDispatcher(testScheduler)
         )
-        assertEquals(FakeDataSource.fakeResponsePost, repository.postStatus(0, 0))
+        assertEquals(FakeDataSource.fakeResponseGetLocation, repository.getLocation("fake", "00:00:00"))
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun apiRepository_getSpacetimes_verifyFakeResponseGetSpacetime() = runTest {
+    fun apiRepository_postLocation_verifyFakeResponsePost() = runTest {
         val repository = ApiRepositoryImpl(
             FakeRestApi(),
+            StandardTestDispatcher(testScheduler)
         )
-        assertEquals(FakeDataSource.fakeResponseGetSpacetime, repository.getSpacetime("00:00:00"))
-    }
-
-    @Test
-    fun apiRepository_postSpacetime_verifyFakeResponsePost() = runTest {
-        val repository = ApiRepositoryImpl(
-            FakeRestApi(),
-        )
-        assertEquals(FakeDataSource.fakeResponsePost, repository.postSpacetime(FakeDataSource.fakePostSpacetime))
+        assertEquals(FakeDataSource.fakeResponsePost, repository.postLocation(FakeDataSource.fakePostLocation))
     }
 }
