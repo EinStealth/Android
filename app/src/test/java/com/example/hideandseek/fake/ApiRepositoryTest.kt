@@ -8,7 +8,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 class ApiRepositoryTest {
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun apiRepository_getTest_verifyFakeResponseGetTest() = runTest {
         val repository = ApiRepositoryImpl(
@@ -18,7 +17,6 @@ class ApiRepositoryTest {
         assertEquals(FakeDataSource.fakeResponseGetTest, repository.getTest())
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun apiRepository_getLocation_verifyFakeResponseGetSpacetime() = runTest {
         val repository = ApiRepositoryImpl(
@@ -28,7 +26,6 @@ class ApiRepositoryTest {
         assertEquals(FakeDataSource.fakeResponseGetLocation, repository.getLocation("fake", "00:00:00"))
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun apiRepository_postLocation_verifyFakeResponsePost() = runTest {
         val repository = ApiRepositoryImpl(
