@@ -134,6 +134,8 @@ class MainFragment(
                     changeBtSkillVisible(mainUiState.isOverSkillTime)
 
                     if (mainUiState.isOverLimitTime) {
+                        // statusをクリアにする
+                        viewModel.updatePlayerStatus(4)
                         // クリアダイアログを表示
                         val successEscapeDialogFragment = SuccessEscapeDialogFragment()
                         val supportFragmentManager = childFragmentManager
@@ -201,6 +203,9 @@ class MainFragment(
 
                                     // かかったTrapの削除(remote)
                                     viewModel.postTrapSpacetime("delete", latestUser)
+
+                                    // トラップにかかったステータスに変更
+                                    viewModel.updatePlayerStatus(2)
 
                                     // TrapにかかったらFragmentを移動
                                     setFragmentResult("MainFragmentTrapTime", bundleOf("trapTime" to latestUser.relativeTime))
