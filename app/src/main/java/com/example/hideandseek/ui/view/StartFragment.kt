@@ -1,5 +1,6 @@
 package com.example.hideandseek.ui.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
-import com.example.hideandseek.databinding.FragmentStartBinding
 
 class StartFragment: Fragment() {
     override fun onCreateView(
@@ -24,44 +24,34 @@ class StartFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        // 名前の読み込み
+        val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
+        val name = sharedPref?.getString("name", "")
+
         return ComposeView(requireContext()).apply {
             setContent {
-                StartScreen(onNavigate = { dest -> findNavController().navigate(dest)})
+                StartScreen(
+                    onNavigate = { dest -> findNavController().navigate(dest)},
+                    name = name.toString()
+                )
             }
         }
-//        _binding = FragmentStartBinding.inflate(inflater, container, false)
-//        val root: View = binding.root
-//
-//        // Viewの取得
-//        val background: ImageView = binding.background
-//
-//        // 名前の読み込み
-//        val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
-//        val name = sharedPref?.getString("name", "")
-//
-//        // 画面が押されたときの処理
-//        background.setOnClickListener {
-//            Log.d("StartFragment", name.toString())
-//            if (name != null && name.toString() != "") {
-//                findNavController().navigate(R.id.navigation_room_type_select)
-//            } else {
-//                findNavController().navigate(R.id.navigation_register_user_name)
-//            }
-//        }
-//
-//        return root
     }
 }
 
 @Composable
-fun StartScreen(onNavigate: (Int) -> (Unit)) {
+fun StartScreen(onNavigate: (Int) -> (Unit), name: String) {
     Column(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive),
             contentDescription = "title",
             contentScale = ContentScale.Crop,
             modifier = Modifier.clickable {
-                onNavigate(R.id.navigation_room_type_select)
+                if (name != "") {
+                    onNavigate(R.id.navigation_room_type_select)
+                } else {
+                    onNavigate(R.id.navigation_register_user_name)
+                }
             }
         )
     }
