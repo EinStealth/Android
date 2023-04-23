@@ -28,7 +28,7 @@ interface MyInfoRepository {
 
 class MyInfoRepositoryImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences
-): MyInfoRepository {
+) : MyInfoRepository {
     override fun writeName(name: String) {
         with (sharedPreferences.edit()) {
             this?.putString("name", name)
@@ -90,5 +90,4 @@ class MyInfoRepositoryImpl @Inject constructor(
     override fun readSecretWords(): String {
         return sharedPreferences.getString("secretWords", "").toString()
     }
-
 }
