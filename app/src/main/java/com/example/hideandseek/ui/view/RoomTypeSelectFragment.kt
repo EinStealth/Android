@@ -11,6 +11,30 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -93,5 +117,71 @@ class RoomTypeSelectFragment: Fragment() {
         }
 
         return root
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun RoomTypeSelectScreen() {
+    Surface(Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(R.drawable.title_background_responsive_nontitlever),
+            contentDescription = "background",
+            contentScale = ContentScale.Crop
+        )
+        Column(
+            Modifier.fillMaxSize(10f)
+        ) {
+            UserInfoCard()
+            Spacer(Modifier.weight(1f))
+            Image(
+                painter = painterResource(R.drawable.button_room_create),
+                contentDescription = "button_room_create",
+                modifier = Modifier
+                    .width(198.dp)
+                    .height(98.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+            Spacer(Modifier.weight(1f))
+            Image(
+                painter = painterResource(R.drawable.button_room_search),
+                contentDescription = "button_room_search",
+                modifier = Modifier
+                    .width(198.dp)
+                    .height(98.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+            Spacer(Modifier.weight(1f))
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun UserInfoCard() {
+    Box {
+        Image(
+            painter = painterResource(R.drawable.user_info_background),
+            contentDescription = "user_info_background",
+            modifier = Modifier
+                .width(300.dp)
+                .height(80.dp)
+        )
+        Row {
+            Image(
+                painter = painterResource(R.drawable.user01_normal),
+                contentDescription = "user_icon",
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(60.dp)
+                    .padding(start = 0.dp, top = 10.dp, end = 0.dp, bottom = 0.dp)
+            )
+            Text(
+                text = "username",
+                modifier = Modifier.padding(start = 0.dp, top = 25.dp, end = 0.dp, bottom = 0.dp)
+            )
+        }
     }
 }
