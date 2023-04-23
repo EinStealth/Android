@@ -66,7 +66,7 @@ class RoomTypeSelectFragment: Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                RoomTypeSelectScreen()
+                RoomTypeSelectScreen(onNavigate = { dest -> findNavController().navigate(dest) })
             }
         }
 //        _binding = FragmentRoomTypeSelectBinding.inflate(inflater, container, false)
@@ -113,22 +113,12 @@ class RoomTypeSelectFragment: Fragment() {
 //        userIcon.setOnClickListener {
 //            findNavController().navigate(R.id.navigation_register_user_icon)
 //        }
-//
-//        // 部屋の作成
-//        btCreate.setOnClickListener {
-//            findNavController().navigate(R.id.navigation_room_create)
-//        }
-//        btSearch.setOnClickListener {
-//            findNavController().navigate(R.id.navigation_room_search)
-//        }
-//
 //        return root
     }
 }
 
-@Preview
 @Composable
-fun RoomTypeSelectScreen() {
+fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit)) {
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
@@ -147,6 +137,7 @@ fun RoomTypeSelectScreen() {
                     .width(198.dp)
                     .height(98.dp)
                     .align(Alignment.CenterHorizontally)
+                    .clickable { onNavigate(R.id.navigation_room_create) }
             )
             Spacer(Modifier.weight(1f))
             Image(
@@ -156,6 +147,7 @@ fun RoomTypeSelectScreen() {
                     .width(198.dp)
                     .height(98.dp)
                     .align(Alignment.CenterHorizontally)
+                    .clickable { onNavigate(R.id.navigation_room_search) }
             )
             Spacer(Modifier.weight(1f))
         }
