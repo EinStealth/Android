@@ -1,13 +1,11 @@
 package com.example.hideandseek.ui.view
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -21,10 +19,6 @@ import com.example.hideandseek.R
 import com.example.hideandseek.databinding.FragmentStartBinding
 
 class StartFragment: Fragment() {
-    private var _binding: FragmentStartBinding? = null
-
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,7 +26,7 @@ class StartFragment: Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                StartScreen()
+                StartScreen(onNavigate = { dest -> findNavController().navigate(dest)})
             }
         }
 //        _binding = FragmentStartBinding.inflate(inflater, container, false)
@@ -60,12 +54,15 @@ class StartFragment: Fragment() {
 }
 
 @Composable
-fun StartScreen() {
+fun StartScreen(onNavigate: (Int) -> (Unit)) {
     Column(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive),
             contentDescription = "title",
             contentScale = ContentScale.Crop,
+            modifier = Modifier.clickable {
+                onNavigate(R.id.navigation_room_type_select)
+            }
         )
     }
 }
