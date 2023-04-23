@@ -7,7 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.painterResource
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
@@ -49,5 +56,16 @@ class StartFragment: Fragment() {
 //        }
 //
 //        return root
+    }
+}
+
+@Composable
+fun StartScreen() {
+    Column(Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(R.drawable.title_background_responsive),
+            contentDescription = "title",
+            contentScale = ContentScale.Crop,
+        )
     }
 }
