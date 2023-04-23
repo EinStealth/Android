@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,64 +64,68 @@ class RoomTypeSelectFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentRoomTypeSelectBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        // Viewの取得
-        val btCreate: ImageView = binding.btCreate
-        val btSearch: ImageView = binding.btSearch
-        val textName: TextView = binding.textName
-        val editName: EditText = binding.editName
-        val userIcon: ImageView = binding.userIcon
-
-        // 名前・アイコンの読み込み
-        viewModel.readUserInfo()
-
-        // 名前・アイコンの設定
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    textName.text = it.userName
-                    when (it.userIcon) {
-                        1 -> {
-                            userIcon.setImageResource(R.drawable.user01_normal)
-                        }
-                        2 -> {
-                            userIcon.setImageResource(R.drawable.user02_normal)
-                        }
-                        3 -> {
-                            userIcon.setImageResource(R.drawable.user03_normal)
-                        }
-                        else -> {
-                            userIcon.setImageResource(R.drawable.user04_normal)
-                        }
-                    }
-                }
+        return ComposeView(requireContext()).apply {
+            setContent {
+                RoomTypeSelectScreen()
             }
         }
-
-        // 名前の編集
-        textName.setOnClickListener {
-            findNavController().navigate(R.id.navigation_register_user_name)
-        }
-        // アイコンの編集
-        userIcon.setOnClickListener {
-            findNavController().navigate(R.id.navigation_register_user_icon)
-        }
-
-        // 部屋の作成
-        btCreate.setOnClickListener {
-            findNavController().navigate(R.id.navigation_room_create)
-        }
-        btSearch.setOnClickListener {
-            findNavController().navigate(R.id.navigation_room_search)
-        }
-
-        return root
+//        _binding = FragmentRoomTypeSelectBinding.inflate(inflater, container, false)
+//        val root: View = binding.root
+//
+//        // Viewの取得
+//        val btCreate: ImageView = binding.btCreate
+//        val btSearch: ImageView = binding.btSearch
+//        val textName: TextView = binding.textName
+//        val editName: EditText = binding.editName
+//        val userIcon: ImageView = binding.userIcon
+//
+//        // 名前・アイコンの読み込み
+//        viewModel.readUserInfo()
+//
+//        // 名前・アイコンの設定
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.uiState.collect {
+//                    textName.text = it.userName
+//                    when (it.userIcon) {
+//                        1 -> {
+//                            userIcon.setImageResource(R.drawable.user01_normal)
+//                        }
+//                        2 -> {
+//                            userIcon.setImageResource(R.drawable.user02_normal)
+//                        }
+//                        3 -> {
+//                            userIcon.setImageResource(R.drawable.user03_normal)
+//                        }
+//                        else -> {
+//                            userIcon.setImageResource(R.drawable.user04_normal)
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        // 名前の編集
+//        textName.setOnClickListener {
+//            findNavController().navigate(R.id.navigation_register_user_name)
+//        }
+//        // アイコンの編集
+//        userIcon.setOnClickListener {
+//            findNavController().navigate(R.id.navigation_register_user_icon)
+//        }
+//
+//        // 部屋の作成
+//        btCreate.setOnClickListener {
+//            findNavController().navigate(R.id.navigation_room_create)
+//        }
+//        btSearch.setOnClickListener {
+//            findNavController().navigate(R.id.navigation_room_search)
+//        }
+//
+//        return root
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun RoomTypeSelectScreen() {
@@ -157,7 +162,6 @@ fun RoomTypeSelectScreen() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun UserInfoCard() {
