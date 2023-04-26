@@ -1,7 +1,5 @@
 package com.example.hideandseek.di
 
-import com.example.hideandseek.data.repository.MapRepository
-import com.example.hideandseek.data.repository.MapRepositoryImpl
 import com.example.hideandseek.data.repository.MyInfoRepository
 import com.example.hideandseek.data.repository.MyInfoRepositoryImpl
 import dagger.Binds

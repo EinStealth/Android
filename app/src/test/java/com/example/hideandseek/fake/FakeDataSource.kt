@@ -50,7 +50,7 @@ object FakeDataSource {
         fakeGetPlayerList,
     )
 
-    val fakePostPlayer =  PostData.PostPlayer(
+    val fakePostPlayer = PostData.PostPlayer(
         playerOne.secret_words,
         playerOne.name,
         playerOne.icon,

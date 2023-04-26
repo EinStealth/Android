@@ -19,13 +19,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class BeTrappedUiState(
-    val latestUser:  UserData           = UserData(0, "", 0.0, 0.0, 0.0),
-    val allTrap:     List<TrapData>     = listOf(),
-    val skillTime:   String             = "",
-    val limitTime:   String             = "",
+    val latestUser: UserData = UserData(0, "", 0.0, 0.0, 0.0),
+    val allTrap: List<TrapData> = listOf(),
+    val skillTime: String = "",
+    val limitTime: String = "",
     val isOverSkillTime: Boolean = true,
     val isOverLimitTime: Boolean = false,
-    val isOverTrapTime:  Boolean = false
+    val isOverTrapTime: Boolean = false
 )
 
 @HiltViewModel

@@ -3,8 +3,6 @@ package com.example.hideandseek.ui.view
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
-import android.util.DisplayMetrics
-import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,17 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.example.hideandseek.R
-import com.example.hideandseek.data.repository.MyLocationRepository
 import com.example.hideandseek.databinding.ActivityMainBinding
 import com.example.hideandseek.ui.viewmodel.MainActivityViewModel
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity: AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels()
 

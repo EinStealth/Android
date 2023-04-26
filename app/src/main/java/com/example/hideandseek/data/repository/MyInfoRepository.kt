@@ -30,21 +30,21 @@ class MyInfoRepositoryImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : MyInfoRepository {
     override fun writeName(name: String) {
-        with (sharedPreferences.edit()) {
+        with(sharedPreferences.edit()) {
             this?.putString("name", name)
             this?.apply()
         }
     }
 
     override fun writeIcon(icon: Int) {
-        with (sharedPreferences.edit()) {
+        with(sharedPreferences.edit()) {
             this?.putInt("icon", icon)
             this?.apply()
         }
     }
 
     override fun writeLocation(location: Location) {
-        with (sharedPreferences.edit()) {
+        with(sharedPreferences.edit()) {
             this?.putFloat("latitude", location.latitude.toFloat())
             this?.putFloat("longitude", location.longitude.toFloat())
             this?.putFloat("altitude", location.altitude.toFloat())
@@ -54,14 +54,14 @@ class MyInfoRepositoryImpl @Inject constructor(
     }
 
     override fun writeRelativeTime(relativeTime: String) {
-        with (sharedPreferences.edit()) {
+        with(sharedPreferences.edit()) {
             this?.putString("relativeTime", relativeTime)
             this?.apply()
         }
     }
 
     override fun writeSecretWords(secretWords: String) {
-        with (sharedPreferences.edit()) {
+        with(sharedPreferences.edit()) {
             this?.putString("secretWords", secretWords)
             this?.apply()
         }

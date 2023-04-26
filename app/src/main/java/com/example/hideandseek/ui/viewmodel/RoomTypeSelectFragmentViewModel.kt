@@ -1,11 +1,7 @@
 package com.example.hideandseek.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.hideandseek.data.datasource.local.UserData
-import com.example.hideandseek.data.datasource.remote.PostData
-import com.example.hideandseek.data.repository.ApiRepository
 import com.example.hideandseek.data.repository.MyInfoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,9 +18,8 @@ data class RoomTypeSelectUiState(
 
 @HiltViewModel
 class RoomTypeSelectFragmentViewModel @Inject constructor(
-    private val apiRepository: ApiRepository,
     private val myInfoRepository: MyInfoRepository
-): ViewModel() {
+) : ViewModel() {
     private val _uiState = MutableStateFlow(RoomTypeSelectUiState())
     val uiState: StateFlow<RoomTypeSelectUiState> = _uiState.asStateFlow()
     fun readUserInfo() {
