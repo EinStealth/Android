@@ -1,6 +1,5 @@
 package com.example.hideandseek.ui.view
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,11 +16,10 @@ import com.example.hideandseek.R
 import com.example.hideandseek.databinding.FragmentRegisterUserNameBinding
 import com.example.hideandseek.ui.viewmodel.RegisterUserNameFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RegisterUserNameFragment: Fragment() {
+class RegisterUserNameFragment : Fragment() {
     private var _binding: FragmentRegisterUserNameBinding? = null
     private val viewModel: RegisterUserNameFragmentViewModel by viewModels()
 
