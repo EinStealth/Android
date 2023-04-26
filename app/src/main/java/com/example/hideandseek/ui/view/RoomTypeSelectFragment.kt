@@ -1,20 +1,13 @@
 package com.example.hideandseek.ui.view
 
-import android.content.Context
-import android.media.Image
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,11 +17,10 @@ import com.example.hideandseek.R
 import com.example.hideandseek.databinding.FragmentRoomTypeSelectBinding
 import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RoomTypeSelectFragment: Fragment() {
+class RoomTypeSelectFragment : Fragment() {
     private var _binding: FragmentRoomTypeSelectBinding? = null
     private val viewModel: RoomTypeSelectFragmentViewModel by viewModels()
 
