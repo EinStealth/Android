@@ -8,8 +8,10 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -63,64 +65,63 @@ class RegisterUserNameFragment : Fragment() {
 
 @Composable
 fun RegisterUserNameScreen(onNavigate: (Int) -> (Unit), viewModel: RegisterUserNameFragmentViewModel = viewModel()) {
-    ConstraintLayout {
-        // Create references for the composable to constrain
-        val (background, dialog, btDecide, textField) = createRefs()
-
+    Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
             contentDescription = "background",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.constrainAs(background) {
-                top.linkTo(parent.top)
-            }
+            contentScale = ContentScale.Crop
         )
-        Image(
-            painter = painterResource(R.drawable.text_null),
-            contentDescription = "dialog",
-            modifier = Modifier.constrainAs(dialog) {
-                top.linkTo(parent.top)
-                bottom.linkTo(parent.bottom)
-            }
-        )
-        var text by remember { mutableStateOf("") }
+        ConstraintLayout {
+            // Create references for the composable to constrain
+            val (dialog, btDecide, textField) = createRefs()
 
-        TextField(
-            value = text,
-            onValueChange = { text = it },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent
-            ),
-            placeholder = { Text(text = "名前を入力して下さい") },
-            modifier = Modifier.constrainAs(textField) {
-                top.linkTo(dialog.top)
-                end.linkTo(dialog.end)
-                bottom.linkTo(dialog.bottom)
-                start.linkTo(dialog.start)
-            }
-        )
+            Image(
+                painter = painterResource(R.drawable.text_null),
+                contentDescription = "dialog",
+                modifier = Modifier.constrainAs(dialog) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                }
+            )
+            var text by remember { mutableStateOf("") }
 
-        Image(
-            painter = painterResource(R.drawable.button_decide),
-            contentDescription = "decide_button",
-            modifier = Modifier
-                .constrainAs(btDecide) {
-                    top.linkTo(textField.bottom)
+            TextField(
+                value = text,
+                onValueChange = { text = it },
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent
+                ),
+                placeholder = { Text(text = "名前を入力して下さい") },
+                modifier = Modifier.constrainAs(textField) {
+                    top.linkTo(dialog.top)
                     end.linkTo(dialog.end)
                     bottom.linkTo(dialog.bottom)
                     start.linkTo(dialog.start)
                 }
-                .width(142.dp)
-                .height(72.dp)
-                .clickable {
-                    viewModel.writeUserName(text)
-                    if (viewModel.uiState.value.isEdit) {
-                        onNavigate(R.id.navigation_room_type_select)
-                    } else {
-                        onNavigate(R.id.navigation_register_user_icon)
+            )
+
+            Image(
+                painter = painterResource(R.drawable.button_decide),
+                contentDescription = "decide_button",
+                modifier = Modifier
+                    .constrainAs(btDecide) {
+                        top.linkTo(textField.bottom)
+                        end.linkTo(dialog.end)
+                        bottom.linkTo(dialog.bottom)
+                        start.linkTo(dialog.start)
                     }
-                }
-        )
+                    .width(142.dp)
+                    .height(72.dp)
+                    .clickable {
+                        viewModel.writeUserName(text)
+                        if (viewModel.uiState.value.isEdit) {
+                            onNavigate(R.id.navigation_room_type_select)
+                        } else {
+                            onNavigate(R.id.navigation_register_user_icon)
+                        }
+                    }
+            )
+        }
     }
 }
 
@@ -166,12 +167,13 @@ fun RegisterUserNamePreview() {
         Image(
             painter = painterResource(R.drawable.button_decide),
             contentDescription = "decide_button",
-            modifier = Modifier.constrainAs(btDecide) {
-                top.linkTo(textField.bottom)
-                end.linkTo(dialog.end)
-                bottom.linkTo(dialog.bottom)
-                start.linkTo(dialog.start)
-            }
+            modifier = Modifier
+                .constrainAs(btDecide) {
+                    top.linkTo(textField.bottom)
+                    end.linkTo(dialog.end)
+                    bottom.linkTo(dialog.bottom)
+                    start.linkTo(dialog.start)
+                }
                 .width(142.dp)
                 .height(72.dp)
         )
