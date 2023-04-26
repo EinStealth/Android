@@ -2,7 +2,6 @@ package com.example.hideandseek.fake
 
 import com.example.hideandseek.data.repository.ApiRepositoryImpl
 import org.junit.Assert.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
