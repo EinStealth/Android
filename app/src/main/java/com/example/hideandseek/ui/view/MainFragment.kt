@@ -148,8 +148,8 @@ class MainFragment(
 
                     Log.d("UiState", "stateを更新しました")
                     val allLocation = mainUiState.allLocation
-                    val allTraps    = mainUiState.allTrap
-                    val latestUser    = mainUiState.latestUser
+                    val allTraps = mainUiState.allTrap
+                    val latestUser = mainUiState.latestUser
 
                     // 自分の情報の表示
                     Log.d("UserLive", latestUser.toString())

@@ -32,14 +32,12 @@
     <fragment
         android:id="@+id/navigation_register_user_icon"
         android:name="com.example.hideandseek.ui.view.RegisterUserIconFragment"
-        android:label="RegisterUserIcon"
-        tools:layout="@layout/fragment_register_user_icon"/>
+        android:label="RegisterUserIcon"/>
 
     <fragment
         android:id="@+id/navigation_register_user_name"
         android:name="com.example.hideandseek.ui.view.RegisterUserNameFragment"
-        android:label="RegisterUserName"
-        tools:layout="@layout/fragment_register_user_name"/>
+        android:label="RegisterUserName"/>
 
     <fragment
         android:id="@+id/navigation_room_type_select"
@@ -60,7 +58,7 @@
 
     <fragment
         android:id="@+id/navigation_stand_by_room"
-        android:name="com.example.hideandseek.ui.view.StandByRoom"
+        android:name="com.example.hideandseek.ui.view.StandByRoomFragment"
         android:label="StandByRoom"
         tools:layout="@layout/fragment_stand_by_room"/>
 

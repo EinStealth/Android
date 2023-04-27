@@ -9,20 +9,27 @@ import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.data.datasource.remote.PostData
 import com.example.hideandseek.data.datasource.remote.ResponseData
-import com.example.hideandseek.data.repository.*
+import com.example.hideandseek.data.repository.ApiRepository
+import com.example.hideandseek.data.repository.LocationRepository
+import com.example.hideandseek.data.repository.MapRepository
+import com.example.hideandseek.data.repository.MyInfoRepository
+import com.example.hideandseek.data.repository.TrapRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
 
 data class MainUiState(
     val allLocation: List<LocationData> = listOf(),
-    val allTrap:     List<TrapData>     = listOf(),
-    val latestUser:  UserData           = UserData(0, "", 0.0, 0.0, 0.0),
-    val skillTime:   String             = "",
-    val limitTime:   String             = "",
+    val allTrap: List<TrapData> = listOf(),
+    val latestUser: UserData = UserData(0, "", 0.0, 0.0, 0.0),
+    val skillTime: String = "",
+    val limitTime: String = "",
     val isOverSkillTime: Boolean = true,
     val isOverLimitTime: Boolean = false,
     val map: Bitmap? = null,

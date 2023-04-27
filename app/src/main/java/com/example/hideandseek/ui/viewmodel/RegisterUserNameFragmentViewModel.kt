@@ -19,7 +19,7 @@ data class RegisterUserNameUiState(
 @HiltViewModel
 class RegisterUserNameFragmentViewModel @Inject constructor(
     private val myInfoRepository: MyInfoRepository
-): ViewModel() {
+) : ViewModel() {
     private val _uiState = MutableStateFlow(RegisterUserNameUiState())
     val uiState: StateFlow<RegisterUserNameUiState> = _uiState.asStateFlow()
     fun readUserInfo() {
