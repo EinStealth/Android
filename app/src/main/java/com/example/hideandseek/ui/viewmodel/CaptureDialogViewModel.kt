@@ -15,6 +15,8 @@ import javax.inject.Inject
 
 data class CaptureUiState(
     val myName: String = "",
+    val flag: Boolean = false,
+    val isDismiss: Boolean = false
 )
 
 @HiltViewModel
@@ -45,6 +47,22 @@ class CaptureDialogViewModel @Inject constructor(
                 }
             } catch (e: java.lang.Exception) {
                 Log.d("UPDATE_TEST_PLAYER", "$e")
+            }
+        }
+    }
+
+    fun changeFlag() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(flag = true)
+            }
+        }
+    }
+
+    fun dialogDismiss() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(isDismiss = true)
             }
         }
     }
