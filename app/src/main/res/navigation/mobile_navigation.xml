@@ -32,8 +32,7 @@
     <fragment
         android:id="@+id/navigation_register_user_icon"
         android:name="com.example.hideandseek.ui.view.RegisterUserIconFragment"
-        android:label="RegisterUserIcon"
-        tools:layout="@layout/fragment_register_user_icon"/>
+        android:label="RegisterUserIcon"/>
 
     <fragment
         android:id="@+id/navigation_register_user_name"
