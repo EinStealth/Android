@@ -52,8 +52,7 @@
     <fragment
         android:id="@+id/navigation_room_search"
         android:name="com.example.hideandseek.ui.view.RoomSearchFragment"
-        android:label="RoomSearch"
-        tools:layout="@layout/fragment_room_search"/>
+        android:label="RoomSearch"/>
 
     <fragment
         android:id="@+id/navigation_stand_by_room"
