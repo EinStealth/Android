@@ -45,7 +45,6 @@ class RegisterUserIconFragment : Fragment() {
     }
 }
 
-
 @Composable
 fun RegisterUserIconScreen(onNavigate: (Int) -> (Unit), viewModel: RegisterUserIconFragmentViewModel = viewModel()) {
     Surface(Modifier.fillMaxSize()) {
