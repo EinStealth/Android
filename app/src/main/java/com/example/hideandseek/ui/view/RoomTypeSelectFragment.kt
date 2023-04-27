@@ -32,7 +32,7 @@ import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RoomTypeSelectFragment: Fragment() {
+class RoomTypeSelectFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
