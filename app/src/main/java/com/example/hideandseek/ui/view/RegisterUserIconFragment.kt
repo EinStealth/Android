@@ -45,47 +45,11 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RegisterUserIconFragment : Fragment() {
-    private var _binding: FragmentRegisterUserIconBinding? = null
-    private val viewModel: RegisterUserIconFragmentViewModel by viewModels()
-
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentRegisterUserIconBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        // Viewの取得
-        val character01: ImageView = binding.character01
-        val character02: ImageView = binding.character02
-        val character03: ImageView = binding.character03
-        val character04: ImageView = binding.character04
-
-        // characterが選択されたときの処理
-        character01.setOnClickListener {
-            // アイコンの保存
-            viewModel.writeUserIcon(1)
-            findNavController().navigate(R.id.navigation_room_type_select)
-        }
-        character02.setOnClickListener {
-            // アイコンの保存
-            viewModel.writeUserIcon(2)
-            findNavController().navigate(R.id.navigation_room_type_select)
-        }
-        character03.setOnClickListener {
-            // アイコンの保存
-            viewModel.writeUserIcon(3)
-            findNavController().navigate(R.id.navigation_room_type_select)
-        }
-        character04.setOnClickListener {
-            // アイコンの保存
-            viewModel.writeUserIcon(4)
-            findNavController().navigate(R.id.navigation_room_type_select)
-        }
-
         return ComposeView(requireContext()).apply {
             setContent {
                 RegisterUserIconScreen(
@@ -107,8 +71,7 @@ fun RegisterUserIconScreen(onNavigate: (Int) -> (Unit), viewModel: RegisterUserI
         )
         ConstraintLayout {
             // Create references for the composable to constrain
-            val (dialog, btDecide, textField) = createRefs()
-
+            val (dialog, iconList) = createRefs()
             Image(
                 painter = painterResource(R.drawable.text_null),
                 contentDescription = "dialog",
@@ -117,44 +80,59 @@ fun RegisterUserIconScreen(onNavigate: (Int) -> (Unit), viewModel: RegisterUserI
                     bottom.linkTo(parent.bottom)
                 }
             )
-            var text by remember { mutableStateOf("") }
-
-            TextField(
-                value = text,
-                onValueChange = { text = it },
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = Color.Transparent
-                ),
-                placeholder = { Text(text = "名前を入力して下さい") },
-                modifier = Modifier.constrainAs(textField) {
-                    top.linkTo(dialog.top)
-                    end.linkTo(dialog.end)
-                    bottom.linkTo(dialog.bottom)
-                    start.linkTo(dialog.start)
+            Row(
+                modifier = Modifier.constrainAs(iconList) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
                 }
-            )
-
-            Image(
-                painter = painterResource(R.drawable.button_decide),
-                contentDescription = "decide_button",
-                modifier = Modifier
-                    .constrainAs(btDecide) {
-                        top.linkTo(textField.bottom)
-                        end.linkTo(dialog.end)
-                        bottom.linkTo(dialog.bottom)
-                        start.linkTo(dialog.start)
-                    }
-                    .width(142.dp)
-                    .height(72.dp)
-                    .clickable {
-//                        viewModel.writeUserName(text)
-//                        if (viewModel.uiState.value.isEdit) {
-//                            onNavigate(R.id.navigation_room_type_select)
-//                        } else {
-//                            onNavigate(R.id.navigation_register_user_icon)
-//                        }
-                    }
-            )
+                    .fillMaxWidth(1f),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.user01_normal),
+                    contentDescription = "icon1",
+                    modifier = Modifier.width(92.dp)
+                        .height(92.dp)
+                        .clickable {
+                            // アイコンの保存
+                            viewModel.writeUserIcon(1)
+                            onNavigate(R.id.navigation_room_type_select)
+                        }
+                )
+                Image(
+                    painter = painterResource(R.drawable.user02_normal),
+                    contentDescription = "icon2",
+                    modifier = Modifier.width(92.dp)
+                        .height(92.dp)
+                        .clickable {
+                            // アイコンの保存
+                            viewModel.writeUserIcon(2)
+                            onNavigate(R.id.navigation_room_type_select)
+                        }
+                )
+                Image(
+                    painter = painterResource(R.drawable.user03_normal),
+                    contentDescription = "icon3",
+                    modifier = Modifier.width(92.dp)
+                        .height(92.dp)
+                        .clickable {
+                            // アイコンの保存
+                            viewModel.writeUserIcon(3)
+                            onNavigate(R.id.navigation_room_type_select)
+                        }
+                )
+                Image(
+                    painter = painterResource(R.drawable.user04_normal),
+                    contentDescription = "icon4",
+                    modifier = Modifier.width(92.dp)
+                        .height(92.dp)
+                        .clickable {
+                            // アイコンの保存
+                            viewModel.writeUserIcon(4)
+                            onNavigate(R.id.navigation_room_type_select)
+                        }
+                )
+            }
         }
     }
 }
@@ -164,7 +142,7 @@ fun RegisterUserIconScreen(onNavigate: (Int) -> (Unit), viewModel: RegisterUserI
 fun RegisterUserIconPreview() {
     ConstraintLayout {
         // Create references for the composable to constrain
-        val (background, dialog, iconList, icon1, icon2, icon3, icon4) = createRefs()
+        val (background, dialog, iconList) = createRefs()
 
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
