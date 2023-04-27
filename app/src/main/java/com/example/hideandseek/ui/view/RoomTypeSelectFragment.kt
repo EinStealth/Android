@@ -1,66 +1,38 @@
 package com.example.hideandseek.ui.view
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.media.Image
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
-import com.example.hideandseek.databinding.FragmentRoomTypeSelectBinding
 import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RoomTypeSelectFragment: Fragment() {
-    private var _binding: FragmentRoomTypeSelectBinding? = null
-    private val viewModel: RoomTypeSelectFragmentViewModel by viewModels()
-
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -71,20 +43,6 @@ class RoomTypeSelectFragment: Fragment() {
                 RoomTypeSelectScreen(onNavigate = { dest -> findNavController().navigate(dest) })
             }
         }
-//        _binding = FragmentRoomTypeSelectBinding.inflate(inflater, container, false)
-//        val root: View = binding.root
-//
-//        /
-//
-//        // 名前の編集
-//        textName.setOnClickListener {
-//            findNavController().navigate(R.id.navigation_register_user_name)
-//        }
-//        // アイコンの編集
-//        userIcon.setOnClickListener {
-//            findNavController().navigate(R.id.navigation_register_user_icon)
-//        }
-//        return root
     }
 }
 
