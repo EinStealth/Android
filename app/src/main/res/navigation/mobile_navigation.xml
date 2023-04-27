@@ -47,8 +47,7 @@
     <fragment
         android:id="@+id/navigation_room_create"
         android:name="com.example.hideandseek.ui.view.RoomCreateFragment"
-        android:label="RoomCreate"
-        tools:layout="@layout/fragment_room_create"/>
+        android:label="RoomCreate"/>
 
     <fragment
         android:id="@+id/navigation_room_search"
