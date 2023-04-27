@@ -1,5 +1,6 @@
 package com.example.hideandseek.ui.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.media.Image
 import android.os.Bundle
@@ -41,6 +42,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -72,38 +74,7 @@ class RoomTypeSelectFragment: Fragment() {
 //        _binding = FragmentRoomTypeSelectBinding.inflate(inflater, container, false)
 //        val root: View = binding.root
 //
-//        // Viewの取得
-//        val btCreate: ImageView = binding.btCreate
-//        val btSearch: ImageView = binding.btSearch
-//        val textName: TextView = binding.textName
-//        val editName: EditText = binding.editName
-//        val userIcon: ImageView = binding.userIcon
-//
-//        // 名前・アイコンの読み込み
-//        viewModel.readUserInfo()
-//
-//        // 名前・アイコンの設定
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.uiState.collect {
-//                    textName.text = it.userName
-//                    when (it.userIcon) {
-//                        1 -> {
-//                            userIcon.setImageResource(R.drawable.user01_normal)
-//                        }
-//                        2 -> {
-//                            userIcon.setImageResource(R.drawable.user02_normal)
-//                        }
-//                        3 -> {
-//                            userIcon.setImageResource(R.drawable.user03_normal)
-//                        }
-//                        else -> {
-//                            userIcon.setImageResource(R.drawable.user04_normal)
-//                        }
-//                    }
-//                }
-//            }
-//        }
+//        /
 //
 //        // 名前の編集
 //        textName.setOnClickListener {
@@ -117,8 +88,12 @@ class RoomTypeSelectFragment: Fragment() {
     }
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit)) {
+fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit), viewModel: RoomTypeSelectFragmentViewModel = viewModel()) {
+    // 名前・アイコンの読み込み
+    viewModel.readUserInfo()
+
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
@@ -128,7 +103,42 @@ fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit)) {
         Column(
             Modifier.fillMaxSize(10f)
         ) {
-            UserInfoCard()
+            Box {
+                Image(
+                    painter = painterResource(R.drawable.user_info_background),
+                    contentDescription = "user_info_background",
+                    modifier = Modifier
+                        .width(300.dp)
+                        .height(80.dp)
+                )
+                Row {
+                    Image(
+                        painter = when (viewModel.uiState.value.userIcon) {
+                            1 -> {
+                                painterResource(R.drawable.user01_normal)
+                            }
+                            2 -> {
+                                painterResource(R.drawable.user01_normal)
+                            }
+                            3 -> {
+                                painterResource(R.drawable.user01_normal)
+                            }
+                            else -> {
+                                painterResource(R.drawable.user01_normal)
+                            }
+                        },
+                        contentDescription = "user_icon",
+                        modifier = Modifier
+                            .width(60.dp)
+                            .height(60.dp)
+                            .padding(start = 0.dp, top = 10.dp, end = 0.dp, bottom = 0.dp)
+                    )
+                    Text(
+                        text = viewModel.uiState.value.userName,
+                        modifier = Modifier.padding(start = 0.dp, top = 25.dp, end = 0.dp, bottom = 0.dp)
+                    )
+                }
+            }
             Spacer(Modifier.weight(1f))
             Image(
                 painter = painterResource(R.drawable.button_room_create),
@@ -150,34 +160,6 @@ fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit)) {
                     .clickable { onNavigate(R.id.navigation_room_search) }
             )
             Spacer(Modifier.weight(1f))
-        }
-    }
-}
-
-@Preview
-@Composable
-fun UserInfoCard() {
-    Box {
-        Image(
-            painter = painterResource(R.drawable.user_info_background),
-            contentDescription = "user_info_background",
-            modifier = Modifier
-                .width(300.dp)
-                .height(80.dp)
-        )
-        Row {
-            Image(
-                painter = painterResource(R.drawable.user01_normal),
-                contentDescription = "user_icon",
-                modifier = Modifier
-                    .width(60.dp)
-                    .height(60.dp)
-                    .padding(start = 0.dp, top = 10.dp, end = 0.dp, bottom = 0.dp)
-            )
-            Text(
-                text = "username",
-                modifier = Modifier.padding(start = 0.dp, top = 25.dp, end = 0.dp, bottom = 0.dp)
-            )
         }
     }
 }
