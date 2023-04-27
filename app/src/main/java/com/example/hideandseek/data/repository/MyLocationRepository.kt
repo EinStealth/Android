@@ -19,7 +19,10 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalTime
 import javax.inject.Inject
 import kotlin.math.pow
@@ -40,13 +43,14 @@ class MyLocationRepositoryImpl @Inject constructor(
     private val fusedLocationProviderClient: FusedLocationProviderClient,
     private val coroutineScope: CoroutineScope,
     @IODispatcher private val ioDispatcher: CoroutineDispatcher,
-): MyLocationRepository {
+) : MyLocationRepository {
     // 現在地を更新するためのコールバック
     private lateinit var locationCallback: LocationCallback
 
     override suspend fun start() {
         // permission check
-        if (ActivityCompat.checkSelfPermission(
+        if (
+            ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -154,8 +158,13 @@ class MyLocationRepositoryImpl @Inject constructor(
 
     private suspend fun postLocation(secretWords: String, relativeTime: LocalTime, location: Location) {
         try {
-            val request = PostData.PostLocation(secretWords, relativeTime.toString().substring(0, 8),
-                location.latitude, location.longitude, 0)
+            val request = PostData.PostLocation(
+                secretWords,
+                relativeTime.toString().substring(0, 8),
+                location.latitude,
+                location.longitude,
+                0
+            )
             val response = apiRepository.postLocation(request)
             if (response.isSuccessful) {
                 Log.d("POST_TEST", "${response}\n${response.body()}")

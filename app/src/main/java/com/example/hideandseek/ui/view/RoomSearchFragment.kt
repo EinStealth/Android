@@ -13,15 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
-import com.example.hideandseek.databinding.FragmentRoomCreateBinding
 import com.example.hideandseek.databinding.FragmentRoomSearchBinding
 import com.example.hideandseek.ui.viewmodel.RoomSearchFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class RoomSearchFragment: Fragment() {
+class RoomSearchFragment : Fragment() {
     private var _binding: FragmentRoomSearchBinding? = null
     private val viewModel: RoomSearchFragmentViewModel by viewModels()
 

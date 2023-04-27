@@ -1,6 +1,5 @@
 package com.example.hideandseek.ui.view
 
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -52,8 +51,8 @@ class WatchFragment(
 
                     Log.d("UiState", "stateを更新しました")
                     val allLocation = watchUiState.allLocation
-                    val allTraps    = watchUiState.allTrap
-                    val latestUser  = watchUiState.latestUser
+                    val allTraps = watchUiState.allTrap
+                    val latestUser = watchUiState.latestUser
 
                     // 自分の情報の表示
                     Log.d("UserLive", latestUser.toString())

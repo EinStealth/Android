@@ -22,8 +22,8 @@ import javax.inject.Inject
 
 data class WatchUiState(
     val allLocation: List<LocationData> = listOf(),
-    val latestUser:  UserData           = UserData(0, "", 0.0, 0.0, 0.0),
-    val allTrap:     List<TrapData>     = listOf(),
+    val latestUser: UserData = UserData(0, "", 0.0, 0.0, 0.0),
+    val allTrap: List<TrapData> = listOf(),
     val map: Bitmap? = null
 )
 
