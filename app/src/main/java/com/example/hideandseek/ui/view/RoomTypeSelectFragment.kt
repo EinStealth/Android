@@ -110,6 +110,9 @@ fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit), viewModel: RoomTypeSelectF
                     modifier = Modifier
                         .width(300.dp)
                         .height(80.dp)
+                        .clickable {
+                            onNavigate(R.id.navigation_register_user_icon)
+                        }
                 )
                 Row {
                     Image(
@@ -118,13 +121,13 @@ fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit), viewModel: RoomTypeSelectF
                                 painterResource(R.drawable.user01_normal)
                             }
                             2 -> {
-                                painterResource(R.drawable.user01_normal)
+                                painterResource(R.drawable.user02_normal)
                             }
                             3 -> {
-                                painterResource(R.drawable.user01_normal)
+                                painterResource(R.drawable.user03_normal)
                             }
                             else -> {
-                                painterResource(R.drawable.user01_normal)
+                                painterResource(R.drawable.user04_normal)
                             }
                         },
                         contentDescription = "user_icon",
@@ -136,6 +139,9 @@ fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit), viewModel: RoomTypeSelectF
                     Text(
                         text = viewModel.uiState.value.userName,
                         modifier = Modifier.padding(start = 0.dp, top = 25.dp, end = 0.dp, bottom = 0.dp)
+                            .clickable {
+                                onNavigate(R.id.navigation_register_user_name)
+                            }
                     )
                 }
             }
