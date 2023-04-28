@@ -5,15 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,7 +21,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -33,8 +29,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
-import com.example.hideandseek.databinding.FragmentWatchBinding
-import com.example.hideandseek.ui.viewmodel.StandByRoomFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.WatchFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
@@ -46,31 +40,18 @@ import kotlinx.coroutines.launch
 class WatchFragment(
     mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : Fragment() {
-    private var _binding: FragmentWatchBinding? = null
     private val viewModel: WatchFragmentViewModel by viewModels()
 
     private val coroutineScope = CoroutineScope(mainDispatcher)
-
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentWatchBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        // Viewの取得
-        // Map
-        val ivMap: ImageView = binding.ivMap
-
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { watchUiState ->
-
-                    // Mapに画像をセット
-                    ivMap.setImageBitmap(watchUiState.map)
 
                     Log.d("UiState", "stateを更新しました")
                     val allLocation = watchUiState.allLocation
