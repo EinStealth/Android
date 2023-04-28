@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,34 +28,37 @@ import com.example.hideandseek.databinding.FragmentSuccessEscapeDialogBinding
 import com.example.hideandseek.ui.viewmodel.CaptureDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+private var d: Dialog? = null
+
 @AndroidEntryPoint
 class SuccessEscapeDialogFragment : DialogFragment() {
-    private var _binding: FragmentSuccessEscapeDialogBinding? = null
-
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentSuccessEscapeDialogBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        d = dialog
 
-        // 捕まったか確認するダイアログ
-        val btClose: ImageView = binding.btClose
-
-        btClose.setOnClickListener {
-            findNavController().navigate(R.id.navigation_result)
-            dialog?.dismiss()
+        return ComposeView(requireContext()).apply {
+            setContent {
+                SuccessEscapeDialogScreen(
+                    onNavigate = { dest -> findNavController().navigate(dest) },
+                    d = d
+                )
+            }
         }
-
-        return root
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(requireActivity())
-        dialog.setContentView(R.layout.fragment_success_escape_dialog)
+        dialog.setContentView(ComposeView(requireContext()).apply {
+            setContent {
+                SuccessEscapeDialogScreen(
+                    onNavigate = { dest -> findNavController().navigate(dest) },
+                    d = d
+                )
+            }
+        })
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         dialog.window?.setDimAmount(0f)
@@ -63,7 +67,7 @@ class SuccessEscapeDialogFragment : DialogFragment() {
 }
 
 @Composable
-fun SuccessEscapeDialogScreen(onNavigate: (Int) -> (Unit), viewModel: CaptureDialogViewModel = viewModel(), d: Dialog?) {
+fun SuccessEscapeDialogScreen(onNavigate: (Int) -> (Unit), d: Dialog?) {
     ConstraintLayout {
         // Create references for the composable to constrain
         val (dialog, icon, btClose) = createRefs()
@@ -107,6 +111,10 @@ fun SuccessEscapeDialogScreen(onNavigate: (Int) -> (Unit), viewModel: CaptureDia
                 .padding(bottom = 20.dp)
                 .width(160.dp)
                 .height(80.dp)
+                .clickable {
+                    onNavigate(R.id.navigation_result)
+                    d?.dismiss()
+                }
         )
     }
 }

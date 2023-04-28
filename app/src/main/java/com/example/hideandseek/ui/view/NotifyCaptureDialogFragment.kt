@@ -76,7 +76,7 @@ class NotifyCaptureDialogFragment : DialogFragment() {
 }
 
 @Composable
-fun NotifyCaptureDialogScreen(onNavigate: (Int) -> (Unit), viewModel: CaptureDialogViewModel = viewModel(), d: Dialog?) {
+fun NotifyCaptureDialogScreen(onNavigate: (Int) -> (Unit), d: Dialog?) {
     ConstraintLayout {
         // Create references for the composable to constrain
         val (dialog, demon, normal, metalRod, btClose) = createRefs()
