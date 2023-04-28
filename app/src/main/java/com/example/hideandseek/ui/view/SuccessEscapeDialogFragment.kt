@@ -50,14 +50,16 @@ class SuccessEscapeDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(requireActivity())
-        dialog.setContentView(ComposeView(requireContext()).apply {
-            setContent {
-                SuccessEscapeDialogScreen(
-                    onNavigate = { dest -> findNavController().navigate(dest) },
-                    d = d
-                )
+        dialog.setContentView(
+            ComposeView(requireContext()).apply {
+                setContent {
+                    SuccessEscapeDialogScreen(
+                        onNavigate = { dest -> findNavController().navigate(dest) },
+                        d = d
+                    )
+                }
             }
-        })
+        )
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         dialog.window?.setDimAmount(0f)
