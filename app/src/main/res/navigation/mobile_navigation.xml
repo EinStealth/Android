@@ -56,8 +56,7 @@
     <fragment
         android:id="@+id/navigation_stand_by_room"
         android:name="com.example.hideandseek.ui.view.StandByRoomFragment"
-        android:label="StandByRoom"
-        tools:layout="@layout/fragment_stand_by_room"/>
+        android:label="StandByRoom"/>
 
     <fragment
         android:id="@+id/navigation_start"
