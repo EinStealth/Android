@@ -23,10 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
-import com.example.hideandseek.ui.viewmodel.CaptureDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 private var d: Dialog? = null
@@ -76,7 +74,7 @@ class NotifyCaptureDialogFragment : DialogFragment() {
 }
 
 @Composable
-fun NotifyCaptureDialogScreen(onNavigate: (Int) -> (Unit), viewModel: CaptureDialogViewModel = viewModel(), d: Dialog?) {
+fun NotifyCaptureDialogScreen(onNavigate: (Int) -> (Unit), d: Dialog?) {
     ConstraintLayout {
         // Create references for the composable to constrain
         val (dialog, demon, normal, metalRod, btClose) = createRefs()
