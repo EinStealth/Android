@@ -29,6 +29,7 @@ import com.example.hideandseek.ui.viewmodel.CaptureDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 var flag: Boolean = false
+var d: Dialog? = null
 
 @AndroidEntryPoint
 class CaptureDialogFragment : DialogFragment() {
@@ -45,6 +46,8 @@ class CaptureDialogFragment : DialogFragment() {
             }
         }
 
+        d = dialog
+
         return ComposeView(requireContext()).apply {
             setContent {
                 CaptureDialogScreen(d = dialog)
@@ -54,6 +57,13 @@ class CaptureDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(requireActivity())
+        dialog.setContentView(
+            ComposeView(requireContext()).apply {
+                setContent {
+                    CaptureDialogScreen(d = d)
+                }
+            }
+        )
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         dialog.window?.setDimAmount(0f)
