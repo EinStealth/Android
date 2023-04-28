@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,33 +28,39 @@ import com.example.hideandseek.databinding.FragmentNotifyCaptureDialogBinding
 import com.example.hideandseek.ui.viewmodel.CaptureDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
+private var d: Dialog? = null
+
 @AndroidEntryPoint
 class NotifyCaptureDialogFragment : DialogFragment() {
-    private var _binding: FragmentNotifyCaptureDialogBinding? = null
-
-    private val binding get() = _binding!!
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentNotifyCaptureDialogBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        d = dialog
 
-        val btClose: ImageView = binding.btClose
-
-        btClose.setOnClickListener {
-            findNavController().navigate(R.id.navigation_watch)
-            dialog?.dismiss()
+        return ComposeView(requireContext()).apply {
+            setContent {
+                NotifyCaptureDialogScreen(
+                    onNavigate = { dest -> findNavController().navigate(dest) },
+                    d = d
+                )
+            }
         }
-
-        return root
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(requireActivity())
-        dialog.setContentView(R.layout.fragment_notify_capture_dialog)
+        dialog.setContentView(
+            ComposeView(requireContext()).apply {
+                setContent {
+                    NotifyCaptureDialogScreen(
+                        onNavigate = { dest -> findNavController().navigate(dest) },
+                        d = d
+                    )
+                }
+            }
+        )
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         dialog.window?.setDimAmount(0f)
@@ -62,7 +69,7 @@ class NotifyCaptureDialogFragment : DialogFragment() {
 }
 
 @Composable
-fun NotifyCaptureDialogScreen(viewModel: CaptureDialogViewModel = viewModel(), d: Dialog?) {
+fun NotifyCaptureDialogScreen(onNavigate: (Int) -> (Unit), viewModel: CaptureDialogViewModel = viewModel(), d: Dialog?) {
     ConstraintLayout {
         // Create references for the composable to constrain
         val (dialog, demon, normal, metalRod, btClose) = createRefs()
@@ -129,6 +136,10 @@ fun NotifyCaptureDialogScreen(viewModel: CaptureDialogViewModel = viewModel(), d
                 .padding(bottom = 20.dp)
                 .width(160.dp)
                 .height(80.dp)
+                .clickable {
+                    onNavigate(R.id.navigation_watch)
+                    d?.dismiss()
+                }
         )
     }
 }
