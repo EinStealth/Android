@@ -28,8 +28,8 @@ import com.example.hideandseek.R
 import com.example.hideandseek.ui.viewmodel.CaptureDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-var flag: Boolean = false
-var d: Dialog? = null
+private var flag: Boolean = false
+private var d: Dialog? = null
 
 @AndroidEntryPoint
 class CaptureDialogFragment : DialogFragment() {
