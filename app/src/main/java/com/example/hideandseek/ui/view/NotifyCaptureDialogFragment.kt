@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
 import android.view.WindowInsetsController
-import android.widget.ImageView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.height
@@ -27,7 +26,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
-import com.example.hideandseek.databinding.FragmentNotifyCaptureDialogBinding
 import com.example.hideandseek.ui.viewmodel.CaptureDialogViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
