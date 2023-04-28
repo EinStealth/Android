@@ -84,152 +84,148 @@ fun StandByRoomScreen(onNavigate: (Int) -> (Unit), viewModel: StandByRoomFragmen
         onNavigate(R.id.navigation_main)
     }
     val allPlayer = standByRoomUiState.allPlayer
-    ConstraintLayout {
-        // Create references for the composable to constrain
-        val (background, dialog, textSecret, icon1, icon2, icon3, icon4, name1, name2, name3, name4, btStart) = createRefs()
-
+    Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
             contentDescription = "background",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .constrainAs(background) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                }
+            contentScale = ContentScale.Crop
         )
-        Image(
-            painter = painterResource(R.drawable.stand_by_room),
-            contentDescription = "dialog",
-            modifier = Modifier
-                .constrainAs(dialog) {
-                    top.linkTo(parent.top)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                }
-                .width(302.dp)
-                .height(405.dp)
-        )
-        Text(
-            text = standByRoomUiState.secretWords,
-            fontSize = 24.sp,
-            modifier = Modifier
-                .constrainAs(textSecret) {
-                    top.linkTo(dialog.top)
-                    end.linkTo(parent.end)
-                    start.linkTo(parent.start)
-                }
-                .padding(top = 44.dp)
-        )
-        if (standByRoomUiState.allPlayer.isNotEmpty()) {
+        ConstraintLayout {
+            // Create references for the composable to constrain
+            val (dialog, textSecret, icon1, icon2, icon3, icon4, name1, name2, name3, name4, btStart) = createRefs()
             Image(
-                painter = painterResource(selectDrawable(allPlayer[0].icon)),
-                contentDescription = "icon1",
+                painter = painterResource(R.drawable.stand_by_room),
+                contentDescription = "dialog",
                 modifier = Modifier
-                    .constrainAs(icon1) {
+                    .constrainAs(dialog) {
+                        top.linkTo(parent.top)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                    }
+                    .width(302.dp)
+                    .height(405.dp)
+            )
+            Text(
+                text = standByRoomUiState.secretWords,
+                fontSize = 24.sp,
+                modifier = Modifier
+                    .constrainAs(textSecret) {
                         top.linkTo(dialog.top)
-                        start.linkTo(dialog.start)
+                        end.linkTo(parent.end)
+                        start.linkTo(parent.start)
                     }
-                    .padding(top = 80.dp, start = 12.dp)
-                    .height(100.dp)
-                    .width(100.dp)
+                    .padding(top = 44.dp)
             )
-            Text(
-                text = allPlayer[0].name,
-                modifier = Modifier
-                    .constrainAs(name1) {
-                        top.linkTo(icon1.bottom)
-                        start.linkTo(icon1.start)
-                        end.linkTo(icon1.end)
-                    }
-            )
-        }
-        if (standByRoomUiState.allPlayer.size > 1) {
+            if (standByRoomUiState.allPlayer.isNotEmpty()) {
+                Image(
+                    painter = painterResource(selectDrawable(allPlayer[0].icon)),
+                    contentDescription = "icon1",
+                    modifier = Modifier
+                        .constrainAs(icon1) {
+                            top.linkTo(dialog.top)
+                            start.linkTo(dialog.start)
+                        }
+                        .padding(top = 80.dp, start = 12.dp)
+                        .height(100.dp)
+                        .width(100.dp)
+                )
+                Text(
+                    text = allPlayer[0].name,
+                    modifier = Modifier
+                        .constrainAs(name1) {
+                            top.linkTo(icon1.bottom)
+                            start.linkTo(icon1.start)
+                            end.linkTo(icon1.end)
+                        }
+                )
+            }
+            if (standByRoomUiState.allPlayer.size > 1) {
+                Image(
+                    painter = painterResource(selectDrawable(allPlayer[1].icon)),
+                    contentDescription = "icon2",
+                    modifier = Modifier
+                        .constrainAs(icon2) {
+                            top.linkTo(dialog.top)
+                            start.linkTo(icon1.end)
+                        }
+                        .padding(top = 80.dp, start = 12.dp)
+                        .height(100.dp)
+                        .width(100.dp)
+                )
+                Text(
+                    text = allPlayer[1].name,
+                    modifier = Modifier
+                        .constrainAs(name2) {
+                            top.linkTo(icon1.bottom)
+                            start.linkTo(icon2.start)
+                            end.linkTo(icon2.end)
+                        }
+                )
+            }
+            if (standByRoomUiState.allPlayer.size > 2) {
+                Image(
+                    painter = painterResource(selectDrawable(allPlayer[2].icon)),
+                    contentDescription = "icon3",
+                    modifier = Modifier
+                        .constrainAs(icon3) {
+                            top.linkTo(name1.bottom)
+                            start.linkTo(dialog.start)
+                        }
+                        .height(100.dp)
+                        .width(100.dp)
+                )
+                Text(
+                    text = allPlayer[2].name,
+                    modifier = Modifier
+                        .constrainAs(name3) {
+                            top.linkTo(icon3.bottom)
+                            start.linkTo(icon3.start)
+                            end.linkTo(icon3.end)
+                        }
+                )
+            }
+            if (standByRoomUiState.allPlayer.size > 3) {
+                Image(
+                    painter = painterResource(selectDrawable(allPlayer[3].icon)),
+                    contentDescription = "icon4",
+                    modifier = Modifier
+                        .constrainAs(icon4) {
+                            top.linkTo(name2.bottom)
+                            start.linkTo(icon3.end)
+                        }
+                        .padding(start = 12.dp)
+                        .height(100.dp)
+                        .width(100.dp)
+                )
+                Text(
+                    text = allPlayer[3].name,
+                    modifier = Modifier
+                        .constrainAs(name4) {
+                            top.linkTo(icon4.bottom)
+                            start.linkTo(icon4.start)
+                            end.linkTo(icon4.end)
+                        }
+                )
+            }
             Image(
-                painter = painterResource(selectDrawable(allPlayer[1].icon)),
-                contentDescription = "icon2",
+                painter = painterResource(R.drawable.bt_start),
+                contentDescription = "button_start",
                 modifier = Modifier
-                    .constrainAs(icon2) {
-                        top.linkTo(dialog.top)
-                        start.linkTo(icon1.end)
+                    .constrainAs(btStart) {
+                        end.linkTo(parent.end)
+                        bottom.linkTo(dialog.bottom)
+                        start.linkTo(parent.start)
                     }
-                    .padding(top = 80.dp, start = 12.dp)
-                    .height(100.dp)
-                    .width(100.dp)
-            )
-            Text(
-                text = allPlayer[1].name,
-                modifier = Modifier
-                    .constrainAs(name2) {
-                        top.linkTo(icon1.bottom)
-                        start.linkTo(icon2.start)
-                        end.linkTo(icon2.end)
+                    .padding(bottom = 12.dp)
+                    .width(142.dp)
+                    .height(72.dp)
+                    .clickable {
+                        onNavigate(R.id.navigation_main)
+                        viewModel.updateIsStart()
                     }
             )
         }
-        if (standByRoomUiState.allPlayer.size > 2) {
-            Image(
-                painter = painterResource(selectDrawable(allPlayer[2].icon)),
-                contentDescription = "icon3",
-                modifier = Modifier
-                    .constrainAs(icon3) {
-                        top.linkTo(name1.bottom)
-                        start.linkTo(dialog.start)
-                    }
-                    .height(100.dp)
-                    .width(100.dp)
-            )
-            Text(
-                text = allPlayer[2].name,
-                modifier = Modifier
-                    .constrainAs(name3) {
-                        top.linkTo(icon3.bottom)
-                        start.linkTo(icon3.start)
-                        end.linkTo(icon3.end)
-                    }
-            )
-        }
-        if (standByRoomUiState.allPlayer.size > 3) {
-            Image(
-                painter = painterResource(selectDrawable(allPlayer[3].icon)),
-                contentDescription = "icon4",
-                modifier = Modifier
-                    .constrainAs(icon4) {
-                        top.linkTo(name2.bottom)
-                        start.linkTo(icon3.end)
-                    }
-                    .padding(start = 12.dp)
-                    .height(100.dp)
-                    .width(100.dp)
-            )
-            Text(
-                text = allPlayer[3].name,
-                modifier = Modifier
-                    .constrainAs(name4) {
-                        top.linkTo(icon4.bottom)
-                        start.linkTo(icon4.start)
-                        end.linkTo(icon4.end)
-                    }
-            )
-        }
-        Image(
-            painter = painterResource(R.drawable.bt_start),
-            contentDescription = "button_start",
-            modifier = Modifier
-                .constrainAs(btStart) {
-                    end.linkTo(parent.end)
-                    bottom.linkTo(dialog.bottom)
-                    start.linkTo(parent.start)
-                }
-                .padding(bottom = 12.dp)
-                .width(142.dp)
-                .height(72.dp)
-                .clickable {
-                    onNavigate(R.id.navigation_main)
-                    viewModel.updateIsStart()
-                }
-        )
     }
 }
 
