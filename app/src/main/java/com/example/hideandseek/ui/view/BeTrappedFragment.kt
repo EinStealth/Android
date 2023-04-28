@@ -8,6 +8,27 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Visibility
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -20,6 +41,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.databinding.FragmentBeTrappedBinding
 import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.WatchFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -176,5 +198,305 @@ class BeTrappedFragment : Fragment() {
         }
 
         return root
+    }
+}
+
+@Composable
+fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: WatchFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+    val watchUiState by viewModel.uiState.collectAsState()
+
+    Surface(Modifier.fillMaxSize()) {
+        watchUiState.map?.let {
+            Image(
+                bitmap = it.asImageBitmap(),
+                contentDescription = "map",
+                contentScale = ContentScale.Crop
+            )
+        }
+        ConstraintLayout {
+            // Create references for the composable to constrain
+            val (ivWatching, btCaptureOff, btSkillOf, user1, user2, user3, user4) = createRefs()
+
+            Image(
+                painter = painterResource(R.drawable.text_watching),
+                contentDescription = "text_watching",
+                modifier = Modifier
+                    .constrainAs(ivWatching) {
+                        end.linkTo(parent.end)
+                        bottom.linkTo(btCaptureOff.top)
+                        start.linkTo(parent.start)
+                    }
+                    .height(80.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.button_captured_off),
+                contentDescription = "鬼に捕まったときに押すボタン",
+                modifier = Modifier
+                    .constrainAs(btCaptureOff) {
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                    }
+                    .height(100.dp)
+                    .width(200.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.button_skill_off),
+                contentDescription = "skill button",
+                modifier = Modifier
+                    .constrainAs(btSkillOf) {
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                    }
+                    .height(100.dp)
+                    .width(180.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.user01_caputure),
+                contentDescription = "user1",
+                modifier = Modifier
+                    .constrainAs(user1) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                    }
+                    .padding(start = 40.dp)
+                    .height(72.dp)
+                    .width(72.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.user02_runaway),
+                contentDescription = "user2",
+                modifier = Modifier
+                    .constrainAs(user2) {
+                        top.linkTo(user1.top)
+                        end.linkTo(user3.start)
+                        start.linkTo(user1.end)
+                    }
+                    .height(72.dp)
+                    .width(72.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.user03_runaway),
+                contentDescription = "user3",
+                modifier = Modifier
+                    .constrainAs(user3) {
+                        top.linkTo(user1.top)
+                        end.linkTo(user4.start)
+                        start.linkTo(user2.end)
+                    }
+                    .height(72.dp)
+                    .width(72.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.user04_oni),
+                contentDescription = "user4",
+                modifier = Modifier
+                    .constrainAs(user4) {
+                        top.linkTo(user1.top)
+                        end.linkTo(parent.end)
+                    }
+                    .padding(end = 40.dp)
+                    .height(72.dp)
+                    .width(72.dp)
+            )
+        }
+    }
+}
+
+@Composable
+@Preview
+fun BeTrappedPreview() {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = Color.Black
+    ) {
+        ConstraintLayout {
+            // Create references for the composable to constrain
+            val (eye, tvTrap, progressTrap, ivTime, tvNow, tvRelative, tvLimit, tvLimitTime, btCaptureOn, btSkillOn, btSkillOff, progressSkill, user1, user2, user3, user4) = createRefs()
+
+            Image(
+                painter = painterResource(R.drawable.eye),
+                contentDescription = "text_watching",
+                modifier = Modifier
+                    .constrainAs(eye) {
+                        end.linkTo(parent.end)
+                        bottom.linkTo(tvTrap.top)
+                        start.linkTo(parent.start)
+                    }
+                    .height(160.dp)
+                    .width(160.dp)
+            )
+            Text(
+                text = "罠が解除されるまで",
+                fontSize = 20.sp,
+                color = Color.White,
+                modifier = Modifier
+                    .constrainAs(tvTrap) {
+                        top.linkTo(parent.top)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                    }
+            )
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .constrainAs(progressTrap) {
+                        top.linkTo(tvTrap.bottom)
+                        end.linkTo(parent.end)
+                        start.linkTo(parent.start)
+                    }
+                    .padding(top = 20.dp)
+                    .height(40.dp)
+                    .width(280.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.text_times),
+                contentDescription = "時間が表示されています",
+                modifier = Modifier
+                    .constrainAs(ivTime) {
+                        top.linkTo(parent.top)
+                        end.linkTo(parent.end)
+                        start.linkTo(parent.start)
+                    }
+                    .height(100.dp)
+            )
+            Text(
+                text = "NOW",
+                fontSize = 12.sp,
+                color = Color.Black,
+                modifier = Modifier
+                    .constrainAs(tvNow) {
+                        top.linkTo(ivTime.top)
+                        bottom.linkTo(ivTime.bottom)
+                        start.linkTo(ivTime.start)
+                    }
+                    .padding(start = 40.dp)
+            )
+            Text(
+                text = "relative_time",
+                fontSize = 20.sp,
+                color = Color.Black,
+                modifier = Modifier
+                    .constrainAs(tvRelative) {
+                        bottom.linkTo(tvNow.bottom)
+                        start.linkTo(tvNow.end)
+                    }
+                    .padding(start = 12.dp)
+            )
+            Text(
+                text = "LIMIT",
+                fontSize = 12.sp,
+                color = Color.Red,
+                modifier = Modifier
+                    .constrainAs(tvLimit) {
+                        end.linkTo(tvLimitTime.start)
+                        bottom.linkTo(tvNow.bottom)
+                    }
+                    .padding(end = 12.dp)
+            )
+            Text(
+                text = "limit_time",
+                fontSize = 20.sp,
+                color = Color.Red,
+                modifier = Modifier
+                    .constrainAs(tvLimitTime) {
+                        end.linkTo(ivTime.end)
+                        bottom.linkTo(tvNow.bottom)
+                    }
+                    .padding(end = 40.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.button_captured_on),
+                contentDescription = "鬼に捕まったときに押すボタン",
+                modifier = Modifier
+                    .constrainAs(btCaptureOn) {
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                    }
+                    .height(100.dp)
+                    .width(200.dp)
+            )
+            Image(
+                    painter = painterResource(R.drawable.button_skill_on),
+            contentDescription = "skill button on",
+            modifier = Modifier
+                .constrainAs(btSkillOn) {
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                }
+                .height(100.dp)
+                .width(180.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.button_skill_off),
+                contentDescription = "skill button off",
+                modifier = Modifier
+                    .constrainAs(btSkillOff) {
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                        visibility = Visibility.Invisible
+                    }
+                    .height(100.dp)
+                    .width(180.dp)
+            )
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .constrainAs(progressSkill) {
+                        end.linkTo(btSkillOff.end)
+                        bottom.linkTo(btSkillOff.bottom)
+                        start.linkTo(btSkillOff.start)
+                    }
+                    .padding(bottom = 24.dp, start = 8.dp)
+                    .height(10.dp)
+                    .width(80.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.user01_caputure),
+                contentDescription = "user1",
+                modifier = Modifier
+                    .constrainAs(user1) {
+                        top.linkTo(ivTime.bottom)
+                        start.linkTo(parent.start)
+                    }
+                    .padding(start = 40.dp)
+                    .height(72.dp)
+                    .width(72.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.user02_runaway),
+                contentDescription = "user2",
+                modifier = Modifier
+                    .constrainAs(user2) {
+                        top.linkTo(user1.top)
+                        end.linkTo(user3.start)
+                        start.linkTo(user1.end)
+                    }
+                    .height(72.dp)
+                    .width(72.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.user03_runaway),
+                contentDescription = "user3",
+                modifier = Modifier
+                    .constrainAs(user3) {
+                        top.linkTo(user1.top)
+                        end.linkTo(user4.start)
+                        start.linkTo(user2.end)
+                    }
+                    .height(72.dp)
+                    .width(72.dp)
+            )
+            Image(
+                painter = painterResource(R.drawable.user04_oni),
+                contentDescription = "user4",
+                modifier = Modifier
+                    .constrainAs(user4) {
+                        top.linkTo(user1.top)
+                        end.linkTo(parent.end)
+                    }
+                    .padding(end = 40.dp)
+                    .height(72.dp)
+                    .width(72.dp)
+            )
+        }
     }
 }
