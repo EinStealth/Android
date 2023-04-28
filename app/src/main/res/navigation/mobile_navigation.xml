@@ -26,8 +26,7 @@
     <fragment
         android:id="@+id/navigation_result"
         android:name="com.example.hideandseek.ui.view.ResultFragment"
-        android:label="Result"
-        tools:layout="@layout/fragment_result"/>
+        android:label="Result"/>
 
     <fragment
         android:id="@+id/navigation_register_user_icon"
