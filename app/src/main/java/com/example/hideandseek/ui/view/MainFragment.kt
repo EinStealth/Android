@@ -22,7 +22,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -279,7 +281,14 @@ class MainFragment(
             captureDialogFragment.show(supportFragmentManager, "capture")
         }
 
-        return root
+        return ComposeView(requireContext()).apply {
+            setContent {
+                MainFragmentScreen(
+                    onNavigate = { dest -> findNavController().navigate(dest) },
+                    childFragmentManager = childFragmentManager
+                )
+            }
+        }
     }
 
     private fun selectDrawable(icon: Int): Int {
@@ -301,18 +310,12 @@ class MainFragment(
 }
 
 @Composable
-fun MainFragmentScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), childFragmentManager: FragmentManager) {
-    val beTrappedUiState by viewModel.uiState.collectAsState()
+fun MainFragmentScreen(onNavigate: (Int) -> (Unit), viewModel: MainFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), childFragmentManager: FragmentManager) {
+    val mainFragmentUiState by viewModel.uiState.collectAsState()
 
-    val latestUser = beTrappedUiState.latestUser
-    val skillTime = beTrappedUiState.skillTime
+    val latestUser = mainFragmentUiState.latestUser
+    val skillTime = mainFragmentUiState.skillTime
 
-    val howProgressTrap =
-        if (latestUser.relativeTime != "") {
-            viewModel.howProgressTrapTime(latestUser.relativeTime, "trapTime") / 60f
-        } else {
-            0f
-        }
     val howProgressSkill =
         if (skillTime != "") {
             viewModel.howProgressSkillTime(
@@ -324,11 +327,13 @@ fun MainFragmentScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragment
         }
 
     Surface(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(R.drawable.title_background_responsive_nontitlever),
-            contentDescription = "background",
-            contentScale = ContentScale.Crop
-        )
+        mainFragmentUiState.map?.let {
+            Image(
+                bitmap = it.asImageBitmap(),
+                contentDescription = "map",
+                contentScale = ContentScale.Crop
+            )
+        }
         ConstraintLayout {
             // Create references for the composable to constrain
             val (ivTime, tvNow, tvRelative, tvLimit, tvLimitTime, btCaptureOn, btSkillOn, btSkillOff, progressSkill, user1, user2, user3, user4) = createRefs()
@@ -406,7 +411,7 @@ fun MainFragmentScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragment
                         captureDialogFragment.show(childFragmentManager, "capture")
                     }
             )
-            if (beTrappedUiState.isOverSkillTime) {
+            if (mainFragmentUiState.isOverSkillTime) {
                 Image(
                     painter = painterResource(R.drawable.button_skill_on),
                     contentDescription = "skill button on",
@@ -417,12 +422,6 @@ fun MainFragmentScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragment
                         }
                         .height(100.dp)
                         .width(180.dp)
-                        .clickable {
-                            viewModel.postTrapRoom(0, latestUser)
-                            viewModel.postTrapSpacetime(latestUser)
-                            viewModel.setSkillTime(latestUser)
-                            viewModel.setIsOverSkillTime(false)
-                        }
                 )
             } else {
                 Image(
