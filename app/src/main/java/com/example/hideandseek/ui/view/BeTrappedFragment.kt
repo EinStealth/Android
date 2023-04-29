@@ -64,9 +64,6 @@ class BeTrappedFragment : Fragment() {
         _binding = FragmentBeTrappedBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // スキルボタン
-        val btSkillOn: ImageView = binding.btSkillOn
-
         setFragmentResultListener("MainFragmentLimitTime") { _, bundle ->
             val result = bundle.getString("limitTime")
             Log.d("limitTimeResultListener", result.toString())
@@ -138,15 +135,6 @@ class BeTrappedFragment : Fragment() {
                                 skillTime,
                             )
                             setFragmentResult("BeTrappedFragmentSkillTime", bundleOf("skillTime" to skillTime))
-                        }
-
-                        // skillボタンが押された時の処理
-                        btSkillOn.setOnClickListener {
-                            setFragmentResult("BeTrappedFragmentSkillTime", bundleOf("skillTime" to latestUser.relativeTime))
-                            viewModel.postTrapRoom(0, latestUser)
-                            viewModel.postTrapSpacetime(latestUser)
-                            viewModel.setSkillTime(latestUser)
-                            viewModel.setIsOverSkillTime(false)
                         }
                     }
                 }
@@ -316,6 +304,12 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
                         }
                         .height(100.dp)
                         .width(180.dp)
+                        .clickable {
+                            viewModel.postTrapRoom(0, latestUser)
+                            viewModel.postTrapSpacetime(latestUser)
+                            viewModel.setSkillTime(latestUser)
+                            viewModel.setIsOverSkillTime(false)
+                        }
                 )
             } else {
                 Image(
