@@ -5,9 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,8 +40,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.data.datasource.local.TrapData
-import com.example.hideandseek.databinding.FragmentMainBinding
-import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
