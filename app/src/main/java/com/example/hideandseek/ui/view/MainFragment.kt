@@ -72,27 +72,6 @@ class MainFragment(
         val root: View = binding.root
 
         // Viewの取得
-        // 捕まったボタン
-        val btCaptureOn: ImageView = binding.btCaptureOn
-
-        // スキルボタン
-        val btSkillOn: ImageView = binding.btSkillOn
-        val btSkillOff: ImageView = binding.btSkillOff
-        val progressSkill: ProgressBar = binding.progressSkill
-
-        fun changeBtSkillVisible(isOn: Boolean) {
-            if (isOn) {
-                btSkillOn.visibility = View.VISIBLE
-                btSkillOff.visibility = View.INVISIBLE
-                progressSkill.visibility = View.INVISIBLE
-            } else {
-                btSkillOn.visibility = View.INVISIBLE
-                btSkillOff.visibility = View.VISIBLE
-                progressSkill.visibility = View.VISIBLE
-
-                progressSkill.max = 60
-            }
-        }
 
         // User normal
         // TODO: Statusを受け取って表示が切り替わるようにする
@@ -149,7 +128,6 @@ class MainFragment(
                     Log.d("UseCaseTest", mainUiState.latestUser.toString())
 
                     setFragmentResult("MainFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to mainUiState.isOverSkillTime))
-                    changeBtSkillVisible(mainUiState.isOverSkillTime)
 
                     if (mainUiState.isOverLimitTime) {
                         // statusをクリアにする
@@ -237,7 +215,6 @@ class MainFragment(
                         // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
                         if (skillTime != "") {
                             viewModel.compareSkillTime(latestUser.relativeTime, skillTime)
-                            progressSkill.progress = viewModel.howProgressSkillTime(latestUser.relativeTime, skillTime)
                             setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to skillTime))
                         }
 
@@ -250,26 +227,8 @@ class MainFragment(
                             }
                         }
                     }
-
-                    // skillボタンが押された時の処理
-                    btSkillOn.setOnClickListener {
-                        Log.d("skill button", "skill buttonが呼ばれました")
-                        setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to mainUiState.latestUser.relativeTime))
-                        // 自分の罠をRoomにinsert
-                        viewModel.postTrapRoom(0, latestUser)
-                        viewModel.postTrapSpacetime("post", latestUser)
-                        viewModel.setSkillTime(latestUser)
-                        viewModel.setIsOverSkillTime(false)
-                    }
                 }
             }
-        }
-
-        // 捕まったボタンが押された時の処理
-        btCaptureOn.setOnClickListener {
-            val captureDialogFragment = CaptureDialogFragment()
-            val supportFragmentManager = childFragmentManager
-            captureDialogFragment.show(supportFragmentManager, "capture")
         }
 
         return ComposeView(requireContext()).apply {
@@ -413,6 +372,13 @@ fun MainFragmentScreen(onNavigate: (Int) -> (Unit), viewModel: MainFragmentViewM
                         }
                         .height(100.dp)
                         .width(180.dp)
+                        .clickable {
+                            // 自分の罠をRoomにinsert
+                            viewModel.postTrapRoom(0, latestUser)
+                            viewModel.postTrapSpacetime("post", latestUser)
+                            viewModel.setSkillTime(latestUser)
+                            viewModel.setIsOverSkillTime(false)
+                        }
                 )
             } else {
                 Image(
