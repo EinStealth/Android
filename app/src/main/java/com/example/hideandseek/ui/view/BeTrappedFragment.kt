@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,8 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,6 +31,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Visibility
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -41,7 +42,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.databinding.FragmentBeTrappedBinding
 import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
-import com.example.hideandseek.ui.viewmodel.WatchFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -197,12 +197,19 @@ class BeTrappedFragment : Fragment() {
             captureDialogFragment.show(supportFragmentManager, "capture")
         }
 
-        return root
+        return ComposeView(requireContext()).apply {
+            setContent {
+                BeTrappedScreen(
+                    onNavigate = { dest -> findNavController().navigate(dest) },
+                    childFragmentManager = childFragmentManager
+                )
+            }
+        }
     }
 }
 
 @Composable
-fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), childFragmentManager: FragmentManager) {
     val beTrappedUiState by viewModel.uiState.collectAsState()
 
     Surface(
@@ -314,6 +321,10 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
                     }
                     .height(100.dp)
                     .width(200.dp)
+                    .clickable {
+                        val captureDialogFragment = CaptureDialogFragment()
+                        captureDialogFragment.show(childFragmentManager, "capture")
+                    }
             )
             Image(
                 painter = painterResource(R.drawable.button_skill_on),
