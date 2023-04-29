@@ -56,33 +56,15 @@ import kotlinx.coroutines.launch
 class MainFragment(
     mainDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : Fragment() {
-    private var _binding: FragmentMainBinding? = null
     private val viewModel: MainFragmentViewModel by viewModels()
 
     private val coroutineScope = CoroutineScope(mainDispatcher)
-
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentMainBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        // Viewの取得
-
-        // User normal
-        // TODO: Statusを受け取って表示が切り替わるようにする
-        val user1Normal: ImageView = binding.user1Normal
-        val user2Normal: ImageView = binding.user2Normal
-        val user3Normal: ImageView = binding.user3Normal
-        // User demon
-        val user4Demon: ImageView = binding.user4Demon
-        // User captured
-        val user1Captured: ImageView = binding.user1Captured
-
         // BeTrappedFragmentから戻ってきた時
         setFragmentResultListener("BeTrappedFragmentSkillTime") { _, bundle ->
             val result = bundle.getString("skillTime")
@@ -98,33 +80,9 @@ class MainFragment(
             viewModel.setIsOverSkillTime(result)
         }
 
-        setFragmentResultListener("UserRegisterFragmentName") { _, bundle ->
-            val result = bundle.getString("name")
-            Log.d("nameRegisterTest", result.toString())
-        }
-
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { mainUiState ->
-
-                    val allPlayer = mainUiState.allPlayer
-                    if (allPlayer.isNotEmpty()) {
-                        for (i in allPlayer.indices) {
-                            if (i == 0) {
-                                user1Normal.setImageResource(selectDrawable(allPlayer[i].icon))
-                            }
-                            if (i == 1) {
-                                user2Normal.setImageResource(selectDrawable(allPlayer[i].icon))
-                            }
-                            if (i == 2) {
-                                user3Normal.setImageResource(selectDrawable(allPlayer[i].icon))
-                            }
-                            if (i == 3) {
-                                user4Demon.setImageResource(selectDrawable(allPlayer[i].icon))
-                            }
-                        }
-                    }
-
                     Log.d("UseCaseTest", mainUiState.latestUser.toString())
 
                     setFragmentResult("MainFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to mainUiState.isOverSkillTime))
@@ -240,21 +198,21 @@ class MainFragment(
             }
         }
     }
+}
 
-    private fun selectDrawable(icon: Int): Int {
-        return when (icon) {
-            1 -> {
-                R.drawable.user01_normal
-            }
-            2 -> {
-                R.drawable.user02_normal
-            }
-            3 -> {
-                R.drawable.user03_normal
-            }
-            else -> {
-                R.drawable.user04_normal
-            }
+private fun selectDrawable(icon: Int): Int {
+    return when (icon) {
+        1 -> {
+            R.drawable.user01_normal
+        }
+        2 -> {
+            R.drawable.user02_normal
+        }
+        3 -> {
+            R.drawable.user03_normal
+        }
+        else -> {
+            R.drawable.user04_normal
         }
     }
 }
@@ -265,6 +223,7 @@ fun MainFragmentScreen(onNavigate: (Int) -> (Unit), viewModel: MainFragmentViewM
 
     val latestUser = mainFragmentUiState.latestUser
     val skillTime = mainFragmentUiState.skillTime
+    val allPlayer = mainFragmentUiState.allPlayer
 
     val howProgressSkill =
         if (skillTime != "") {
@@ -405,54 +364,62 @@ fun MainFragmentScreen(onNavigate: (Int) -> (Unit), viewModel: MainFragmentViewM
                         .width(80.dp)
                 )
             }
-            Image(
-                painter = painterResource(R.drawable.user01_caputure),
-                contentDescription = "user1",
-                modifier = Modifier
-                    .constrainAs(user1) {
-                        top.linkTo(ivTime.bottom)
-                        start.linkTo(parent.start)
-                    }
-                    .padding(start = 40.dp)
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user02_runaway),
-                contentDescription = "user2",
-                modifier = Modifier
-                    .constrainAs(user2) {
-                        top.linkTo(user1.top)
-                        end.linkTo(user3.start)
-                        start.linkTo(user1.end)
-                    }
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user03_runaway),
-                contentDescription = "user3",
-                modifier = Modifier
-                    .constrainAs(user3) {
-                        top.linkTo(user1.top)
-                        end.linkTo(user4.start)
-                        start.linkTo(user2.end)
-                    }
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user04_oni),
-                contentDescription = "user4",
-                modifier = Modifier
-                    .constrainAs(user4) {
-                        top.linkTo(user1.top)
-                        end.linkTo(parent.end)
-                    }
-                    .padding(end = 40.dp)
-                    .height(72.dp)
-                    .width(72.dp)
-            )
+            if (allPlayer.isNotEmpty()) {
+                Image(
+                    painter = painterResource(selectDrawable(allPlayer[0].icon)),
+                    contentDescription = "user1",
+                    modifier = Modifier
+                        .constrainAs(user1) {
+                            top.linkTo(ivTime.bottom)
+                            start.linkTo(parent.start)
+                        }
+                        .padding(start = 40.dp)
+                        .height(72.dp)
+                        .width(72.dp)
+                )
+            }
+            if (allPlayer.size > 1) {
+                Image(
+                    painter = painterResource(selectDrawable(allPlayer[1].icon)),
+                    contentDescription = "user2",
+                    modifier = Modifier
+                        .constrainAs(user2) {
+                            top.linkTo(user1.top)
+                            end.linkTo(user3.start)
+                            start.linkTo(user1.end)
+                        }
+                        .height(72.dp)
+                        .width(72.dp)
+                )
+            }
+            if (allPlayer.size > 2) {
+                Image(
+                    painter = painterResource(selectDrawable(allPlayer[2].icon)),
+                    contentDescription = "user3",
+                    modifier = Modifier
+                        .constrainAs(user3) {
+                            top.linkTo(user1.top)
+                            end.linkTo(user4.start)
+                            start.linkTo(user2.end)
+                        }
+                        .height(72.dp)
+                        .width(72.dp)
+                )
+            }
+            if (allPlayer.size > 3) {
+                Image(
+                    painter = painterResource(selectDrawable(allPlayer[3].icon)),
+                    contentDescription = "user4",
+                    modifier = Modifier
+                        .constrainAs(user4) {
+                            top.linkTo(user1.top)
+                            end.linkTo(parent.end)
+                        }
+                        .padding(end = 40.dp)
+                        .height(72.dp)
+                        .width(72.dp)
+                )
+            }
         }
     }
 }
