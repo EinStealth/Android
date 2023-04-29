@@ -64,32 +64,8 @@ class BeTrappedFragment : Fragment() {
         _binding = FragmentBeTrappedBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Viewの取得
-        // 時間表示の場所
-        val tvRelativeTime: TextView = binding.tvRelativeTime
-
         // スキルボタン
         val btSkillOn: ImageView = binding.btSkillOn
-        val btSkillOff: ImageView = binding.btSkillOff
-        val progressSkill: ProgressBar = binding.progressSkill
-
-        fun changeBtSkillVisible(isOn: Boolean) {
-            if (isOn) {
-                btSkillOn.visibility = View.VISIBLE
-                btSkillOff.visibility = View.INVISIBLE
-                progressSkill.visibility = View.INVISIBLE
-            } else {
-                btSkillOn.visibility = View.INVISIBLE
-                btSkillOff.visibility = View.VISIBLE
-                progressSkill.visibility = View.VISIBLE
-
-                progressSkill.max = 60
-            }
-        }
-
-        // Trapが解除されるまでのプログレスバー
-        val progressTrap: ProgressBar = binding.progressTrap
-        progressTrap.max = 60
 
         setFragmentResultListener("MainFragmentLimitTime") { _, bundle ->
             val result = bundle.getString("limitTime")
@@ -128,7 +104,6 @@ class BeTrappedFragment : Fragment() {
 
                     // Skillを使ってからの時間を監視
                     setFragmentResult("BeTrappedFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to beTrappedUiState.isOverSkillTime))
-                    changeBtSkillVisible(beTrappedUiState.isOverSkillTime)
 
                     // 罠にかかっている時間の監視
                     if (beTrappedUiState.isOverTrapTime) {
@@ -159,10 +134,6 @@ class BeTrappedFragment : Fragment() {
                         // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
                         if (skillTime != "") {
                             viewModel.compareSkillTime(
-                                latestUser.relativeTime,
-                                skillTime,
-                            )
-                            progressSkill.progress = viewModel.howProgressSkillTime(
                                 latestUser.relativeTime,
                                 skillTime,
                             )
@@ -198,9 +169,20 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
     val beTrappedUiState by viewModel.uiState.collectAsState()
 
     val latestUser = beTrappedUiState.latestUser
+    val skillTime = beTrappedUiState.skillTime
+
     val howProgressTrap =
         if (latestUser.relativeTime != "" && trapTime != "") {
             viewModel.howProgressTrapTime(latestUser.relativeTime, trapTime)/60f
+        } else {
+            0f
+        }
+    val howProgressSkill =
+        if (skillTime != "") {
+            viewModel.howProgressSkillTime(
+                latestUser.relativeTime,
+                skillTime,
+            )/60f
         } else {
             0f
         }
@@ -323,41 +305,43 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
                         captureDialogFragment.show(childFragmentManager, "capture")
                     }
             )
-            Image(
-                painter = painterResource(R.drawable.button_skill_on),
-                contentDescription = "skill button on",
-                modifier = Modifier
-                    .constrainAs(btSkillOn) {
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                    }
-                    .height(100.dp)
-                    .width(180.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.button_skill_off),
-                contentDescription = "skill button off",
-                modifier = Modifier
-                    .constrainAs(btSkillOff) {
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                        visibility = Visibility.Invisible
-                    }
-                    .height(100.dp)
-                    .width(180.dp)
-            )
-            LinearProgressIndicator(
-                progress = 0f,
-                modifier = Modifier
-                    .constrainAs(progressSkill) {
-                        end.linkTo(btSkillOff.end)
-                        bottom.linkTo(btSkillOff.bottom)
-                        start.linkTo(btSkillOff.start)
-                    }
-                    .padding(bottom = 24.dp, start = 8.dp)
-                    .height(10.dp)
-                    .width(80.dp)
-            )
+            if (beTrappedUiState.isOverSkillTime) {
+                Image(
+                    painter = painterResource(R.drawable.button_skill_on),
+                    contentDescription = "skill button on",
+                    modifier = Modifier
+                        .constrainAs(btSkillOn) {
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        }
+                        .height(100.dp)
+                        .width(180.dp)
+                )
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.button_skill_off),
+                    contentDescription = "skill button off",
+                    modifier = Modifier
+                        .constrainAs(btSkillOff) {
+                            end.linkTo(parent.end)
+                            bottom.linkTo(parent.bottom)
+                        }
+                        .height(100.dp)
+                        .width(180.dp)
+                )
+                LinearProgressIndicator(
+                    progress = howProgressSkill,
+                    modifier = Modifier
+                        .constrainAs(progressSkill) {
+                            end.linkTo(btSkillOff.end)
+                            bottom.linkTo(btSkillOff.bottom)
+                            start.linkTo(btSkillOff.start)
+                        }
+                        .padding(bottom = 24.dp, start = 8.dp)
+                        .height(10.dp)
+                        .width(80.dp)
+                )
+            }
             Image(
                 painter = painterResource(R.drawable.user01_caputure),
                 contentDescription = "user1",
