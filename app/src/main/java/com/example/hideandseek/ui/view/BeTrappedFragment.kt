@@ -45,6 +45,10 @@ import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+// 2重LiveData解消のために変数定義
+private var limitTime = ""
+private var trapTime = ""
+
 @AndroidEntryPoint
 class BeTrappedFragment : Fragment() {
     private var _binding: FragmentBeTrappedBinding? = null
@@ -87,10 +91,6 @@ class BeTrappedFragment : Fragment() {
             }
         }
 
-        // 2重LiveData解消のために変数定義
-        var limitTime = ""
-        var trapTime = ""
-
         // Trapが解除されるまでのプログレスバー
         val progressTrap: ProgressBar = binding.progressTrap
         progressTrap.max = 60
@@ -98,7 +98,6 @@ class BeTrappedFragment : Fragment() {
         setFragmentResultListener("MainFragmentLimitTime") { _, bundle ->
             val result = bundle.getString("limitTime")
             Log.d("limitTimeResultListener", result.toString())
-            tvLimitTime.text = result
             if (result != null) {
                 limitTime = result
             }
@@ -190,13 +189,6 @@ class BeTrappedFragment : Fragment() {
             }
         }
 
-        // 捕まったボタンが押された時の処理
-        btCaptureOn.setOnClickListener {
-            val captureDialogFragment = CaptureDialogFragment()
-            val supportFragmentManager = childFragmentManager
-            captureDialogFragment.show(supportFragmentManager, "capture")
-        }
-
         return ComposeView(requireContext()).apply {
             setContent {
                 BeTrappedScreen(
@@ -245,6 +237,7 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
                     }
             )
             LinearProgressIndicator(
+                progress = 0f,
                 modifier = Modifier
                     .constrainAs(progressTrap) {
                         top.linkTo(tvTrap.bottom)
@@ -301,7 +294,7 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
                     .padding(end = 12.dp)
             )
             Text(
-                text = "limit_time",
+                text = limitTime,
                 fontSize = 20.sp,
                 color = Color.Red,
                 modifier = Modifier
@@ -350,6 +343,7 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
                     .width(180.dp)
             )
             LinearProgressIndicator(
+                progress = 0f,
                 modifier = Modifier
                     .constrainAs(progressSkill) {
                         end.linkTo(btSkillOff.end)
