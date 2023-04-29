@@ -9,7 +9,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.ui.viewmodel.MainActivityViewModel
+import com.example.hideandseek.ui.viewmodel.RegisterUserIconFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.RegisterUserNameFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.RoomCreateFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.RoomSearchFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.StandByRoomFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.WatchFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            StartPreview()
+            MyApp()
         }
 
         // フルスクリーンにするために、TitleBarなどを隠す
@@ -66,5 +78,54 @@ class MainActivity : AppCompatActivity() {
             )
             window.decorView.windowInsetsController?.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
+    }
+}
+
+@Composable
+fun MyApp() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "start") {
+        composable("start") {
+            StartScreen(navController)
+        }
+        composable("registerName") {
+            val viewModel = hiltViewModel<RegisterUserNameFragmentViewModel>()
+            RegisterUserNameScreen(viewModel, navController)
+        }
+        composable("registerIcon") {
+            val viewModel = hiltViewModel<RegisterUserIconFragmentViewModel>()
+            RegisterUserIconScreen(viewModel, navController)
+        }
+        composable("roomTypeSelect") {
+            val viewModel = hiltViewModel<RoomTypeSelectFragmentViewModel>()
+            RoomTypeSelectScreen(viewModel, navController)
+        }
+        composable("roomCreate") {
+            val viewModel = hiltViewModel<RoomCreateFragmentViewModel>()
+            RoomCreateScreen(viewModel, navController)
+        }
+        composable("roomSearch") {
+            val viewModel = hiltViewModel<RoomSearchFragmentViewModel>()
+            RoomSearchScreen(viewModel, navController)
+        }
+        composable("standByRoom") {
+            val viewModel = hiltViewModel<StandByRoomFragmentViewModel>()
+            StandByRoomScreen(viewModel, navController)
+        }
+//        composable("main") {
+//            val viewModel = hiltViewModel<MainFragmentViewModel>()
+//            MainFragmentScreen(childFragmentManager)
+//        }
+        composable("watch") {
+            val viewModel = hiltViewModel<WatchFragmentViewModel>()
+            WatchScreen(viewModel, navController)
+        }
+        composable("result") {
+            ResultScreen(navController)
+        }
+//        composable("beTrapped") {
+//            val viewModel = hiltViewModel<BeTrappedFragmentViewModel>()
+//            BeTrappedScreen(onNavigate = , childFragmentManager = )
+//        }
     }
 }

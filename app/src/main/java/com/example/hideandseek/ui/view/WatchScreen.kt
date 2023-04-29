@@ -1,10 +1,7 @@
 package com.example.hideandseek.ui.view
 
-import android.os.Bundle
+import android.annotation.SuppressLint
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -17,87 +14,52 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.NavController
 import com.example.hideandseek.R
 import com.example.hideandseek.ui.viewmodel.WatchFragmentViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
-class WatchFragment(
-    mainDispatcher: CoroutineDispatcher = Dispatchers.Main
-) : Fragment() {
-    private val viewModel: WatchFragmentViewModel by viewModels()
+@SuppressLint("CoroutineCreationDuringComposition")
+@Composable
+fun WatchScreen(viewModel: WatchFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController, mainDispatcher: CoroutineDispatcher = Dispatchers.Main) {
+    val watchUiState by viewModel.uiState.collectAsState()
 
-    private val coroutineScope = CoroutineScope(mainDispatcher)
+    val coroutineScope = CoroutineScope(mainDispatcher)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { watchUiState ->
+    val allLocation = watchUiState.allLocation
+    val allTraps = watchUiState.allTrap
+    val latestUser = watchUiState.latestUser
 
-                    Log.d("UiState", "stateを更新しました")
-                    val allLocation = watchUiState.allLocation
-                    val allTraps = watchUiState.allTrap
-                    val latestUser = watchUiState.latestUser
-
-                    // 自分の情報の表示
-                    Log.d("UserLive", latestUser.toString())
-                    if (latestUser.relativeTime != "") {
-                        // 他人の位置を追加
-                        Log.d("ALL_Location", allLocation.toString())
-                        if (allLocation.isNotEmpty()) {
-                            // ユーザーの位置情報
-                            for (i in allLocation.indices) {
-                                if (allLocation[i].status == 1) {
-                                    viewModel.postTrapRoom(1, latestUser)
-                                }
-                            }
-                        }
-
-                        // URLから画像を取得
-                        // 相対時間10秒おきに行う
-                        if (latestUser.relativeTime.substring(7, 8) == "0") {
-                            Log.d("fetchMAP", "Mapが更新されました")
-                            coroutineScope.launch {
-                                viewModel.fetchMap(latestUser, allLocation, allTraps)
-                            }
-                        }
-                    }
+    // 自分の情報の表示
+    Log.d("UserLive", latestUser.toString())
+    if (latestUser.relativeTime != "") {
+        // 他人の位置を追加
+        Log.d("ALL_Location", allLocation.toString())
+        if (allLocation.isNotEmpty()) {
+            // ユーザーの位置情報
+            for (i in allLocation.indices) {
+                if (allLocation[i].status == 1) {
+                    viewModel.postTrapRoom(1, latestUser)
                 }
             }
         }
 
-        return ComposeView(requireContext()).apply {
-            setContent {
-                WatchScreen(
-                    onNavigate = { dest -> findNavController().navigate(dest) }
-                )
+        // URLから画像を取得
+        // 相対時間10秒おきに行う
+        if (latestUser.relativeTime.substring(7, 8) == "0") {
+            Log.d("fetchMAP", "Mapが更新されました")
+            coroutineScope.launch {
+                viewModel.fetchMap(latestUser, allLocation, allTraps)
             }
         }
     }
-}
-
-@Composable
-fun WatchScreen(onNavigate: (Int) -> (Unit), viewModel: WatchFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
-    val watchUiState by viewModel.uiState.collectAsState()
 
     Surface(Modifier.fillMaxSize()) {
         watchUiState.map?.let {
