@@ -125,8 +125,7 @@ fun MyApp() {
             WatchScreen(viewModel, navController)
         }
         composable("result") {
-            val viewModel = hiltViewModel<ResultFragmentViewModel>()
-            ResultScreen(viewModel, navController)
+            ResultScreen(navController)
         }
         composable("beTrapped") {
             val viewModel = hiltViewModel<BeTrappedFragmentViewModel>()

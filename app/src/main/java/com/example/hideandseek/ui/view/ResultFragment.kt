@@ -1,9 +1,5 @@
 package com.example.hideandseek.ui.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
@@ -13,38 +9,16 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.NavController
 import com.example.hideandseek.R
-import dagger.hilt.android.AndroidEntryPoint
-
-@AndroidEntryPoint
-class ResultFragment : Fragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        // TODO: 結果に応じてResultを変える
-
-        return ComposeView(requireContext()).apply {
-            setContent {
-                ResultScreen(
-                    onNavigate = { dest -> findNavController().navigate(dest) }
-                )
-            }
-        }
-    }
-}
 
 @Composable
-fun ResultScreen(onNavigate: (Int) -> (Unit)) {
+fun ResultScreen(navController: NavController) {
     ConstraintLayout {
         // Create references for the composable to constrain
         val (dialog, textResult, textWinner, textLoser, winner1, winner2, loser1, loser2, btClose) = createRefs()
