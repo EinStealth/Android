@@ -5,9 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,7 +37,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
-import com.example.hideandseek.databinding.FragmentBeTrappedBinding
 import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -51,19 +47,13 @@ private var trapTime = ""
 
 @AndroidEntryPoint
 class BeTrappedFragment : Fragment() {
-    private var _binding: FragmentBeTrappedBinding? = null
     private val viewModel: BeTrappedFragmentViewModel by viewModels()
-
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentBeTrappedBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
         setFragmentResultListener("MainFragmentLimitTime") { _, bundle ->
             val result = bundle.getString("limitTime")
             Log.d("limitTimeResultListener", result.toString())
