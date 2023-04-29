@@ -1,9 +1,5 @@
 package com.example.hideandseek.ui.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,43 +17,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.NavController
 import com.example.hideandseek.R
 import com.example.hideandseek.ui.viewmodel.RegisterUserNameFragmentViewModel
-import dagger.hilt.android.AndroidEntryPoint
-
-@AndroidEntryPoint
-class RegisterUserNameFragment : Fragment() {
-    private val viewModel: RegisterUserNameFragmentViewModel by viewModels()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        // 既に名前が保存されているか確認する
-        viewModel.readUserInfo()
-
-        return ComposeView(requireContext()).apply {
-            setContent {
-                RegisterUserNameScreen(
-                    onNavigate = { dest -> findNavController().navigate(dest) }
-                )
-            }
-        }
-    }
-}
 
 @Composable
-fun RegisterUserNameScreen(onNavigate: (Int) -> (Unit), viewModel: RegisterUserNameFragmentViewModel = viewModel()) {
+fun RegisterUserNameScreen(viewModel: RegisterUserNameFragmentViewModel, navController: NavController) {
+    // 既に名前が保存されているか確認する
+    viewModel.readUserInfo()
+
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
@@ -108,9 +80,9 @@ fun RegisterUserNameScreen(onNavigate: (Int) -> (Unit), viewModel: RegisterUserN
                     .clickable {
                         viewModel.writeUserName(text)
                         if (viewModel.uiState.value.isEdit) {
-                            onNavigate(R.id.navigation_room_type_select)
+                            navController.navigate("roomTypeSelect")
                         } else {
-                            onNavigate(R.id.navigation_register_user_icon)
+                            navController.navigate("registerIcon")
                         }
                     }
             )

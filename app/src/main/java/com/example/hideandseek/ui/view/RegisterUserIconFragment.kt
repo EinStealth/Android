@@ -37,16 +37,14 @@ class RegisterUserIconFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                RegisterUserIconScreen(
-                    onNavigate = { dest -> findNavController().navigate(dest) }
-                )
+                RegisterUserIconScreen()
             }
         }
     }
 }
 
 @Composable
-fun RegisterUserIconScreen(onNavigate: (Int) -> (Unit), viewModel: RegisterUserIconFragmentViewModel = viewModel()) {
+fun RegisterUserIconScreen(viewModel: RegisterUserIconFragmentViewModel = viewModel()) {
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
@@ -80,7 +78,7 @@ fun RegisterUserIconScreen(onNavigate: (Int) -> (Unit), viewModel: RegisterUserI
                         .clickable {
                             // アイコンの保存
                             viewModel.writeUserIcon(1)
-                            onNavigate(R.id.navigation_room_type_select)
+//                            onNavigate(R.id.navigation_room_type_select)
                         }
                 )
                 Image(
@@ -91,7 +89,7 @@ fun RegisterUserIconScreen(onNavigate: (Int) -> (Unit), viewModel: RegisterUserI
                         .clickable {
                             // アイコンの保存
                             viewModel.writeUserIcon(2)
-                            onNavigate(R.id.navigation_room_type_select)
+//                            onNavigate(R.id.navigation_room_type_select)
                         }
                 )
                 Image(
@@ -102,7 +100,7 @@ fun RegisterUserIconScreen(onNavigate: (Int) -> (Unit), viewModel: RegisterUserI
                         .clickable {
                             // アイコンの保存
                             viewModel.writeUserIcon(3)
-                            onNavigate(R.id.navigation_room_type_select)
+//                            onNavigate(R.id.navigation_room_type_select)
                         }
                 )
                 Image(
@@ -113,7 +111,7 @@ fun RegisterUserIconScreen(onNavigate: (Int) -> (Unit), viewModel: RegisterUserI
                         .clickable {
                             // アイコンの保存
                             viewModel.writeUserIcon(4)
-                            onNavigate(R.id.navigation_room_type_select)
+//                            onNavigate(R.id.navigation_room_type_select)
                         }
                 )
             }

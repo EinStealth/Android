@@ -10,10 +10,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.ui.viewmodel.MainActivityViewModel
+import com.example.hideandseek.ui.viewmodel.RegisterUserIconFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.RegisterUserNameFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -76,7 +81,21 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "start") {
-        composable("start") { StartScreen() }
+    NavHost(navController = navController, startDestination = "registerName") {
+        composable("start") {
+            StartScreen(navController)
+        }
+        composable("registerName") {
+            val viewModel = hiltViewModel<RegisterUserNameFragmentViewModel>()
+            RegisterUserNameScreen(viewModel, navController)
+        }
+        composable("registerIcon") {
+            val viewModel = hiltViewModel<RegisterUserIconFragmentViewModel>()
+            RegisterUserIconScreen(viewModel)
+        }
+        composable("roomTypeSelect") {
+            val viewModel = hiltViewModel<RoomTypeSelectFragmentViewModel>()
+            RoomTypeSelectScreen(viewModel)
+        }
     }
 }

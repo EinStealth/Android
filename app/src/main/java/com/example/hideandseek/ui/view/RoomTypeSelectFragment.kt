@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -40,15 +42,16 @@ class RoomTypeSelectFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                RoomTypeSelectScreen(onNavigate = { dest -> findNavController().navigate(dest) })
+                RoomTypeSelectScreen()
             }
         }
     }
 }
 
-@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit), viewModel: RoomTypeSelectFragmentViewModel = viewModel()) {
+fun RoomTypeSelectScreen(viewModel: RoomTypeSelectFragmentViewModel = viewModel()) {
+    val roomTypeSelectUiState by viewModel.uiState.collectAsState()
+
     // 名前・アイコンの読み込み
     viewModel.readUserInfo()
 
@@ -69,12 +72,12 @@ fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit), viewModel: RoomTypeSelectF
                         .width(300.dp)
                         .height(80.dp)
                         .clickable {
-                            onNavigate(R.id.navigation_register_user_icon)
+//                            onNavigate(R.id.navigation_register_user_icon)
                         }
                 )
                 Row {
                     Image(
-                        painter = when (viewModel.uiState.value.userIcon) {
+                        painter = when (roomTypeSelectUiState.userIcon) {
                             1 -> {
                                 painterResource(R.drawable.user01_normal)
                             }
@@ -95,10 +98,11 @@ fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit), viewModel: RoomTypeSelectF
                             .padding(start = 0.dp, top = 10.dp, end = 0.dp, bottom = 0.dp)
                     )
                     Text(
-                        text = viewModel.uiState.value.userName,
-                        modifier = Modifier.padding(start = 0.dp, top = 25.dp, end = 0.dp, bottom = 0.dp)
+                        text = roomTypeSelectUiState.userName,
+                        modifier = Modifier
+                            .padding(start = 0.dp, top = 25.dp, end = 0.dp, bottom = 0.dp)
                             .clickable {
-                                onNavigate(R.id.navigation_register_user_name)
+//                                onNavigate(R.id.navigation_register_user_name)
                             }
                     )
                 }
@@ -111,7 +115,9 @@ fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit), viewModel: RoomTypeSelectF
                     .width(198.dp)
                     .height(98.dp)
                     .align(Alignment.CenterHorizontally)
-                    .clickable { onNavigate(R.id.navigation_room_create) }
+                    .clickable {
+//                        onNavigate(R.id.navigation_room_create)
+                    }
             )
             Spacer(Modifier.weight(1f))
             Image(
@@ -121,7 +127,9 @@ fun RoomTypeSelectScreen(onNavigate: (Int) -> (Unit), viewModel: RoomTypeSelectF
                     .width(198.dp)
                     .height(98.dp)
                     .align(Alignment.CenterHorizontally)
-                    .clickable { onNavigate(R.id.navigation_room_search) }
+                    .clickable {
+//                        onNavigate(R.id.navigation_room_search)
+                    }
             )
             Spacer(Modifier.weight(1f))
         }

@@ -12,10 +12,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.R
 
 @Composable
-fun StartScreen() {
+fun StartScreen(navController: NavController) {
     val activity = LocalContext.current as Activity
 
     // 名前の読み込み
@@ -28,11 +30,11 @@ fun StartScreen() {
             contentDescription = "title",
             contentScale = ContentScale.Crop,
             modifier = Modifier.clickable {
-//                if (name != "") {
-//                    onNavigate(R.id.navigation_room_type_select)
-//                } else {
-//                    onNavigate(R.id.navigation_register_user_name)
-//                }
+                if (name != "") {
+                    navController.navigate("roomTypeSelect")
+                } else {
+                    navController.navigate("registerName")
+                }
             }
         )
     }
