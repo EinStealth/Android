@@ -9,6 +9,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.ui.viewmodel.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            StartPreview()
+            MyApp()
         }
 
         // フルスクリーンにするために、TitleBarなどを隠す
@@ -66,5 +70,13 @@ class MainActivity : AppCompatActivity() {
             )
             window.decorView.windowInsetsController?.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
+    }
+}
+
+@Composable
+fun MyApp() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "start") {
+        composable("start") { StartScreen() }
     }
 }

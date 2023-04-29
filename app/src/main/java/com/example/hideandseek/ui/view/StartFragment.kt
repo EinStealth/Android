@@ -1,5 +1,6 @@
 package com.example.hideandseek.ui.view
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
@@ -25,34 +27,35 @@ class StartFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        // 名前の読み込み
-        val sharedPref = activity?.getSharedPreferences("user_info", Context.MODE_PRIVATE)
-        val name = sharedPref?.getString("name", "")
+
 
         return ComposeView(requireContext()).apply {
             setContent {
-                StartScreen(
-                    onNavigate = { dest -> findNavController().navigate(dest) },
-                    name = name.toString()
-                )
+                StartScreen()
             }
         }
     }
 }
 
 @Composable
-fun StartScreen(onNavigate: (Int) -> (Unit), name: String) {
+fun StartScreen() {
+    val activity = LocalContext.current as Activity
+
+    // 名前の読み込み
+    val sharedPref = activity.getSharedPreferences("user_info", Context.MODE_PRIVATE)
+    val name = sharedPref?.getString("name", "")
+
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive),
             contentDescription = "title",
             contentScale = ContentScale.Crop,
             modifier = Modifier.clickable {
-                if (name != "") {
-                    onNavigate(R.id.navigation_room_type_select)
-                } else {
-                    onNavigate(R.id.navigation_register_user_name)
-                }
+//                if (name != "") {
+//                    onNavigate(R.id.navigation_room_type_select)
+//                } else {
+//                    onNavigate(R.id.navigation_register_user_name)
+//                }
             }
         )
     }
