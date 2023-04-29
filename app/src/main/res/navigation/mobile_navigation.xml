@@ -25,16 +25,6 @@
         android:label="Result"/>
 
     <fragment
-        android:id="@+id/navigation_register_user_icon"
-        android:name="com.example.hideandseek.ui.view.RegisterUserIconFragment"
-        android:label="RegisterUserIcon"/>
-
-    <fragment
-        android:id="@+id/navigation_room_type_select"
-        android:name="com.example.hideandseek.ui.view.RoomTypeSelectFragment"
-        android:label="RoomTypeSelect"/>
-
-    <fragment
         android:id="@+id/navigation_room_create"
         android:name="com.example.hideandseek.ui.view.RoomCreateFragment"
         android:label="RoomCreate"/>

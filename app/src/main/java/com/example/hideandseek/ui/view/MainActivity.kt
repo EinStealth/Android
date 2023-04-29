@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "registerName") {
+    NavHost(navController = navController, startDestination = "start") {
         composable("start") {
             StartScreen(navController)
         }
@@ -91,11 +91,11 @@ fun MyApp() {
         }
         composable("registerIcon") {
             val viewModel = hiltViewModel<RegisterUserIconFragmentViewModel>()
-            RegisterUserIconScreen(viewModel)
+            RegisterUserIconScreen(viewModel, navController)
         }
         composable("roomTypeSelect") {
             val viewModel = hiltViewModel<RoomTypeSelectFragmentViewModel>()
-            RoomTypeSelectScreen(viewModel)
+            RoomTypeSelectScreen(viewModel, navController)
         }
     }
 }
