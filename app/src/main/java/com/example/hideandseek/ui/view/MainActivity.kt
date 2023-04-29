@@ -11,16 +11,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.MainActivityViewModel
-import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RegisterUserIconFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RegisterUserNameFragmentViewModel
-import com.example.hideandseek.ui.viewmodel.ResultFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RoomCreateFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RoomSearchFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
