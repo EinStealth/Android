@@ -15,10 +15,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.MainActivityViewModel
+import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RegisterUserIconFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RegisterUserNameFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.ResultFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.RoomCreateFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.RoomSearchFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.StandByRoomFragmentViewModel
+import com.example.hideandseek.ui.viewmodel.WatchFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -96,6 +103,34 @@ fun MyApp() {
         composable("roomTypeSelect") {
             val viewModel = hiltViewModel<RoomTypeSelectFragmentViewModel>()
             RoomTypeSelectScreen(viewModel, navController)
+        }
+        composable("roomCreate") {
+            val viewModel = hiltViewModel<RoomCreateFragmentViewModel>()
+            RoomCreateScreen()
+        }
+        composable("roomSearch") {
+            val viewModel = hiltViewModel<RoomSearchFragmentViewModel>()
+            RoomSearchScreen()
+        }
+        composable("standByRoom") {
+            val viewModel = hiltViewModel<StandByRoomFragmentViewModel>()
+            StandByRoomScreen()
+        }
+        composable("main") {
+            val viewModel = hiltViewModel<MainFragmentViewModel>()
+            MainFragmentScreen(onNavigate = , childFragmentManager = )
+        }
+        composable("watch") {
+            val viewModel = hiltViewModel<WatchFragmentViewModel>()
+            WatchScreen(onNavigate = )
+        }
+        composable("result") {
+            val viewModel = hiltViewModel<ResultFragmentViewModel>()
+            ResultScreen(onNavigate = )
+        }
+        composable("beTrapped") {
+            val viewModel = hiltViewModel<BeTrappedFragmentViewModel>()
+            BeTrappedScreen(onNavigate = , childFragmentManager = )
         }
     }
 }
