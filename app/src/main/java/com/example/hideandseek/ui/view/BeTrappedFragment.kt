@@ -67,10 +67,6 @@ class BeTrappedFragment : Fragment() {
         // Viewの取得
         // 時間表示の場所
         val tvRelativeTime: TextView = binding.tvRelativeTime
-        val tvLimitTime: TextView = binding.tvLimitTime
-
-        // 捕まったボタン
-        val btCaptureOn: ImageView = binding.btCaptureOn
 
         // スキルボタン
         val btSkillOn: ImageView = binding.btSkillOn
@@ -151,14 +147,11 @@ class BeTrappedFragment : Fragment() {
 
                     Log.d("UserLive", latestUser.toString())
                     if (latestUser.relativeTime != "") {
-                        tvRelativeTime.text = latestUser.relativeTime
                         // 制限時間になったかどうかの判定
                         viewModel.compareTime(latestUser.relativeTime, limitTime)
 
                         // trapにかかっている時間を計測
                         viewModel.compareTrapTime(latestUser.relativeTime, trapTime)
-                        val howProgressTrap = viewModel.howProgressTrapTime(latestUser.relativeTime, trapTime)
-                        progressTrap.progress = howProgressTrap
 
                         // Skill Buttonの Progress Bar
                         // スキルボタンを複数回押したとき、relativeが一旦最初の(skillTime+1)秒になって、本来のrelativeまで1秒ずつ足される
@@ -280,17 +273,19 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
                     }
                     .padding(start = 40.dp)
             )
-            Text(
-                text = "relative_time",
-                fontSize = 20.sp,
-                color = Color.Black,
-                modifier = Modifier
-                    .constrainAs(tvRelative) {
-                        bottom.linkTo(tvNow.bottom)
-                        start.linkTo(tvNow.end)
-                    }
-                    .padding(start = 12.dp)
-            )
+            if (latestUser.relativeTime != "") {
+                Text(
+                    text = latestUser.relativeTime,
+                    fontSize = 20.sp,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .constrainAs(tvRelative) {
+                            bottom.linkTo(tvNow.bottom)
+                            start.linkTo(tvNow.end)
+                        }
+                        .padding(start = 12.dp)
+                )
+            }
             Text(
                 text = "LIMIT",
                 fontSize = 12.sp,
