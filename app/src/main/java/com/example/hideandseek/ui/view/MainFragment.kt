@@ -72,11 +72,6 @@ class MainFragment(
         val root: View = binding.root
 
         // Viewの取得
-        // 時間表示の場所
-        val tvRelativeTime: TextView = binding.tvRelativeTime
-        val tvLimitTime: TextView = binding.tvLimitTime
-        // Map
-        val ivMap: ImageView = binding.ivMap
         // 捕まったボタン
         val btCaptureOn: ImageView = binding.btCaptureOn
 
@@ -153,8 +148,6 @@ class MainFragment(
 
                     Log.d("UseCaseTest", mainUiState.latestUser.toString())
 
-                    ivMap.setImageBitmap(mainUiState.map)
-
                     setFragmentResult("MainFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to mainUiState.isOverSkillTime))
                     changeBtSkillVisible(mainUiState.isOverSkillTime)
 
@@ -167,7 +160,6 @@ class MainFragment(
                         successEscapeDialogFragment.show(supportFragmentManager, "clear")
                     }
 
-                    tvLimitTime.text = mainUiState.limitTime
                     val limitTime = mainUiState.limitTime
                     val skillTime = mainUiState.skillTime
 
@@ -181,7 +173,6 @@ class MainFragment(
                     if (limitTime == "" && latestUser.relativeTime != "") {
                         viewModel.setLimitTime(latestUser.relativeTime)
                     }
-                    tvRelativeTime.text = latestUser.relativeTime
 
                     if (latestUser.relativeTime != "") {
 
@@ -386,7 +377,7 @@ fun MainFragmentScreen(onNavigate: (Int) -> (Unit), viewModel: MainFragmentViewM
                     .padding(end = 12.dp)
             )
             Text(
-                text = "limitTime",
+                text = mainFragmentUiState.limitTime,
                 fontSize = 20.sp,
                 color = Color.Red,
                 modifier = Modifier
