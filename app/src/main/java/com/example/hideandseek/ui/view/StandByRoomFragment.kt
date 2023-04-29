@@ -1,9 +1,5 @@
 package com.example.hideandseek.ui.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,34 +13,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.NavController
 import com.example.hideandseek.R
 import com.example.hideandseek.ui.viewmodel.StandByRoomFragmentViewModel
-import dagger.hilt.android.AndroidEntryPoint
-
-@AndroidEntryPoint
-class StandByRoomFragment : Fragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        return ComposeView(requireContext()).apply {
-            setContent {
-                StandByRoomScreen(
-                    onNavigate = { dest -> findNavController().navigate(dest) }
-                )
-            }
-        }
-    }
-}
 
 private fun selectDrawable(icon: Int): Int {
     return when (icon) {
@@ -64,11 +40,11 @@ private fun selectDrawable(icon: Int): Int {
 }
 
 @Composable
-fun StandByRoomScreen(onNavigate: (Int) -> (Unit), viewModel: StandByRoomFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController) {
     val standByRoomUiState by viewModel.uiState.collectAsState()
 
     if (standByRoomUiState.isStart == 1) {
-        onNavigate(R.id.navigation_main)
+        navController.navigate("main")
     }
     val allPlayer = standByRoomUiState.allPlayer
     Surface(Modifier.fillMaxSize()) {
@@ -208,7 +184,7 @@ fun StandByRoomScreen(onNavigate: (Int) -> (Unit), viewModel: StandByRoomFragmen
                     .width(142.dp)
                     .height(72.dp)
                     .clickable {
-                        onNavigate(R.id.navigation_main)
+                        navController.navigate("main")
                         viewModel.updateIsStart()
                     }
             )
