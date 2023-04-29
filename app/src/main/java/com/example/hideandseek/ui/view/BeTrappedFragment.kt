@@ -151,7 +151,7 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
 
     val howProgressTrap =
         if (latestUser.relativeTime != "" && trapTime != "") {
-            viewModel.howProgressTrapTime(latestUser.relativeTime, trapTime)/60f
+            viewModel.howProgressTrapTime(latestUser.relativeTime, trapTime) / 60f
         } else {
             0f
         }
@@ -160,11 +160,10 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
             viewModel.howProgressSkillTime(
                 latestUser.relativeTime,
                 skillTime,
-            )/60f
+            ) / 60f
         } else {
             0f
         }
-
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -492,15 +491,15 @@ fun BeTrappedPreview() {
                     .width(200.dp)
             )
             Image(
-                    painter = painterResource(R.drawable.button_skill_on),
-            contentDescription = "skill button on",
-            modifier = Modifier
-                .constrainAs(btSkillOn) {
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                }
-                .height(100.dp)
-                .width(180.dp)
+                painter = painterResource(R.drawable.button_skill_on),
+                contentDescription = "skill button on",
+                modifier = Modifier
+                    .constrainAs(btSkillOn) {
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                    }
+                    .height(100.dp)
+                    .width(180.dp)
             )
             Image(
                 painter = painterResource(R.drawable.button_skill_off),
