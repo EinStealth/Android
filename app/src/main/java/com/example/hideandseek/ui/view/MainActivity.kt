@@ -5,10 +5,12 @@ import android.os.Build
 import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.hideandseek.R
@@ -21,33 +23,15 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainActivityViewModel by viewModels()
 
-    private lateinit var binding: ActivityMainBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        // fragmentのnavGraph
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_register_user_name,
-                R.id.navigation_main,
-                R.id.navigation_be_trapped,
-                R.id.navigation_result,
-                R.id.navigation_watch,
-                R.id.navigation_room_type_select,
-                R.id.navigation_start,
-
-            ),
-        )
+        setContent {
+            StartPreview()
+        }
 
         // フルスクリーンにするために、TitleBarなどを隠す
         hideSystemUI()
-
-        // BottomNavigationのセットアップ
-        setupActionBarWithNavController(navController, appBarConfiguration)
 
         // 位置情報の権限をリクエスト
         // 正確な位置情報、おおよその位置情報どちらを許可しますか？というダイアログが出る。
