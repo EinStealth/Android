@@ -37,6 +37,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.data.datasource.local.TrapData
@@ -187,7 +188,6 @@ class MainFragment(
         return ComposeView(requireContext()).apply {
             setContent {
                 MainFragmentScreen(
-                    onNavigate = { dest -> findNavController().navigate(dest) },
                     childFragmentManager = childFragmentManager
                 )
             }
@@ -213,7 +213,7 @@ private fun selectDrawable(icon: Int): Int {
 }
 
 @Composable
-fun MainFragmentScreen(onNavigate: (Int) -> (Unit), viewModel: MainFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), childFragmentManager: FragmentManager) {
+fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), childFragmentManager: FragmentManager) {
     val mainFragmentUiState by viewModel.uiState.collectAsState()
 
     val latestUser = mainFragmentUiState.latestUser

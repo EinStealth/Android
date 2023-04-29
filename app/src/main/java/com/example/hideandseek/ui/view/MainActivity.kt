@@ -116,10 +116,10 @@ fun MyApp() {
             val viewModel = hiltViewModel<StandByRoomFragmentViewModel>()
             StandByRoomScreen(viewModel, navController)
         }
-        composable("main") {
-            val viewModel = hiltViewModel<MainFragmentViewModel>()
-            MainFragmentScreen(onNavigate = , childFragmentManager = )
-        }
+//        composable("main") {
+//            val viewModel = hiltViewModel<MainFragmentViewModel>()
+//            MainFragmentScreen(childFragmentManager)
+//        }
         composable("watch") {
             val viewModel = hiltViewModel<WatchFragmentViewModel>()
             WatchScreen(viewModel, navController)
@@ -127,9 +127,9 @@ fun MyApp() {
         composable("result") {
             ResultScreen(navController)
         }
-        composable("beTrapped") {
-            val viewModel = hiltViewModel<BeTrappedFragmentViewModel>()
-            BeTrappedScreen(onNavigate = , childFragmentManager = )
-        }
+//        composable("beTrapped") {
+//            val viewModel = hiltViewModel<BeTrappedFragmentViewModel>()
+//            BeTrappedScreen(onNavigate = , childFragmentManager = )
+//        }
     }
 }
