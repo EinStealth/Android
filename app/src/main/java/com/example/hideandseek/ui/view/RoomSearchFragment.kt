@@ -1,9 +1,5 @@
 package com.example.hideandseek.ui.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,37 +17,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.NavController
 import com.example.hideandseek.R
 import com.example.hideandseek.ui.viewmodel.RoomSearchFragmentViewModel
-import dagger.hilt.android.AndroidEntryPoint
-
-@AndroidEntryPoint
-class RoomSearchFragment : Fragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        return ComposeView(requireContext()).apply {
-            setContent {
-                RoomSearchScreen(
-                    onNavigate = { dest -> findNavController().navigate(dest) }
-                )
-            }
-        }
-    }
-}
 
 @Composable
-fun RoomSearchScreen(onNavigate: (Int) -> (Unit), viewModel: RoomSearchFragmentViewModel = viewModel()) {
+fun RoomSearchScreen(viewModel: RoomSearchFragmentViewModel = viewModel(), navController: NavController) {
     // 名前・アイコンの読み込み
     viewModel.readUserInfo()
 
@@ -111,7 +87,7 @@ fun RoomSearchScreen(onNavigate: (Int) -> (Unit), viewModel: RoomSearchFragmentV
                         viewModel.postPlayer(text, viewModel.uiState.value.userName, viewModel.uiState.value.userIcon)
                         // secret_wordsの保存
                         viewModel.writeSecretWords(text)
-                        onNavigate(R.id.navigation_stand_by_room)
+                        navController.navigate("standByRoom")
                     }
             )
         }

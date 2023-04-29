@@ -27,7 +27,7 @@ import com.example.hideandseek.R
 import com.example.hideandseek.ui.viewmodel.RoomCreateFragmentViewModel
 
 @Composable
-fun RoomCreateScreen(navController: NavController, viewModel: RoomCreateFragmentViewModel = viewModel()) {
+fun RoomCreateScreen(viewModel: RoomCreateFragmentViewModel = viewModel(), navController: NavController) {
     // 名前・アイコンの読み込み
     viewModel.readUserInfo()
 
