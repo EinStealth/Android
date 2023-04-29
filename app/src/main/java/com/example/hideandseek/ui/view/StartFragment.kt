@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
@@ -53,6 +54,18 @@ fun StartScreen(onNavigate: (Int) -> (Unit), name: String) {
                     onNavigate(R.id.navigation_register_user_name)
                 }
             }
+        )
+    }
+}
+
+@Composable
+@Preview
+fun StartPreview() {
+    Surface(Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(R.drawable.title_background_responsive),
+            contentDescription = "title",
+            contentScale = ContentScale.Crop
         )
     }
 }
