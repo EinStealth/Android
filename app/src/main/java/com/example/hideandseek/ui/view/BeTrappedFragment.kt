@@ -204,6 +204,15 @@ class BeTrappedFragment : Fragment() {
 fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), childFragmentManager: FragmentManager) {
     val beTrappedUiState by viewModel.uiState.collectAsState()
 
+    val latestUser = beTrappedUiState.latestUser
+    val howProgressTrap =
+        if (latestUser.relativeTime != "" && trapTime != "") {
+            viewModel.howProgressTrapTime(latestUser.relativeTime, trapTime)/60f
+        } else {
+            0f
+        }
+
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Color.Black
@@ -237,7 +246,7 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
                     }
             )
             LinearProgressIndicator(
-                progress = 0f,
+                progress = howProgressTrap,
                 modifier = Modifier
                     .constrainAs(progressTrap) {
                         top.linkTo(tvTrap.bottom)
