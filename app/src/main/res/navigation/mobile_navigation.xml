@@ -30,11 +30,6 @@
         android:label="RegisterUserIcon"/>
 
     <fragment
-        android:id="@+id/navigation_register_user_name"
-        android:name="com.example.hideandseek.ui.view.RegisterUserNameFragment"
-        android:label="RegisterUserName"/>
-
-    <fragment
         android:id="@+id/navigation_room_type_select"
         android:name="com.example.hideandseek.ui.view.RoomTypeSelectFragment"
         android:label="RoomTypeSelect"/>
