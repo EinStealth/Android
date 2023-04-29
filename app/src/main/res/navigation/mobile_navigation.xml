@@ -14,8 +14,7 @@
     <fragment
         android:id="@+id/navigation_be_trapped"
         android:name="com.example.hideandseek.ui.view.BeTrappedFragment"
-        android:label="BeTrapped"
-        tools:layout="@layout/fragment_be_trapped"/>
+        android:label="BeTrapped"/>
 
     <fragment
         android:id="@+id/navigation_watch"
