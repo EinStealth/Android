@@ -2,10 +2,6 @@ package com.example.hideandseek.ui.view
 
 import android.app.Activity
 import android.content.Context
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,29 +9,10 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
-
-class StartFragment : Fragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-
-
-        return ComposeView(requireContext()).apply {
-            setContent {
-                StartScreen()
-            }
-        }
-    }
-}
 
 @Composable
 fun StartScreen() {

@@ -54,9 +54,4 @@
         android:name="com.example.hideandseek.ui.view.StandByRoomFragment"
         android:label="StandByRoom"/>
 
-    <fragment
-        android:id="@+id/navigation_start"
-        android:name="com.example.hideandseek.ui.view.StartFragment"
-        android:label="Start"/>
-
 </navigation>
