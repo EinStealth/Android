@@ -37,6 +37,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.data.datasource.local.TrapData
@@ -47,152 +48,150 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
-class MainFragment(
-    mainDispatcher: CoroutineDispatcher = Dispatchers.Main
-) : Fragment() {
-    private val viewModel: MainFragmentViewModel by viewModels()
-
-    private val coroutineScope = CoroutineScope(mainDispatcher)
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        // BeTrappedFragmentから戻ってきた時
-        setFragmentResultListener("BeTrappedFragmentSkillTime") { _, bundle ->
-            val result = bundle.getString("skillTime")
-            Log.d("skillTimeResultFragment", result.toString())
-            if (result != null) {
-                viewModel.setSkillTImeString(result)
-            }
-        }
-
-        setFragmentResultListener("BeTrappedFragmentIsOverSkillTime") { _, bundle ->
-            val result = bundle.getBoolean("isOverSkillTime")
-            Log.d("isOverSkillTimeResultFragment", result.toString())
-            viewModel.setIsOverSkillTime(result)
-        }
-
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { mainUiState ->
-                    Log.d("UseCaseTest", mainUiState.latestUser.toString())
-
-                    setFragmentResult("MainFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to mainUiState.isOverSkillTime))
-
-                    if (mainUiState.isOverLimitTime) {
-                        // statusをクリアにする
-                        viewModel.updatePlayerStatus(4)
-                        // クリアダイアログを表示
-                        val successEscapeDialogFragment = SuccessEscapeDialogFragment()
-                        val supportFragmentManager = childFragmentManager
-                        successEscapeDialogFragment.show(supportFragmentManager, "clear")
-                    }
-
-                    val limitTime = mainUiState.limitTime
-                    val skillTime = mainUiState.skillTime
-
-                    Log.d("UiState", "stateを更新しました")
-                    val allLocation = mainUiState.allLocation
-                    val allTraps = mainUiState.allTrap
-                    val latestUser = mainUiState.latestUser
-
-                    // 自分の情報の表示
-                    Log.d("UserLive", latestUser.toString())
-                    if (limitTime == "" && latestUser.relativeTime != "") {
-                        viewModel.setLimitTime(latestUser.relativeTime)
-                    }
-
-                    if (latestUser.relativeTime != "") {
-
-                        // 制限時間になったかどうかの判定
-                        if (limitTime != "") {
-                            viewModel.compareTime(latestUser.relativeTime, limitTime)
-                            setFragmentResult("MainFragmentLimitTime", bundleOf("limitTime" to limitTime))
-                        }
-
-                        // 他人の位置を追加
-                        Log.d("ALL_Location", allLocation.toString())
-                        if (allLocation.isNotEmpty()) {
-                            // ユーザーの位置情報
-                            for (i in allLocation.indices) {
-                                when (allLocation[i].status) {
-                                    1 -> {
-                                        // 他人の罠をRoomにinsert
-                                        val trap = TrapData(0, allLocation[i].latitude, allLocation[i].longitude, 1)
-                                        viewModel.postOthersTrap(trap)
-                                        viewModel.deleteLocation(allLocation[i])
-                                    }
-                                    -1 -> {
-                                        // 罠を削除
-                                        if (allTraps.isNotEmpty()) {
-                                            for (j in allTraps.indices) {
-                                                if (allTraps[j].latitude == allLocation[i].latitude) {
-                                                    viewModel.deleteTrap(allTraps[j])
-                                                }
-                                            }
-                                        }
-                                        viewModel.deleteLocation(allLocation[i])
-                                    }
-                                }
-                            }
-                        }
-                        Log.d("All_trap", allTraps.toString())
-
-                        // trapの位置情報
-                        if (allTraps.isNotEmpty()) {
-                            for (i in allTraps.indices) {
-                                if (viewModel.checkCaughtTrap(latestUser, allTraps[i])) {
-                                    // かかったTrapの削除(local)
-                                    viewModel.deleteTrap(allTraps[i])
-
-                                    // かかったTrapの削除(remote)
-                                    viewModel.postTrapSpacetime("delete", latestUser)
-
-                                    // トラップにかかったステータスに変更
-                                    viewModel.updatePlayerStatus(2)
-
-                                    // TrapにかかったらFragmentを移動
-                                    setFragmentResult("MainFragmentTrapTime", bundleOf("trapTime" to latestUser.relativeTime))
-
-                                    findNavController().navigate(R.id.navigation_be_trapped)
-                                }
-                            }
-                        }
-
-                        // Skill Buttonの Progress Bar
-                        // スキルボタンを複数回押したとき、relativeが一旦最初の(skillTime+1)秒になって、本来のrelativeまで1秒ずつ足される
-                        // observeを二重にしてるせいで変な挙動していると思われる（放置するとメモリやばそう）
-                        // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
-                        if (skillTime != "") {
-                            viewModel.compareSkillTime(latestUser.relativeTime, skillTime)
-                            setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to skillTime))
-                        }
-
-                        // URLから画像を取得
-                        // 相対時間10秒おきに行う
-                        if (latestUser.relativeTime.substring(7, 8) == "0") {
-                            Log.d("fetchMAP", "Mapが更新されました")
-                            coroutineScope.launch {
-                                viewModel.fetchMap(latestUser, allLocation, allTraps)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return ComposeView(requireContext()).apply {
-            setContent {
-                MainFragmentScreen(
-                    childFragmentManager = childFragmentManager
-                )
-            }
-        }
-    }
-}
+//@AndroidEntryPoint
+//class MainFragment(
+//    mainDispatcher: CoroutineDispatcher = Dispatchers.Main
+//) : Fragment() {
+//    private val viewModel: MainFragmentViewModel by viewModels()
+//
+//    private val coroutineScope = CoroutineScope(mainDispatcher)
+//
+//    override fun onCreateView(
+//        inflater: LayoutInflater,
+//        container: ViewGroup?,
+//        savedInstanceState: Bundle?,
+//    ): View {
+//        // BeTrappedFragmentから戻ってきた時
+//        setFragmentResultListener("BeTrappedFragmentSkillTime") { _, bundle ->
+//            val result = bundle.getString("skillTime")
+//            Log.d("skillTimeResultFragment", result.toString())
+//            if (result != null) {
+//                viewModel.setSkillTImeString(result)
+//            }
+//        }
+//
+//        setFragmentResultListener("BeTrappedFragmentIsOverSkillTime") { _, bundle ->
+//            val result = bundle.getBoolean("isOverSkillTime")
+//            Log.d("isOverSkillTimeResultFragment", result.toString())
+//            viewModel.setIsOverSkillTime(result)
+//        }
+//
+//        lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.uiState.collect { mainUiState ->
+//                    Log.d("UseCaseTest", mainUiState.latestUser.toString())
+//
+//                    setFragmentResult("MainFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to mainUiState.isOverSkillTime))
+//
+//                    if (mainUiState.isOverLimitTime) {
+//                        // statusをクリアにする
+//                        viewModel.updatePlayerStatus(4)
+//                        // クリアダイアログを表示
+//                        val successEscapeDialogFragment = SuccessEscapeDialogFragment()
+//                        val supportFragmentManager = childFragmentManager
+//                        successEscapeDialogFragment.show(supportFragmentManager, "clear")
+//                    }
+//
+//                    val limitTime = mainUiState.limitTime
+//                    val skillTime = mainUiState.skillTime
+//
+//                    Log.d("UiState", "stateを更新しました")
+//                    val allLocation = mainUiState.allLocation
+//                    val allTraps = mainUiState.allTrap
+//                    val latestUser = mainUiState.latestUser
+//
+//                    // 自分の情報の表示
+//                    Log.d("UserLive", latestUser.toString())
+//                    if (limitTime == "" && latestUser.relativeTime != "") {
+//                        viewModel.setLimitTime(latestUser.relativeTime)
+//                    }
+//
+//                    if (latestUser.relativeTime != "") {
+//
+//                        // 制限時間になったかどうかの判定
+//                        if (limitTime != "") {
+//                            viewModel.compareTime(latestUser.relativeTime, limitTime)
+//                            setFragmentResult("MainFragmentLimitTime", bundleOf("limitTime" to limitTime))
+//                        }
+//
+//                        // 他人の位置を追加
+//                        Log.d("ALL_Location", allLocation.toString())
+//                        if (allLocation.isNotEmpty()) {
+//                            // ユーザーの位置情報
+//                            for (i in allLocation.indices) {
+//                                when (allLocation[i].status) {
+//                                    1 -> {
+//                                        // 他人の罠をRoomにinsert
+//                                        val trap = TrapData(0, allLocation[i].latitude, allLocation[i].longitude, 1)
+//                                        viewModel.postOthersTrap(trap)
+//                                        viewModel.deleteLocation(allLocation[i])
+//                                    }
+//                                    -1 -> {
+//                                        // 罠を削除
+//                                        if (allTraps.isNotEmpty()) {
+//                                            for (j in allTraps.indices) {
+//                                                if (allTraps[j].latitude == allLocation[i].latitude) {
+//                                                    viewModel.deleteTrap(allTraps[j])
+//                                                }
+//                                            }
+//                                        }
+//                                        viewModel.deleteLocation(allLocation[i])
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        Log.d("All_trap", allTraps.toString())
+//
+//                        // trapの位置情報
+//                        if (allTraps.isNotEmpty()) {
+//                            for (i in allTraps.indices) {
+//                                if (viewModel.checkCaughtTrap(latestUser, allTraps[i])) {
+//                                    // かかったTrapの削除(local)
+//                                    viewModel.deleteTrap(allTraps[i])
+//
+//                                    // かかったTrapの削除(remote)
+//                                    viewModel.postTrapSpacetime("delete", latestUser)
+//
+//                                    // トラップにかかったステータスに変更
+//                                    viewModel.updatePlayerStatus(2)
+//
+//                                    // TrapにかかったらFragmentを移動
+//                                    setFragmentResult("MainFragmentTrapTime", bundleOf("trapTime" to latestUser.relativeTime))
+//
+//                                    findNavController().navigate(R.id.navigation_be_trapped)
+//                                }
+//                            }
+//                        }
+//
+//                        // Skill Buttonの Progress Bar
+//                        // スキルボタンを複数回押したとき、relativeが一旦最初の(skillTime+1)秒になって、本来のrelativeまで1秒ずつ足される
+//                        // observeを二重にしてるせいで変な挙動していると思われる（放置するとメモリやばそう）
+//                        // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
+//                        if (skillTime != "") {
+//                            viewModel.compareSkillTime(latestUser.relativeTime, skillTime)
+//                            setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to skillTime))
+//                        }
+//
+//                        // URLから画像を取得
+//                        // 相対時間10秒おきに行う
+//                        if (latestUser.relativeTime.substring(7, 8) == "0") {
+//                            Log.d("fetchMAP", "Mapが更新されました")
+//                            coroutineScope.launch {
+//                                viewModel.fetchMap(latestUser, allLocation, allTraps)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        return ComposeView(requireContext()).apply {
+//            setContent {
+//                MainFragmentScreen()                )
+//            }
+//        }
+//    }
+//}
 
 private fun selectDrawable(icon: Int): Int {
     return when (icon) {
@@ -212,7 +211,7 @@ private fun selectDrawable(icon: Int): Int {
 }
 
 @Composable
-fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), childFragmentManager: FragmentManager) {
+fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController) {
     val mainFragmentUiState by viewModel.uiState.collectAsState()
 
     val latestUser = mainFragmentUiState.latestUser
@@ -310,8 +309,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                     .height(100.dp)
                     .width(200.dp)
                     .clickable {
-                        val captureDialogFragment = CaptureDialogFragment()
-                        captureDialogFragment.show(childFragmentManager, "capture")
+                        navController.navigate("capture")
                     }
             )
             if (mainFragmentUiState.isOverSkillTime) {

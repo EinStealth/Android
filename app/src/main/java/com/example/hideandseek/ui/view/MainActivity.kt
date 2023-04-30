@@ -14,7 +14,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.hideandseek.ui.viewmodel.CaptureDialogViewModel
 import com.example.hideandseek.ui.viewmodel.MainActivityViewModel
+import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RegisterUserIconFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RegisterUserNameFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RoomCreateFragmentViewModel
@@ -112,10 +114,20 @@ fun MyApp() {
             val viewModel = hiltViewModel<StandByRoomFragmentViewModel>()
             StandByRoomScreen(viewModel, navController)
         }
-//        composable("main") {
-//            val viewModel = hiltViewModel<MainFragmentViewModel>()
-//            MainFragmentScreen(childFragmentManager)
-//        }
+        composable("main") {
+            val viewModel = hiltViewModel<MainFragmentViewModel>()
+            MainFragmentScreen(viewModel, navController)
+        }
+        composable("capture") {
+            val viewModel = hiltViewModel<CaptureDialogViewModel>()
+            CaptureDialogScreen(viewModel, navController)
+        }
+        composable("notifyCapture") {
+            NotifyCaptureDialogScreen(navController)
+        }
+        composable("clear") {
+            SuccessEscapeDialogScreen(navController)
+        }
         composable("watch") {
             val viewModel = hiltViewModel<WatchFragmentViewModel>()
             WatchScreen(viewModel, navController)

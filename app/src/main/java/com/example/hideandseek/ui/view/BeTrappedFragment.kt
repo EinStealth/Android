@@ -100,9 +100,9 @@ class BeTrappedFragment : Fragment() {
                     // 制限時間と相対時間の監視
                     if (beTrappedUiState.isOverLimitTime) {
                         // クリアダイアログを表示
-                        val successEscapeDialogFragment = SuccessEscapeDialogFragment()
-                        val supportFragmentManager = childFragmentManager
-                        successEscapeDialogFragment.show(supportFragmentManager, "clear")
+//                        val successEscapeDialogFragment = SuccessEscapeDialogFragment()
+//                        val supportFragmentManager = childFragmentManager
+//                        successEscapeDialogFragment.show(supportFragmentManager, "clear")
                     }
 
                     val latestUser = beTrappedUiState.latestUser
@@ -278,8 +278,6 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
                     .height(100.dp)
                     .width(200.dp)
                     .clickable {
-                        val captureDialogFragment = CaptureDialogFragment()
-                        captureDialogFragment.show(childFragmentManager, "capture")
                     }
             )
             if (beTrappedUiState.isOverSkillTime) {
