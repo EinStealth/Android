@@ -278,8 +278,6 @@ fun BeTrappedScreen(onNavigate: (Int) -> (Unit), viewModel: BeTrappedFragmentVie
                     .height(100.dp)
                     .width(200.dp)
                     .clickable {
-                        val captureDialogFragment = CaptureDialogFragment()
-                        captureDialogFragment.show(childFragmentManager, "capture")
                     }
             )
             if (beTrappedUiState.isOverSkillTime) {
