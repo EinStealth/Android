@@ -15,6 +15,14 @@ interface MyInfoRepository {
 
     fun writeSecretWords(secretWords: String)
 
+    fun writeIsOverSkillTime(isOverSkillTime: Boolean)
+
+    fun writeLimitTime(limitTime: String)
+
+    fun writeTrapTime(trapTime: String)
+
+    fun writeSkillTime(skillTime: String)
+
     fun readName(): String
 
     fun readIcon(): Int
@@ -24,6 +32,14 @@ interface MyInfoRepository {
     fun readRelativeTime(): String
 
     fun readSecretWords(): String
+
+    fun readIsOverSkillTime(): Boolean
+
+    fun readLimitTime(): String
+
+    fun readTrapTime(): String
+
+    fun readSkillTime(): String
 }
 
 class MyInfoRepositoryImpl @Inject constructor(
@@ -67,6 +83,34 @@ class MyInfoRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun writeIsOverSkillTime(isOverSkillTime: Boolean) {
+        with(sharedPreferences.edit()) {
+            this?.putBoolean("isOverSkillTime", isOverSkillTime)
+            this?.apply()
+        }
+    }
+
+    override fun writeLimitTime(limitTime: String) {
+        with(sharedPreferences.edit()) {
+            this?.putString("limitTime", limitTime)
+            this?.apply()
+        }
+    }
+
+    override fun writeTrapTime(trapTime: String) {
+        with(sharedPreferences.edit()) {
+            this?.putString("trapTime", trapTime)
+            this?.apply()
+        }
+    }
+
+    override fun writeSkillTime(skillTime: String) {
+        with(sharedPreferences.edit()) {
+            this?.putString("skillTime", skillTime)
+            this?.apply()
+        }
+    }
+
     override fun readName(): String {
         return sharedPreferences.getString("name", "").toString()
     }
@@ -89,5 +133,21 @@ class MyInfoRepositoryImpl @Inject constructor(
 
     override fun readSecretWords(): String {
         return sharedPreferences.getString("secretWords", "").toString()
+    }
+
+    override fun readIsOverSkillTime(): Boolean {
+        return sharedPreferences.getBoolean("isOverSkillTime", true)
+    }
+
+    override fun readLimitTime(): String {
+        return sharedPreferences.getString("limitTime", "").toString()
+    }
+
+    override fun readTrapTime(): String {
+        return sharedPreferences.getString("trapTime", "").toString()
+    }
+
+    override fun readSkillTime(): String {
+        return sharedPreferences.getString("skillTime", "").toString()
     }
 }
