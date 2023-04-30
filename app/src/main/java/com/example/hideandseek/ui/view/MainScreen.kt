@@ -68,8 +68,6 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
 
     val coroutineScope = CoroutineScope(mainDispatcher)
 
-
-
     val latestUser = mainUiState.latestUser
     val skillTime = mainUiState.skillTime
     val allPlayer = mainUiState.allPlayer
