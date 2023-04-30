@@ -122,6 +122,9 @@ fun MyApp() {
             val viewModel = hiltViewModel<CaptureDialogViewModel>()
             CaptureDialogScreen(viewModel, navController)
         }
+        composable("notifyCapture") {
+            NotifyCaptureDialogScreen(navController)
+        }
         composable("watch") {
             val viewModel = hiltViewModel<WatchFragmentViewModel>()
             WatchScreen(viewModel, navController)
