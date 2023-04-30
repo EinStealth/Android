@@ -125,6 +125,9 @@ fun MyApp() {
         composable("notifyCapture") {
             NotifyCaptureDialogScreen(navController)
         }
+        composable("clear") {
+            SuccessEscapeDialogScreen(navController)
+        }
         composable("watch") {
             val viewModel = hiltViewModel<WatchFragmentViewModel>()
             WatchScreen(viewModel, navController)
