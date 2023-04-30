@@ -14,6 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.CaptureDialogViewModel
 import com.example.hideandseek.ui.viewmodel.MainActivityViewModel
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
@@ -135,9 +136,9 @@ fun MyApp() {
         composable("result") {
             ResultScreen(navController)
         }
-//        composable("beTrapped") {
-//            val viewModel = hiltViewModel<BeTrappedFragmentViewModel>()
-//            BeTrappedScreen(onNavigate = , childFragmentManager = )
-//        }
+        composable("beTrapped") {
+            val viewModel = hiltViewModel<BeTrappedFragmentViewModel>()
+            BeTrappedScreen(viewModel, navController)
+        }
     }
 }
