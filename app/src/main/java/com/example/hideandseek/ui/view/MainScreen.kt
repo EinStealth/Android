@@ -33,151 +33,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-//@AndroidEntryPoint
-//class MainFragment(
-//    mainDispatcher: CoroutineDispatcher = Dispatchers.Main
-//) : Fragment() {
-//    private val viewModel: MainFragmentViewModel by viewModels()
-//
-//    private val coroutineScope = CoroutineScope(mainDispatcher)
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?,
-//    ): View {
-//        // BeTrappedFragmentから戻ってきた時
-//        setFragmentResultListener("BeTrappedFragmentSkillTime") { _, bundle ->
-//            val result = bundle.getString("skillTime")
-//            Log.d("skillTimeResultFragment", result.toString())
-//            if (result != null) {
-//                viewModel.setSkillTImeString(result)
-//            }
-//        }
-//
-//        setFragmentResultListener("BeTrappedFragmentIsOverSkillTime") { _, bundle ->
-//            val result = bundle.getBoolean("isOverSkillTime")
-//            Log.d("isOverSkillTimeResultFragment", result.toString())
-//            viewModel.setIsOverSkillTime(result)
-//        }
-//
-//        lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.uiState.collect { mainUiState ->
-//                    Log.d("UseCaseTest", mainUiState.latestUser.toString())
-//
-//                    setFragmentResult("MainFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to mainUiState.isOverSkillTime))
-//
-//                    if (mainUiState.isOverLimitTime) {
-//                        // statusをクリアにする
-//                        viewModel.updatePlayerStatus(4)
-//                        // クリアダイアログを表示
-//                        val successEscapeDialogFragment = SuccessEscapeDialogFragment()
-//                        val supportFragmentManager = childFragmentManager
-//                        successEscapeDialogFragment.show(supportFragmentManager, "clear")
-//                    }
-//
-//                    val limitTime = mainUiState.limitTime
-//                    val skillTime = mainUiState.skillTime
-//
-//                    Log.d("UiState", "stateを更新しました")
-//                    val allLocation = mainUiState.allLocation
-//                    val allTraps = mainUiState.allTrap
-//                    val latestUser = mainUiState.latestUser
-//
-//                    // 自分の情報の表示
-//                    Log.d("UserLive", latestUser.toString())
-//                    if (limitTime == "" && latestUser.relativeTime != "") {
-//                        viewModel.setLimitTime(latestUser.relativeTime)
-//                    }
-//
-//                    if (latestUser.relativeTime != "") {
-//
-//                        // 制限時間になったかどうかの判定
-//                        if (limitTime != "") {
-//                            viewModel.compareTime(latestUser.relativeTime, limitTime)
-//                            setFragmentResult("MainFragmentLimitTime", bundleOf("limitTime" to limitTime))
-//                        }
-//
-//                        // 他人の位置を追加
-//                        Log.d("ALL_Location", allLocation.toString())
-//                        if (allLocation.isNotEmpty()) {
-//                            // ユーザーの位置情報
-//                            for (i in allLocation.indices) {
-//                                when (allLocation[i].status) {
-//                                    1 -> {
-//                                        // 他人の罠をRoomにinsert
-//                                        val trap = TrapData(0, allLocation[i].latitude, allLocation[i].longitude, 1)
-//                                        viewModel.postOthersTrap(trap)
-//                                        viewModel.deleteLocation(allLocation[i])
-//                                    }
-//                                    -1 -> {
-//                                        // 罠を削除
-//                                        if (allTraps.isNotEmpty()) {
-//                                            for (j in allTraps.indices) {
-//                                                if (allTraps[j].latitude == allLocation[i].latitude) {
-//                                                    viewModel.deleteTrap(allTraps[j])
-//                                                }
-//                                            }
-//                                        }
-//                                        viewModel.deleteLocation(allLocation[i])
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        Log.d("All_trap", allTraps.toString())
-//
-//                        // trapの位置情報
-//                        if (allTraps.isNotEmpty()) {
-//                            for (i in allTraps.indices) {
-//                                if (viewModel.checkCaughtTrap(latestUser, allTraps[i])) {
-//                                    // かかったTrapの削除(local)
-//                                    viewModel.deleteTrap(allTraps[i])
-//
-//                                    // かかったTrapの削除(remote)
-//                                    viewModel.postTrapSpacetime("delete", latestUser)
-//
-//                                    // トラップにかかったステータスに変更
-//                                    viewModel.updatePlayerStatus(2)
-//
-//                                    // TrapにかかったらFragmentを移動
-//                                    setFragmentResult("MainFragmentTrapTime", bundleOf("trapTime" to latestUser.relativeTime))
-//
-//                                    findNavController().navigate(R.id.navigation_be_trapped)
-//                                }
-//                            }
-//                        }
-//
-//                        // Skill Buttonの Progress Bar
-//                        // スキルボタンを複数回押したとき、relativeが一旦最初の(skillTime+1)秒になって、本来のrelativeまで1秒ずつ足される
-//                        // observeを二重にしてるせいで変な挙動していると思われる（放置するとメモリやばそう）
-//                        // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
-//                        if (skillTime != "") {
-//                            viewModel.compareSkillTime(latestUser.relativeTime, skillTime)
-//                            setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to skillTime))
-//                        }
-//
-//                        // URLから画像を取得
-//                        // 相対時間10秒おきに行う
-//                        if (latestUser.relativeTime.substring(7, 8) == "0") {
-//                            Log.d("fetchMAP", "Mapが更新されました")
-//                            coroutineScope.launch {
-//                                viewModel.fetchMap(latestUser, allLocation, allTraps)
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        return ComposeView(requireContext()).apply {
-//            setContent {
-//                MainFragmentScreen()                )
-//            }
-//        }
-//    }
-//}
-
 private fun selectDrawable(icon: Int): Int {
     return when (icon) {
         1 -> {
@@ -198,6 +53,17 @@ private fun selectDrawable(icon: Int): Int {
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController, mainDispatcher: CoroutineDispatcher = Dispatchers.Main) {
+    // 別composeから戻ってきたとき
+    val returnSkillTime = viewModel.readSkillTime()
+    val returnIsOverSkillTime = viewModel.readIsOverSkillTime()
+    Log.d("SavedSkillTime and IsOver", "skillTime: " + returnSkillTime + "isOver: $returnIsOverSkillTime")
+    if (returnSkillTime != "") {
+        viewModel.setSkillTImeString(returnSkillTime)
+        if (!returnIsOverSkillTime) {
+            viewModel.setIsOverSkillTime(false)
+        }
+    }
+
     val mainUiState by viewModel.uiState.collectAsState()
 
     val coroutineScope = CoroutineScope(mainDispatcher)
@@ -206,9 +72,11 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
     val skillTime = mainUiState.skillTime
     val allPlayer = mainUiState.allPlayer
 
+    Log.d("SkillTime and IsOver", "skillTime: " + mainUiState.skillTime + "isOver: ${mainUiState.isOverSkillTime}")
+
     Log.d("UseCaseTest", mainUiState.latestUser.toString())
 
-//    setFragmentResult("MainFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to mainUiState.isOverSkillTime))
+    viewModel.saveIsOverSkillTime(mainUiState.isOverSkillTime)
 
     if (mainUiState.isOverLimitTime) {
         // statusをクリアにする
@@ -234,7 +102,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
         // 制限時間になったかどうかの判定
         if (limitTime != "") {
             viewModel.compareTime(latestUser.relativeTime, limitTime)
-//            setFragmentResult("MainFragmentLimitTime", bundleOf("limitTime" to limitTime))
+            viewModel.saveLimitTime(limitTime)
         }
 
         // 他人の位置を追加
@@ -279,7 +147,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                     viewModel.updatePlayerStatus(2)
 
                     // TrapにかかったらFragmentを移動
-//                    setFragmentResult("MainFragmentTrapTime", bundleOf("trapTime" to latestUser.relativeTime))
+                    viewModel.saveTrapTime(latestUser.relativeTime)
 
                     navController.navigate("beTrapped")
                 }
@@ -292,7 +160,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
         // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
         if (skillTime != "") {
             viewModel.compareSkillTime(latestUser.relativeTime, skillTime)
-//            setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to skillTime))
+            viewModel.saveSkillTime(skillTime)
         }
 
         // URLから画像を取得
@@ -415,7 +283,9 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                             viewModel.postTrapRoom(0, latestUser)
                             viewModel.postTrapSpacetime("post", latestUser)
                             viewModel.setSkillTime(latestUser)
+                            viewModel.saveSkillTime(latestUser.relativeTime)
                             viewModel.setIsOverSkillTime(false)
+                            viewModel.saveIsOverSkillTime(false)
                         }
                 )
             } else {

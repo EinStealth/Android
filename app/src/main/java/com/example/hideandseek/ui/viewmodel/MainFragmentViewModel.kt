@@ -266,4 +266,28 @@ class MainFragmentViewModel @Inject constructor(
             setMap(fetchedMap)
         }
     }
+
+    fun saveIsOverSkillTime(isOverSkillTime: Boolean) {
+        myInfoRepository.writeIsOverSkillTime(isOverSkillTime)
+    }
+
+    fun saveLimitTime(limitTime: String) {
+        myInfoRepository.writeLimitTime(limitTime)
+    }
+
+    fun saveTrapTime(trapTime: String) {
+        myInfoRepository.writeTrapTime(trapTime)
+    }
+
+    fun saveSkillTime(skillTime: String) {
+        myInfoRepository.writeSkillTime(skillTime)
+    }
+
+    fun readIsOverSkillTime(): Boolean {
+        return myInfoRepository.readIsOverSkillTime()
+    }
+
+    fun readSkillTime(): String {
+        return myInfoRepository.readSkillTime()
+    }
 }
