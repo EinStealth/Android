@@ -1,10 +1,7 @@
 package com.example.hideandseek.ui.view
 
-import android.os.Bundle
+import android.annotation.SuppressLint
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,28 +18,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Visibility
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -210,13 +195,115 @@ private fun selectDrawable(icon: Int): Int {
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController) {
-    val mainFragmentUiState by viewModel.uiState.collectAsState()
+fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController, mainDispatcher: CoroutineDispatcher = Dispatchers.Main) {
+    val mainUiState by viewModel.uiState.collectAsState()
 
-    val latestUser = mainFragmentUiState.latestUser
-    val skillTime = mainFragmentUiState.skillTime
-    val allPlayer = mainFragmentUiState.allPlayer
+    val coroutineScope = CoroutineScope(mainDispatcher)
+
+    val latestUser = mainUiState.latestUser
+    val skillTime = mainUiState.skillTime
+    val allPlayer = mainUiState.allPlayer
+
+    Log.d("UseCaseTest", mainUiState.latestUser.toString())
+
+//    setFragmentResult("MainFragmentIsOverSkillTime", bundleOf("isOverSkillTime" to mainUiState.isOverSkillTime))
+
+    if (mainUiState.isOverLimitTime) {
+        // statusをクリアにする
+        viewModel.updatePlayerStatus(4)
+        // クリアダイアログを表示
+        navController.navigate("clear")
+    }
+
+    val limitTime = mainUiState.limitTime
+
+    Log.d("UiState", "stateを更新しました")
+    val allLocation = mainUiState.allLocation
+    val allTraps = mainUiState.allTrap
+
+    // 自分の情報の表示
+    Log.d("UserLive", latestUser.toString())
+    if (limitTime == "" && latestUser.relativeTime != "") {
+        viewModel.setLimitTime(latestUser.relativeTime)
+    }
+
+    if (latestUser.relativeTime != "") {
+
+        // 制限時間になったかどうかの判定
+        if (limitTime != "") {
+            viewModel.compareTime(latestUser.relativeTime, limitTime)
+//            setFragmentResult("MainFragmentLimitTime", bundleOf("limitTime" to limitTime))
+        }
+
+        // 他人の位置を追加
+        Log.d("ALL_Location", allLocation.toString())
+        if (allLocation.isNotEmpty()) {
+            // ユーザーの位置情報
+            for (i in allLocation.indices) {
+                when (allLocation[i].status) {
+                    1 -> {
+                        // 他人の罠をRoomにinsert
+                        val trap = TrapData(0, allLocation[i].latitude, allLocation[i].longitude, 1)
+                        viewModel.postOthersTrap(trap)
+                        viewModel.deleteLocation(allLocation[i])
+                    }
+                    -1 -> {
+                        // 罠を削除
+                        if (allTraps.isNotEmpty()) {
+                            for (j in allTraps.indices) {
+                                if (allTraps[j].latitude == allLocation[i].latitude) {
+                                    viewModel.deleteTrap(allTraps[j])
+                                }
+                            }
+                        }
+                        viewModel.deleteLocation(allLocation[i])
+                    }
+                }
+            }
+        }
+        Log.d("All_trap", allTraps.toString())
+
+        // trapの位置情報
+        if (allTraps.isNotEmpty()) {
+            for (i in allTraps.indices) {
+                if (viewModel.checkCaughtTrap(latestUser, allTraps[i])) {
+                    // かかったTrapの削除(local)
+                    viewModel.deleteTrap(allTraps[i])
+
+                    // かかったTrapの削除(remote)
+                    viewModel.postTrapSpacetime("delete", latestUser)
+
+                    // トラップにかかったステータスに変更
+                    viewModel.updatePlayerStatus(2)
+
+                    // TrapにかかったらFragmentを移動
+//                    setFragmentResult("MainFragmentTrapTime", bundleOf("trapTime" to latestUser.relativeTime))
+
+                    navController.navigate("beTrapped")
+                }
+            }
+        }
+
+        // Skill Buttonの Progress Bar
+        // スキルボタンを複数回押したとき、relativeが一旦最初の(skillTime+1)秒になって、本来のrelativeまで1秒ずつ足される
+        // observeを二重にしてるせいで変な挙動していると思われる（放置するとメモリやばそう）
+        // この辺ちゃんと仕様わかってないので、リファクタリング時に修正する
+        if (skillTime != "") {
+            viewModel.compareSkillTime(latestUser.relativeTime, skillTime)
+//            setFragmentResult("MainFragmentSkillTime", bundleOf("skillTime" to skillTime))
+        }
+
+        // URLから画像を取得
+        // 相対時間10秒おきに行う
+        if (latestUser.relativeTime.substring(7, 8) == "0") {
+            Log.d("fetchMAP", "Mapが更新されました")
+            coroutineScope.launch {
+                viewModel.fetchMap(latestUser, allLocation, allTraps)
+            }
+        }
+    }
 
     val howProgressSkill =
         if (skillTime != "") {
@@ -229,7 +316,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
         }
 
     Surface(modifier = Modifier.fillMaxSize()) {
-        mainFragmentUiState.map?.let {
+        mainUiState.map?.let {
             Image(
                 bitmap = it.asImageBitmap(),
                 contentDescription = "map",
@@ -288,7 +375,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                     .padding(end = 12.dp)
             )
             Text(
-                text = mainFragmentUiState.limitTime,
+                text = mainUiState.limitTime,
                 fontSize = 20.sp,
                 color = Color.Red,
                 modifier = Modifier
@@ -312,7 +399,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                         navController.navigate("capture")
                     }
             )
-            if (mainFragmentUiState.isOverSkillTime) {
+            if (mainUiState.isOverSkillTime) {
                 Image(
                     painter = painterResource(R.drawable.button_skill_on),
                     contentDescription = "skill button on",
@@ -416,8 +503,8 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
     }
 }
 
-@Composable
 @Preview
+@Composable
 fun MainFragmentPreview() {
     Surface(modifier = Modifier.fillMaxSize()) {
         Image(
