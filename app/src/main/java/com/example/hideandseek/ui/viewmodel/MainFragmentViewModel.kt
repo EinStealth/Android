@@ -173,6 +173,12 @@ class MainFragmentViewModel @Inject constructor(
         }
     }
 
+    fun setLimitTimeString(limitTime: String) {
+        _uiState.update { mainUiState ->
+            mainUiState.copy(limitTime = limitTime)
+        }
+    }
+
     // 相対時間が制限時間を超えてたらtrueを返す
     fun compareTime(relativeTime: String, limitTime: String) {
         _uiState.update { mainUiState ->
@@ -289,5 +295,9 @@ class MainFragmentViewModel @Inject constructor(
 
     fun readSkillTime(): String {
         return myInfoRepository.readSkillTime()
+    }
+
+    fun readLimitTime(): String {
+        return myInfoRepository.readLimitTime()
     }
 }
