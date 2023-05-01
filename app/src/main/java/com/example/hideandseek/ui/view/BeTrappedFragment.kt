@@ -24,7 +24,6 @@ import androidx.constraintlayout.compose.Visibility
 import androidx.navigation.NavController
 import com.example.hideandseek.R
 import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
-import kotlinx.coroutines.delay
 
 // 2重LiveData解消のために変数定義
 private var limitTime = ""
