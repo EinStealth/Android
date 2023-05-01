@@ -56,12 +56,16 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
     // 別composeから戻ってきたとき
     val returnSkillTime = viewModel.readSkillTime()
     val returnIsOverSkillTime = viewModel.readIsOverSkillTime()
+    val returnLimitTime = viewModel.readLimitTime()
     Log.d("SavedSkillTime and IsOver", "skillTime: " + returnSkillTime + "isOver: $returnIsOverSkillTime")
     if (returnSkillTime != "") {
         viewModel.setSkillTImeString(returnSkillTime)
         if (!returnIsOverSkillTime) {
             viewModel.setIsOverSkillTime(false)
         }
+    }
+    if (returnLimitTime != "") {
+        viewModel.setLimitTimeString(returnLimitTime)
     }
 
     val mainUiState by viewModel.uiState.collectAsState()

@@ -43,6 +43,9 @@ private fun selectDrawable(icon: Int): Int {
 fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController) {
     val standByRoomUiState by viewModel.uiState.collectAsState()
 
+    // limit timeの初期化
+    viewModel.resetData()
+
     if (standByRoomUiState.isStart == 1) {
         navController.navigate("main")
     }

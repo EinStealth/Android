@@ -40,6 +40,12 @@ class StandByRoomFragmentViewModel @Inject constructor(
         }
     }
 
+    fun resetData() {
+        myInfoRepository.writeLimitTime("")
+        myInfoRepository.writeSkillTime("")
+        myInfoRepository.writeIsOverSkillTime(true)
+    }
+
     private fun readSecretWords(): String {
         return myInfoRepository.readSecretWords()
     }
