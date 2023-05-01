@@ -154,6 +154,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                     viewModel.saveTrapTime(latestUser.relativeTime)
 
                     navController.navigate("beTrapped")
+                    mainCallCount = 0
                 }
             }
         }

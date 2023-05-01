@@ -127,6 +127,12 @@ class BeTrappedFragmentViewModel @Inject constructor(
         }
     }
 
+    fun setIsOverTrapTime(p0: Boolean) {
+        _uiState.update { beTrappedUiState ->
+            beTrappedUiState.copy(isOverTrapTime = p0)
+        }
+    }
+
     fun postTrapSpacetime(latestUser: UserData) {
         viewModelScope.launch {
             try {

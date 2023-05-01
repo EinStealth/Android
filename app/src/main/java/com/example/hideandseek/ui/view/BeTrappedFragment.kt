@@ -28,6 +28,7 @@ import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
 // 2重LiveData解消のために変数定義
 private var limitTime = ""
 private var trapTime = ""
+var mainCallCount = 0
 
 @Composable
 fun BeTrappedScreen(viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController) {
@@ -58,8 +59,10 @@ fun BeTrappedScreen(viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.v
     viewModel.saveIsOverSkillTime(beTrappedUiState.isOverSkillTime)
 
     // 罠にかかっている時間の監視
-    if (beTrappedUiState.isOverTrapTime) {
+    if (beTrappedUiState.isOverTrapTime && mainCallCount == 0) {
         navController.navigate("main")
+        Log.d("MAIN_COUNT", "MainScreenが呼ばれました. count: $mainCallCount")
+        mainCallCount += 1
     }
 
     // 制限時間と相対時間の監視
