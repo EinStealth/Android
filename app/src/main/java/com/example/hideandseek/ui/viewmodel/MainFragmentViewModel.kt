@@ -193,9 +193,9 @@ class MainFragmentViewModel @Inject constructor(
         // UserがTrapと一定の距離に来たかどうかを返す
         Log.d("checkCaughtTrap", (abs(user.latitude - trap.latitude) + abs(user.longitude - trap.longitude)).toString())
         // 自分の罠の場合は当たり判定を行わない
-        if (trap.status == 0) {
-            return false
-        }
+//        if (trap.status == 0) {
+//            return false
+//        }
         // 緯度・経度1どの違いで約100kmの差
         // よって0.00001の差で1m程度の差になる
         // 今回は0.000001以内、つまり10cm以内に入ったら当たった判定

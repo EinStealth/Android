@@ -142,4 +142,28 @@ class BeTrappedFragmentViewModel @Inject constructor(
             }
         }
     }
+
+    fun saveIsOverSkillTime(isOverSkillTime: Boolean) {
+        myInfoRepository.writeIsOverSkillTime(isOverSkillTime)
+    }
+
+    fun saveSkillTime(skillTime: String) {
+        myInfoRepository.writeSkillTime(skillTime)
+    }
+
+    fun readIsOverSkillTime(): Boolean {
+        return myInfoRepository.readIsOverSkillTime()
+    }
+
+    fun readSkillTime(): String {
+        return myInfoRepository.readSkillTime()
+    }
+
+    fun readTrapTime(): String {
+        return myInfoRepository.readTrapTime()
+    }
+
+    fun readLimitTime(): String {
+        return myInfoRepository.readLimitTime()
+    }
 }
