@@ -29,6 +29,7 @@ import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
 private var limitTime = ""
 private var trapTime = ""
 var mainCallCount = 0
+var isOverTrapInBeTrapped = true
 
 @Composable
 fun BeTrappedScreen(viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController) {
@@ -54,6 +55,8 @@ fun BeTrappedScreen(viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.v
     val beTrappedUiState by viewModel.uiState.collectAsState()
 
     val skillTime = beTrappedUiState.skillTime
+
+    isOverTrapInBeTrapped = beTrappedUiState.isOverTrapTime
 
     // Skillを使ってからの時間を監視
     viewModel.saveIsOverSkillTime(beTrappedUiState.isOverSkillTime)
