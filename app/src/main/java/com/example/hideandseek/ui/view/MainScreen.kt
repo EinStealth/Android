@@ -82,11 +82,12 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
 
     viewModel.saveIsOverSkillTime(mainUiState.isOverSkillTime)
 
-    if (mainUiState.isOverLimitTime) {
+    if (mainUiState.isOverLimitTime && clearCallCount == 0) {
         // statusをクリアにする
         viewModel.updatePlayerStatus(4)
         // クリアダイアログを表示
         navController.navigate("clear")
+        clearCallCount += 1
     }
 
     val limitTime = mainUiState.limitTime

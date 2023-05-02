@@ -29,6 +29,7 @@ import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
 private var limitTime = ""
 private var trapTime = ""
 var mainCallCount = 0
+var clearCallCount = 0
 var isOverTrapInBeTrapped = true
 
 @Composable
@@ -69,9 +70,10 @@ fun BeTrappedScreen(viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.v
     }
 
     // 制限時間と相対時間の監視
-    if (beTrappedUiState.isOverLimitTime) {
+    if (beTrappedUiState.isOverLimitTime && clearCallCount == 0) {
         // クリアダイアログを表示
         navController.navigate("clear")
+        clearCallCount += 1
     }
 
     val latestUser = beTrappedUiState.latestUser
