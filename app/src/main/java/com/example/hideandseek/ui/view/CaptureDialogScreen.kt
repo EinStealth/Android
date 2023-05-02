@@ -88,7 +88,7 @@ fun CaptureDialogScreen(viewModel: CaptureDialogViewModel = viewModel(), navCont
                     .clickable {
                         if (isOverTrapInBeTrapped) {
                             navController.navigate("main")
-                        }else {
+                        } else {
                             navController.navigate("beTrapped")
                         }
                     }
