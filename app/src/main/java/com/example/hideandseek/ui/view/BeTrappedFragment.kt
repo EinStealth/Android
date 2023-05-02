@@ -223,6 +223,7 @@ fun BeTrappedScreen(viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.v
                     .height(100.dp)
                     .width(200.dp)
                     .clickable {
+                        navController.navigate("capture")
                     }
             )
             if (beTrappedUiState.isOverSkillTime) {
