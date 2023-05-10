@@ -61,6 +61,7 @@ fun RoomSearchScreen(viewModel: RoomSearchFragmentViewModel = viewModel(), navCo
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.Transparent
                 ),
+                singleLine = true,
                 placeholder = { Text(text = "\uD83D\uDDDD　合言葉") },
                 modifier = Modifier.constrainAs(textField) {
                     top.linkTo(dialog.top)
