@@ -2,10 +2,16 @@ package com.example.hideandseek.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -58,7 +64,7 @@ fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecyc
         )
         ConstraintLayout {
             // Create references for the composable to constrain
-            val (dialog, textSecret, icon1, icon2, icon3, icon4, name1, name2, name3, name4, btStart) = createRefs()
+            val (dialog, textSecret, playerList, btStart) = createRefs()
             Image(
                 painter = painterResource(R.drawable.stand_by_room),
                 contentDescription = "dialog",
@@ -83,96 +89,30 @@ fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecyc
                     }
                     .padding(top = 44.dp)
             )
-            if (standByRoomUiState.allPlayer.isNotEmpty()) {
-                Image(
-                    painter = painterResource(selectDrawable(allPlayer[0].icon)),
-                    contentDescription = "icon1",
-                    modifier = Modifier
-                        .constrainAs(icon1) {
-                            top.linkTo(dialog.top)
-                            start.linkTo(dialog.start)
-                        }
-                        .padding(top = 80.dp, start = 12.dp)
-                        .height(100.dp)
-                        .width(100.dp)
-                )
-                Text(
-                    text = allPlayer[0].name,
-                    modifier = Modifier
-                        .constrainAs(name1) {
-                            top.linkTo(icon1.bottom)
-                            start.linkTo(icon1.start)
-                            end.linkTo(icon1.end)
-                        }
-                )
-            }
-            if (standByRoomUiState.allPlayer.size > 1) {
-                Image(
-                    painter = painterResource(selectDrawable(allPlayer[1].icon)),
-                    contentDescription = "icon2",
-                    modifier = Modifier
-                        .constrainAs(icon2) {
-                            top.linkTo(dialog.top)
-                            start.linkTo(icon1.end)
-                        }
-                        .padding(top = 80.dp, start = 12.dp)
-                        .height(100.dp)
-                        .width(100.dp)
-                )
-                Text(
-                    text = allPlayer[1].name,
-                    modifier = Modifier
-                        .constrainAs(name2) {
-                            top.linkTo(icon1.bottom)
-                            start.linkTo(icon2.start)
-                            end.linkTo(icon2.end)
-                        }
-                )
-            }
-            if (standByRoomUiState.allPlayer.size > 2) {
-                Image(
-                    painter = painterResource(selectDrawable(allPlayer[2].icon)),
-                    contentDescription = "icon3",
-                    modifier = Modifier
-                        .constrainAs(icon3) {
-                            top.linkTo(name1.bottom)
-                            start.linkTo(dialog.start)
-                        }
-                        .height(100.dp)
-                        .width(100.dp)
-                )
-                Text(
-                    text = allPlayer[2].name,
-                    modifier = Modifier
-                        .constrainAs(name3) {
-                            top.linkTo(icon3.bottom)
-                            start.linkTo(icon3.start)
-                            end.linkTo(icon3.end)
-                        }
-                )
-            }
-            if (standByRoomUiState.allPlayer.size > 3) {
-                Image(
-                    painter = painterResource(selectDrawable(allPlayer[3].icon)),
-                    contentDescription = "icon4",
-                    modifier = Modifier
-                        .constrainAs(icon4) {
-                            top.linkTo(name2.bottom)
-                            start.linkTo(icon3.end)
-                        }
-                        .padding(start = 12.dp)
-                        .height(100.dp)
-                        .width(100.dp)
-                )
-                Text(
-                    text = allPlayer[3].name,
-                    modifier = Modifier
-                        .constrainAs(name4) {
-                            top.linkTo(icon4.bottom)
-                            start.linkTo(icon4.start)
-                            end.linkTo(icon4.end)
-                        }
-                )
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                contentPadding = PaddingValues(start = 100.dp),
+                modifier = Modifier
+                    .constrainAs(playerList) {
+                        top.linkTo(dialog.top)
+                        end.linkTo(dialog.end)
+                        bottom.linkTo(dialog.bottom)
+                        start.linkTo(dialog.start)
+                    }
+                    .height(200.dp)
+            ) {
+                items(allPlayer) {
+                    Column(
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Image(
+                            painter = painterResource(selectDrawable(it.icon)),
+                            contentDescription = "icon"
+                        )
+                        Text(text = it.name)
+                    }
+                }
             }
             Image(
                 painter = painterResource(R.drawable.bt_start),
