@@ -103,7 +103,7 @@ fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecyc
                     .height(200.dp)
             ) {
                 items(allPlayer) {
-                    Column (
+                    Column(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Image(
