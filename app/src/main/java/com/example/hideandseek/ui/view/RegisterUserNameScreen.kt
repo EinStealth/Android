@@ -53,6 +53,7 @@ fun RegisterUserNameScreen(viewModel: RegisterUserNameFragmentViewModel, navCont
             TextField(
                 value = text,
                 onValueChange = { text = it },
+                singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.Transparent
                 ),
