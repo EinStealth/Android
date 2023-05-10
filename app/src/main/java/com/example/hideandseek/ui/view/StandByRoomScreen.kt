@@ -58,16 +58,6 @@ fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecyc
         navController.navigate("main")
     }
     val allPlayer = standByRoomUiState.allPlayer
-    val playerTest = listOf(
-        ResponseData.ResponseGetPlayer("test", "user1", 1, 1),
-        ResponseData.ResponseGetPlayer("test", "user2", 2, 1),
-        ResponseData.ResponseGetPlayer("test", "user3", 3, 1),
-        ResponseData.ResponseGetPlayer("test", "user4", 1, 1),
-        ResponseData.ResponseGetPlayer("test", "user1", 1, 1),
-        ResponseData.ResponseGetPlayer("test", "user2", 2, 1),
-        ResponseData.ResponseGetPlayer("test", "user3", 3, 1),
-        ResponseData.ResponseGetPlayer("test", "user4", 1, 1),
-    )
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
@@ -115,7 +105,7 @@ fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecyc
                     .height(200.dp)
             ) {
                 items(
-                    playerTest
+                    allPlayer
                 ) {
                     Column (
                         verticalArrangement = Arrangement.Center
