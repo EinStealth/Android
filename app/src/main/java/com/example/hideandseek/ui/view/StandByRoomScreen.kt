@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Surface
@@ -27,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import com.example.hideandseek.R
-import com.example.hideandseek.data.datasource.remote.ResponseData
 import com.example.hideandseek.ui.viewmodel.StandByRoomFragmentViewModel
 
 private fun selectDrawable(icon: Int): Int {
@@ -104,9 +102,7 @@ fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecyc
                     }
                     .height(200.dp)
             ) {
-                items(
-                    allPlayer
-                ) {
+                items(allPlayer) {
                     Column (
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -116,7 +112,6 @@ fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecyc
                         )
                         Text(text = it.name)
                     }
-
                 }
             }
             Image(
