@@ -103,6 +103,14 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
     }
 
     if (latestUser.relativeTime != "") {
+        if (mainUiState.map == null) {
+            // URLから画像を取得
+            // 相対時間10秒おきに行う
+            Log.d("fetchMAP", "Mapが更新されました")
+            coroutineScope.launch {
+                viewModel.fetchMap(latestUser, allLocation, allTraps)
+            }
+        }
 
         // 制限時間になったかどうかの判定
         if (limitTime != "") {
