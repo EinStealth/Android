@@ -28,6 +28,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.temporal.ChronoUnit
 
 interface MyLocationRepository {
     suspend fun start()
@@ -62,6 +63,7 @@ class MyLocationRepositoryImpl @Inject constructor(
         }
 
         var relativeTime: LocalTime = LocalTime.now()
+        var preTime: LocalTime = relativeTime
 
         // 直近の位置情報を取得
         fusedLocationProviderClient.lastLocation
@@ -73,7 +75,11 @@ class MyLocationRepositoryImpl @Inject constructor(
                     // ずれとを計算
                     val gap = calculateGap(location)
                     // 相対時間を計算
-                    relativeTime = calculateRelativeTime(relativeTime, gap)
+                    val nowTime = LocalTime.now()
+                    val dif = ChronoUnit.NANOS.between(preTime, nowTime)
+                    Log.d("LocalTimeDif", "preTime: $preTime, nowTime: $nowTime, dif: $dif")
+                    preTime = nowTime
+                    relativeTime = relativeTime.minusNanos(gap).plusNanos(dif)
                     myInfoRepository.writeRelativeTime(relativeTime.toString().substring(0, 8))
                     // 10秒おきにAPI通信をする
                     if (relativeTime.second % 10 == 0) {
@@ -109,7 +115,12 @@ class MyLocationRepositoryImpl @Inject constructor(
                     // ずれとを計算
                     val gap = calculateGap(location)
                     // 相対時間を計算
-                    relativeTime = calculateRelativeTime(relativeTime, gap)
+                    val nowTime = LocalTime.now()
+                    val dif = ChronoUnit.NANOS.between(preTime, nowTime)
+                    Log.d("LocalTimeDif", "preTime: $preTime, nowTime: $nowTime, dif: $dif")
+                    preTime = nowTime
+                    relativeTime = relativeTime.minusNanos(gap).plusNanos(dif)
+                    Log.d("LocalTimeDifRelative", "relativeTime: $relativeTime, gap: $gap")
                     myInfoRepository.writeRelativeTime(relativeTime.toString().substring(0, 8))
                     // 10秒おきにAPI通信をする
                     if (relativeTime.second % 10 == 0) {
@@ -142,10 +153,6 @@ class MyLocationRepositoryImpl @Inject constructor(
     private fun calculateGap(location: Location): Long {
         Log.d("GAP", "speed: ${location.speed}, calc: ${(1000000000 * (1 - sqrt(1 - (location.speed / 10).pow(2)))).roundToInt().toLong()}")
         return (1000000000 * (1 - sqrt(1 - (location.speed / 10).pow(2)))).roundToInt().toLong()
-    }
-
-    private fun calculateRelativeTime(relativeTime: LocalTime, gap: Long): LocalTime {
-        return relativeTime.minusNanos(gap).plusSeconds(1)
     }
 
     private suspend fun insertLocationAll(relativeTime: LocalTime, response: List<ResponseData.ResponseGetLocation>) {
