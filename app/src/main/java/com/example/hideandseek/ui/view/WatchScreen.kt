@@ -40,6 +40,15 @@ fun WatchScreen(viewModel: WatchFragmentViewModel = androidx.lifecycle.viewmodel
     // 自分の情報の表示
     Log.d("UserLive", latestUser.toString())
     if (latestUser.relativeTime != "") {
+        if (watchUiState.map == null) {
+            // URLから画像を取得
+            // 相対時間10秒おきに行う
+            Log.d("fetchMAP", "Mapが更新されました")
+            coroutineScope.launch {
+                viewModel.fetchMap(latestUser, allLocation, allTraps)
+            }
+        }
+
         // 他人の位置を追加
         Log.d("ALL_Location", allLocation.toString())
         if (allLocation.isNotEmpty()) {
