@@ -171,7 +171,7 @@ class MyLocationRepositoryImpl @Inject constructor(
         try {
             val request = PostData.PostLocation(
                 secretWords,
-                relativeTime.toString().substring(0, 8),
+                relativeTime.toString().substring(0, 7)+"0",
                 location.latitude,
                 location.longitude,
                 0
@@ -189,7 +189,7 @@ class MyLocationRepositoryImpl @Inject constructor(
 
     private suspend fun getLocation(secretWords: String, relativeTime: LocalTime) {
         try {
-            val response = apiRepository.getLocation(secretWords, relativeTime.toString().substring(0, 8))
+            val response = apiRepository.getLocation(secretWords, relativeTime.toString().substring(0, 7)+"0")
             if (response.isSuccessful) {
                 Log.d("GET_TEST", "${response}\n${response.body()}")
                 response.body()?.let { insertLocationAll(relativeTime, it) }
