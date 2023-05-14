@@ -35,21 +35,42 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-private fun selectDrawable(icon: Int): Int {
-    return when (icon) {
+private fun selectDrawable(icon: Int, status: Int): Int {
+    when (icon) {
         1 -> {
-            R.drawable.user01_normal
+            when (status % 10) {
+                0 -> return R.drawable.user01_runaway
+                1 -> return R.drawable.user01_caputure
+                2 -> return R.drawable.user01_clear
+                3 -> return R.drawable.user01_oni
+            }
         }
         2 -> {
-            R.drawable.user02_normal
+            when (status % 10) {
+                0 -> return R.drawable.user02_runaway
+                1 -> return R.drawable.user02_caputure
+                2 -> return R.drawable.user02_clear
+                3 -> return R.drawable.user02_oni
+            }
         }
         3 -> {
-            R.drawable.user03_normal
+            when (status % 10) {
+                0 -> return R.drawable.user03_runaway
+                1 -> return R.drawable.user03_capture
+                2 -> return R.drawable.user03_clear
+                3 -> return R.drawable.user03_oni
+            }
         }
         else -> {
-            R.drawable.user04_normal
+            when (status % 10) {
+                0 -> return R.drawable.user04_runaway
+                1 -> return R.drawable.user04_capture
+                2 -> return R.drawable.user04_clear
+                3 -> return R.drawable.user04_oni
+            }
         }
     }
+    return R.drawable.user01_normal
 }
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -342,7 +363,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
             ) {
                 items(allPlayer) {
                     Image(
-                        painter = painterResource(id = selectDrawable(it.icon)),
+                        painter = painterResource(id = selectDrawable(it.icon, it.status)),
                         contentDescription = "userList",
                         modifier = Modifier.padding(start = 28.dp)
                             .height(72.dp)
