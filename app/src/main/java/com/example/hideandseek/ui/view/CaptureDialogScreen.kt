@@ -70,7 +70,7 @@ fun CaptureDialogScreen(viewModel: CaptureDialogViewModel = viewModel(), navCont
                     .height(80.dp)
                     .clickable {
                         // ステータスを捕まったに変更
-                        viewModel.updatePlayerStatus(3)
+                        viewModel.updatePlayerStatus(1)
                         navController.navigate("notifyCapture")
                     }
             )
