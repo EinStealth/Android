@@ -64,8 +64,7 @@ fun WatchScreen(viewModel: WatchFragmentViewModel = androidx.lifecycle.viewmodel
         // 相対時間10秒おきに行う
         if (watchUiState.preRelativeTime == "") {
             viewModel.updatePreRelativeTime()
-        }
-        else {
+        } else {
             Log.d("fetchMap", "re: ${latestUser.relativeTime}, pre: ${watchUiState.preRelativeTime}")
             if (latestUser.relativeTime.substring(6, 7) != watchUiState.preRelativeTime.substring(6, 7)) {
                 Log.d("fetchMAP", "Mapが更新されました")

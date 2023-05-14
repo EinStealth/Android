@@ -83,7 +83,7 @@ class MyLocationRepositoryImpl @Inject constructor(
                     relativeTime = relativeTime.minusNanos(gap).plusNanos(dif)
                     myInfoRepository.writeRelativeTime(relativeTime.toString().substring(0, 8))
                     // 10秒おきにAPI通信をする
-                    if (relativeTime.second/10 != preRelativeTime.second/10) {
+                    if (relativeTime.second / 10 != preRelativeTime.second / 10) {
                         coroutineScope.launch {
                             withContext(ioDispatcher) {
                                 val secretWords = myInfoRepository.readSecretWords()
@@ -125,8 +125,7 @@ class MyLocationRepositoryImpl @Inject constructor(
                     Log.d("LocalTimeDifRelative", "relativeTime: $relativeTime, gap: $gap")
                     myInfoRepository.writeRelativeTime(relativeTime.toString().substring(0, 8))
                     // 10秒おきにAPI通信をする
-                    Log.d("warizan", "re: ${relativeTime.second/10}, pre: ${preRelativeTime.second/10}")
-                    if (relativeTime.second/10 != preRelativeTime.second/10) {
+                    if (relativeTime.second / 10 != preRelativeTime.second / 10) {
                         coroutineScope.launch {
                             withContext(ioDispatcher) {
                                 val secretWords = myInfoRepository.readSecretWords()
@@ -171,7 +170,7 @@ class MyLocationRepositoryImpl @Inject constructor(
         try {
             val request = PostData.PostLocation(
                 secretWords,
-                relativeTime.toString().substring(0, 7)+"0",
+                relativeTime.toString().substring(0, 7) + "0",
                 location.latitude,
                 location.longitude,
                 0

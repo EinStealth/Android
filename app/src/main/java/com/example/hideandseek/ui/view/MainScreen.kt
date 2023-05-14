@@ -180,8 +180,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
         // 相対時間10秒おきに行う
         if (mainUiState.preRelativeTime == "") {
             viewModel.updatePreRelativeTime()
-        }
-        else {
+        } else {
             Log.d("fetchMap", "re: ${latestUser.relativeTime}, pre: ${mainUiState.preRelativeTime}")
             if (latestUser.relativeTime.substring(6, 7) != mainUiState.preRelativeTime.substring(6, 7)) {
                 Log.d("fetchMAP", "Mapが更新されました")
