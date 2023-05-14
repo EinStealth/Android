@@ -29,7 +29,6 @@ import androidx.constraintlayout.compose.Visibility
 import androidx.navigation.NavController
 import com.example.hideandseek.R
 import com.example.hideandseek.data.datasource.local.TrapData
-import com.example.hideandseek.data.datasource.remote.ResponseData
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
