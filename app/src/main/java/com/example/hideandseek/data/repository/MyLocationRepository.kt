@@ -63,6 +63,7 @@ class MyLocationRepositoryImpl @Inject constructor(
         }
 
         var relativeTime: LocalTime = LocalTime.now()
+        var preRelativeTime: LocalTime = relativeTime
         var preTime: LocalTime = relativeTime
 
         // 直近の位置情報を取得
@@ -82,7 +83,7 @@ class MyLocationRepositoryImpl @Inject constructor(
                     relativeTime = relativeTime.minusNanos(gap).plusNanos(dif)
                     myInfoRepository.writeRelativeTime(relativeTime.toString().substring(0, 8))
                     // 10秒おきにAPI通信をする
-                    if (relativeTime.second % 10 == 0) {
+                    if (relativeTime.second / 10 != preRelativeTime.second / 10) {
                         coroutineScope.launch {
                             withContext(ioDispatcher) {
                                 val secretWords = myInfoRepository.readSecretWords()
@@ -92,6 +93,7 @@ class MyLocationRepositoryImpl @Inject constructor(
                             }
                         }
                     }
+                    preRelativeTime = relativeTime
                 }
             }
 
@@ -123,7 +125,7 @@ class MyLocationRepositoryImpl @Inject constructor(
                     Log.d("LocalTimeDifRelative", "relativeTime: $relativeTime, gap: $gap")
                     myInfoRepository.writeRelativeTime(relativeTime.toString().substring(0, 8))
                     // 10秒おきにAPI通信をする
-                    if (relativeTime.second % 10 == 0) {
+                    if (relativeTime.second / 10 != preRelativeTime.second / 10) {
                         coroutineScope.launch {
                             withContext(ioDispatcher) {
                                 val secretWords = myInfoRepository.readSecretWords()
@@ -133,6 +135,7 @@ class MyLocationRepositoryImpl @Inject constructor(
                             }
                         }
                     }
+                    preRelativeTime = relativeTime
                 }
             }
         }
@@ -167,7 +170,7 @@ class MyLocationRepositoryImpl @Inject constructor(
         try {
             val request = PostData.PostLocation(
                 secretWords,
-                relativeTime.toString().substring(0, 8),
+                relativeTime.toString().substring(0, 7) + "0",
                 location.latitude,
                 location.longitude,
                 0
@@ -185,7 +188,7 @@ class MyLocationRepositoryImpl @Inject constructor(
 
     private suspend fun getLocation(secretWords: String, relativeTime: LocalTime) {
         try {
-            val response = apiRepository.getLocation(secretWords, relativeTime.toString().substring(0, 8))
+            val response = apiRepository.getLocation(secretWords, relativeTime.toString().substring(0, 7) + "0")
             if (response.isSuccessful) {
                 Log.d("GET_TEST", "${response}\n${response.body()}")
                 response.body()?.let { insertLocationAll(relativeTime, it) }
