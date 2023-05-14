@@ -35,6 +35,7 @@ data class MainUiState(
     val map: Bitmap? = null,
     val allPlayer: List<ResponseData.ResponseGetPlayer> = listOf(),
     val myName: String = "",
+    val preRelativeTime: String = ""
 )
 
 @HiltViewModel
@@ -91,6 +92,12 @@ class MainFragmentViewModel @Inject constructor(
         }
     }
 
+    fun updatePreRelativeTime() {
+        _uiState.update { mainUiState ->
+            mainUiState.copy(preRelativeTime = mainUiState.latestUser.relativeTime)
+        }
+    }
+
     private fun getPlayer(secretWords: String) {
         viewModelScope.launch {
             try {
@@ -98,8 +105,8 @@ class MainFragmentViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     if (response.body() != null) {
                         viewModelScope.launch {
-                            _uiState.update { standByRoomUiState ->
-                                standByRoomUiState.copy(allPlayer = response.body()!!)
+                            _uiState.update { mainUiState ->
+                                mainUiState.copy(allPlayer = response.body()!!)
                             }
                         }
                     }

@@ -105,7 +105,6 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
     if (latestUser.relativeTime != "") {
         if (mainUiState.map == null) {
             // URLから画像を取得
-            // 相対時間10秒おきに行う
             Log.d("fetchMAP", "Mapが更新されました")
             coroutineScope.launch {
                 viewModel.fetchMap(latestUser, allLocation, allTraps)
@@ -179,10 +178,17 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
 
         // URLから画像を取得
         // 相対時間10秒おきに行う
-        if (latestUser.relativeTime.substring(7, 8) == "0") {
-            Log.d("fetchMAP", "Mapが更新されました")
-            coroutineScope.launch {
-                viewModel.fetchMap(latestUser, allLocation, allTraps)
+        if (mainUiState.preRelativeTime == "") {
+            viewModel.updatePreRelativeTime()
+        }
+        else {
+            Log.d("fetchMap", "re: ${latestUser.relativeTime}, pre: ${mainUiState.preRelativeTime}")
+            if (latestUser.relativeTime.substring(6, 7) != mainUiState.preRelativeTime.substring(6, 7)) {
+                Log.d("fetchMAP", "Mapが更新されました")
+                coroutineScope.launch {
+                    viewModel.fetchMap(latestUser, allLocation, allTraps)
+                }
+                viewModel.updatePreRelativeTime()
             }
         }
     }
