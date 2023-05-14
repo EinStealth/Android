@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +28,23 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+private fun selectDrawable(icon: Int): Int {
+    return when (icon) {
+        1 -> {
+            R.drawable.user01_normal
+        }
+        2 -> {
+            R.drawable.user02_normal
+        }
+        3 -> {
+            R.drawable.user03_normal
+        }
+        else -> {
+            R.drawable.user04_normal
+        }
+    }
+}
+
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun WatchScreen(viewModel: WatchFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController, mainDispatcher: CoroutineDispatcher = Dispatchers.Main) {
@@ -36,6 +55,7 @@ fun WatchScreen(viewModel: WatchFragmentViewModel = androidx.lifecycle.viewmodel
     val allLocation = watchUiState.allLocation
     val allTraps = watchUiState.allTrap
     val latestUser = watchUiState.latestUser
+    val allPlayer = watchUiState.allPlayer
 
     // 自分の情報の表示
     Log.d("UserLive", latestUser.toString())
@@ -86,7 +106,7 @@ fun WatchScreen(viewModel: WatchFragmentViewModel = androidx.lifecycle.viewmodel
         }
         ConstraintLayout {
             // Create references for the composable to constrain
-            val (ivWatching, btCaptureOff, btSkillOf, user1, user2, user3, user4) = createRefs()
+            val (ivWatching, btCaptureOff, btSkillOf, userList) = createRefs()
 
             Image(
                 painter = painterResource(R.drawable.text_watching),
@@ -121,54 +141,23 @@ fun WatchScreen(viewModel: WatchFragmentViewModel = androidx.lifecycle.viewmodel
                     .height(100.dp)
                     .width(180.dp)
             )
-            Image(
-                painter = painterResource(R.drawable.user01_caputure),
-                contentDescription = "user1",
-                modifier = Modifier
-                    .constrainAs(user1) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                    }
-                    .padding(start = 40.dp)
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user02_runaway),
-                contentDescription = "user2",
-                modifier = Modifier
-                    .constrainAs(user2) {
-                        top.linkTo(user1.top)
-                        end.linkTo(user3.start)
-                        start.linkTo(user1.end)
-                    }
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user03_runaway),
-                contentDescription = "user3",
-                modifier = Modifier
-                    .constrainAs(user3) {
-                        top.linkTo(user1.top)
-                        end.linkTo(user4.start)
-                        start.linkTo(user2.end)
-                    }
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user04_oni),
-                contentDescription = "user4",
-                modifier = Modifier
-                    .constrainAs(user4) {
-                        top.linkTo(user1.top)
-                        end.linkTo(parent.end)
-                    }
-                    .padding(end = 40.dp)
-                    .height(72.dp)
-                    .width(72.dp)
-            )
+            LazyRow(
+                modifier = Modifier.constrainAs(userList) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                }
+            ) {
+                items(allPlayer) {
+                    Image(
+                        painter = painterResource(id = selectDrawable(it.icon)),
+                        contentDescription = "userList",
+                        modifier = Modifier.padding(start = 28.dp)
+                            .height(72.dp)
+                            .width(72.dp)
+
+                    )
+                }
+            }
         }
     }
 }

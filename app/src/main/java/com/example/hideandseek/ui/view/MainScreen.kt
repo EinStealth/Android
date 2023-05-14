@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -212,7 +214,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
         }
         ConstraintLayout {
             // Create references for the composable to constrain
-            val (ivTime, tvNow, tvRelative, tvLimit, tvLimitTime, btCaptureOn, btSkillOn, btSkillOff, progressSkill, user1, user2, user3, user4) = createRefs()
+            val (ivTime, tvNow, tvRelative, tvLimit, tvLimitTime, btCaptureOn, btSkillOn, btSkillOff, progressSkill, userList) = createRefs()
 
             Image(
                 painter = painterResource(R.drawable.text_times),
@@ -332,61 +334,22 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                         .width(80.dp)
                 )
             }
-            if (allPlayer.isNotEmpty()) {
-                Image(
-                    painter = painterResource(selectDrawable(allPlayer[0].icon)),
-                    contentDescription = "user1",
-                    modifier = Modifier
-                        .constrainAs(user1) {
-                            top.linkTo(ivTime.bottom)
-                            start.linkTo(parent.start)
-                        }
-                        .padding(start = 40.dp)
-                        .height(72.dp)
-                        .width(72.dp)
-                )
-            }
-            if (allPlayer.size > 1) {
-                Image(
-                    painter = painterResource(selectDrawable(allPlayer[1].icon)),
-                    contentDescription = "user2",
-                    modifier = Modifier
-                        .constrainAs(user2) {
-                            top.linkTo(user1.top)
-                            end.linkTo(user3.start)
-                            start.linkTo(user1.end)
-                        }
-                        .height(72.dp)
-                        .width(72.dp)
-                )
-            }
-            if (allPlayer.size > 2) {
-                Image(
-                    painter = painterResource(selectDrawable(allPlayer[2].icon)),
-                    contentDescription = "user3",
-                    modifier = Modifier
-                        .constrainAs(user3) {
-                            top.linkTo(user1.top)
-                            end.linkTo(user4.start)
-                            start.linkTo(user2.end)
-                        }
-                        .height(72.dp)
-                        .width(72.dp)
-                )
-            }
-            if (allPlayer.size > 3) {
-                Image(
-                    painter = painterResource(selectDrawable(allPlayer[3].icon)),
-                    contentDescription = "user4",
-                    modifier = Modifier
-                        .constrainAs(user4) {
-                            top.linkTo(user1.top)
-                            end.linkTo(parent.end)
-                        }
-                        .padding(end = 40.dp)
-                        .height(72.dp)
-                        .width(72.dp)
-                )
+            LazyRow(
+                modifier = Modifier.constrainAs(userList) {
+                    top.linkTo(ivTime.bottom)
+                    start.linkTo(parent.start)
+                }
+            ) {
+                items(allPlayer) {
+                    Image(
+                        painter = painterResource(id = selectDrawable(it.icon)),
+                        contentDescription = "userList",
+                        modifier = Modifier.padding(start = 28.dp)
+                            .height(72.dp)
+                            .width(72.dp)
+
+                    )
+                }
             }
         }
     }
