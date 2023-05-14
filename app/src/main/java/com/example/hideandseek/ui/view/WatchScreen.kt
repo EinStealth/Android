@@ -45,7 +45,6 @@ private fun selectDrawable(icon: Int): Int {
     }
 }
 
-
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun WatchScreen(viewModel: WatchFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController, mainDispatcher: CoroutineDispatcher = Dispatchers.Main) {
