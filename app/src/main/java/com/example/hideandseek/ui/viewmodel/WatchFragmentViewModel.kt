@@ -24,7 +24,8 @@ data class WatchUiState(
     val allLocation: List<LocationData> = listOf(),
     val latestUser: UserData = UserData(0, "", 0.0, 0.0, 0.0),
     val allTrap: List<TrapData> = listOf(),
-    val map: Bitmap? = null
+    val map: Bitmap? = null,
+    val preRelativeTime: String = ""
 )
 
 @HiltViewModel
@@ -64,6 +65,12 @@ class WatchFragmentViewModel @Inject constructor(
                     mainUiState.copy(allTrap = allTraps)
                 }
             }
+        }
+    }
+
+    fun updatePreRelativeTime() {
+        _uiState.update { watchUiState ->
+            watchUiState.copy(preRelativeTime = watchUiState.latestUser.relativeTime)
         }
     }
 
