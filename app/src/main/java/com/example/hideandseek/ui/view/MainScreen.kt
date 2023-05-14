@@ -107,7 +107,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
 
     if (mainUiState.isOverLimitTime && clearCallCount == 0) {
         // statusをクリアにする
-        viewModel.updatePlayerStatus(4)
+        viewModel.updatePlayerStatus(2)
         // クリアダイアログを表示
         navController.navigate("clear")
         clearCallCount += 1
@@ -179,7 +179,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                     viewModel.postTrapSpacetime("delete", latestUser)
 
                     // トラップにかかったステータスに変更
-                    viewModel.updatePlayerStatus(2)
+                    viewModel.updatePlayerStatus(1)
 
                     // TrapにかかったらFragmentを移動
                     viewModel.saveTrapTime(latestUser.relativeTime)
