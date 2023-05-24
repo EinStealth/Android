@@ -117,7 +117,7 @@ fun MyApp() {
         }
         composable("main") {
             val viewModel = hiltViewModel<MainFragmentViewModel>()
-            MainFragmentScreen(viewModel, navController)
+            MainScreen(viewModel, navController)
         }
         composable("capture") {
             val viewModel = hiltViewModel<CaptureDialogViewModel>()
@@ -131,10 +131,10 @@ fun MyApp() {
         }
         composable("watch") {
             val viewModel = hiltViewModel<WatchFragmentViewModel>()
-            WatchScreen(viewModel, navController)
+            WatchScreen(viewModel)
         }
         composable("result") {
-            ResultScreen(navController)
+            ResultScreen()
         }
         composable("beTrapped") {
             val viewModel = hiltViewModel<BeTrappedFragmentViewModel>()

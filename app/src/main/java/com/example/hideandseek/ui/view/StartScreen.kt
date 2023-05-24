@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.R
 
 @Composable
@@ -23,6 +24,17 @@ fun StartScreen(navController: NavController) {
     val sharedPref = activity.getSharedPreferences("user_info", Context.MODE_PRIVATE)
     val name = sharedPref?.getString("name", "")
 
+    StartLayout(
+        name = name.toString(),
+        navController = navController,
+    )
+}
+
+@Composable
+private fun StartLayout(
+    name: String,
+    navController: NavController
+) {
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive),
@@ -39,14 +51,11 @@ fun StartScreen(navController: NavController) {
     }
 }
 
-@Composable
 @Preview
-fun StartPreview() {
-    Surface(Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(R.drawable.title_background_responsive),
-            contentDescription = "title",
-            contentScale = ContentScale.Crop
-        )
-    }
+@Composable
+private fun StartPreview() {
+    StartLayout(
+        name = "atomic",
+        navController = rememberNavController(),
+    )
 }

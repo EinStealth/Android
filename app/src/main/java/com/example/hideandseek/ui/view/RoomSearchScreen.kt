@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.ui.viewmodel.RoomSearchFragmentViewModel
 
@@ -31,6 +32,24 @@ fun RoomSearchScreen(viewModel: RoomSearchFragmentViewModel = viewModel(), navCo
     // 名前・アイコンの読み込み
     viewModel.readUserInfo()
 
+    fun onClickSearchButton(text: String) {
+        // player情報のpost
+        viewModel.postPlayer(text, viewModel.uiState.value.userName, viewModel.uiState.value.userIcon)
+        // secret_wordsの保存
+        viewModel.writeSecretWords(text)
+    }
+
+    RoomSearchLayout(
+        navController = navController,
+        onClickSearchButton = { onClickSearchButton(it) },
+    )
+}
+
+@Composable
+private fun RoomSearchLayout(
+    navController: NavController,
+    onClickSearchButton: (String) -> Unit,
+) {
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
@@ -44,12 +63,13 @@ fun RoomSearchScreen(viewModel: RoomSearchFragmentViewModel = viewModel(), navCo
             Image(
                 painter = painterResource(R.drawable.secret_word),
                 contentDescription = "dialog",
-                modifier = Modifier.constrainAs(dialog) {
-                    top.linkTo(parent.top)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                }
+                modifier = Modifier
+                    .constrainAs(dialog) {
+                        top.linkTo(parent.top)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                    }
                     .width(300.dp)
                     .height(258.dp)
             )
@@ -84,10 +104,7 @@ fun RoomSearchScreen(viewModel: RoomSearchFragmentViewModel = viewModel(), navCo
                     .height(72.dp)
                     .clickable {
                         // TODO: 部屋が存在している確認
-                        // player情報のpost
-                        viewModel.postPlayer(text, viewModel.uiState.value.userName, viewModel.uiState.value.userIcon)
-                        // secret_wordsの保存
-                        viewModel.writeSecretWords(text)
+                        onClickSearchButton(text)
                         navController.navigate("standByRoom")
                     }
             )
@@ -98,58 +115,8 @@ fun RoomSearchScreen(viewModel: RoomSearchFragmentViewModel = viewModel(), navCo
 @Preview
 @Composable
 fun RoomSearchPreview() {
-    ConstraintLayout {
-        // Create references for the composable to constrain
-        val (background, dialog, btSearch, textField) = createRefs()
-
-        Image(
-            painter = painterResource(R.drawable.title_background_responsive_nontitlever),
-            contentDescription = "background",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.constrainAs(background) {
-                top.linkTo(parent.top)
-            }
-        )
-        Image(
-            painter = painterResource(R.drawable.secret_word),
-            contentDescription = "dialog",
-            modifier = Modifier.constrainAs(dialog) {
-                top.linkTo(parent.top)
-                end.linkTo(parent.end)
-                bottom.linkTo(parent.bottom)
-                start.linkTo(parent.start)
-            }
-                .width(300.dp)
-                .height(258.dp)
-        )
-        var text by remember { mutableStateOf("") }
-
-        TextField(
-            value = text,
-            onValueChange = { text = it },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent
-            ),
-            placeholder = { Text(text = "\uD83D\uDDDD　合言葉") },
-            modifier = Modifier.constrainAs(textField) {
-                top.linkTo(dialog.top)
-                end.linkTo(dialog.end)
-                bottom.linkTo(dialog.bottom)
-                start.linkTo(dialog.start)
-            }
-        )
-        Image(
-            painter = painterResource(R.drawable.bt_search),
-            contentDescription = "search_button",
-            modifier = Modifier
-                .constrainAs(btSearch) {
-                    top.linkTo(textField.bottom)
-                    end.linkTo(dialog.end)
-                    bottom.linkTo(dialog.bottom)
-                    start.linkTo(dialog.start)
-                }
-                .width(142.dp)
-                .height(72.dp)
-        )
-    }
+    RoomSearchLayout(
+        navController = rememberNavController(),
+        onClickSearchButton = {},
+    )
 }

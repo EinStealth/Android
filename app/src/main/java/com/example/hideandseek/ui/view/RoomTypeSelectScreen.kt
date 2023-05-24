@@ -19,9 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
 
@@ -32,6 +34,19 @@ fun RoomTypeSelectScreen(viewModel: RoomTypeSelectFragmentViewModel = viewModel(
     // 名前・アイコンの読み込み
     viewModel.readUserInfo()
 
+    RoomTypeSelectLayout(
+        navController = navController,
+        userIcon = roomTypeSelectUiState.userIcon,
+        userName = roomTypeSelectUiState.userName,
+    )
+}
+
+@Composable
+private fun RoomTypeSelectLayout(
+    navController: NavController,
+    userIcon: Int,
+    userName: String,
+) {
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
@@ -54,7 +69,7 @@ fun RoomTypeSelectScreen(viewModel: RoomTypeSelectFragmentViewModel = viewModel(
                 )
                 Row {
                     Image(
-                        painter = when (roomTypeSelectUiState.userIcon) {
+                        painter = when (userIcon) {
                             1 -> {
                                 painterResource(R.drawable.user01_normal)
                             }
@@ -75,7 +90,7 @@ fun RoomTypeSelectScreen(viewModel: RoomTypeSelectFragmentViewModel = viewModel(
                             .padding(start = 0.dp, top = 10.dp, end = 0.dp, bottom = 0.dp)
                     )
                     Text(
-                        text = roomTypeSelectUiState.userName,
+                        text = userName,
                         modifier = Modifier
                             .padding(start = 0.dp, top = 25.dp, end = 0.dp, bottom = 0.dp)
                             .clickable {
@@ -111,4 +126,14 @@ fun RoomTypeSelectScreen(viewModel: RoomTypeSelectFragmentViewModel = viewModel(
             Spacer(Modifier.weight(1f))
         }
     }
+}
+
+@Preview
+@Composable
+private fun RoomTypeSelectPreview() {
+    RoomTypeSelectLayout(
+        navController = rememberNavController(),
+        userIcon = 1,
+        userName = "なまえ",
+    )
 }

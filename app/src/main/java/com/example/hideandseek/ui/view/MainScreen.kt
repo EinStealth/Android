@@ -1,6 +1,7 @@
 package com.example.hideandseek.ui.view
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -25,10 +26,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Visibility
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.data.datasource.local.TrapData
+import com.example.hideandseek.data.datasource.remote.ResponseData
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -75,7 +77,7 @@ private fun selectDrawable(icon: Int, status: Int): Int {
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController, mainDispatcher: CoroutineDispatcher = Dispatchers.Main) {
+fun MainScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController, mainDispatcher: CoroutineDispatcher = Dispatchers.Main) {
     // 別composeから戻ってきたとき
     val returnSkillTime = viewModel.readSkillTime()
     val returnIsOverSkillTime = viewModel.readIsOverSkillTime()
@@ -225,8 +227,41 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
             0f
         }
 
+    val onClickSkillButton = {
+        viewModel.postTrapRoom(0, latestUser)
+        viewModel.postTrapSpacetime("post", latestUser)
+        viewModel.setSkillTime(latestUser)
+        viewModel.saveSkillTime(latestUser.relativeTime)
+        viewModel.setIsOverSkillTime(false)
+        viewModel.saveIsOverSkillTime(false)
+    }
+
+    MainLayout(
+        map = mainUiState.map,
+        relativeTime = latestUser.relativeTime,
+        limitTime = limitTime,
+        navController = navController,
+        isOverSkillTime = mainUiState.isOverSkillTime,
+        onClickSkillButton = onClickSkillButton,
+        howProgressSkill = howProgressSkill,
+        allPlayer = allPlayer
+    )
+}
+
+@Composable
+private fun MainLayout(
+    map: Bitmap?,
+    relativeTime: String,
+    limitTime: String,
+    navController: NavController,
+    isOverSkillTime: Boolean,
+    onClickSkillButton: () -> Unit,
+    howProgressSkill: Float,
+    allPlayer: List<ResponseData.ResponseGetPlayer>
+
+) {
     Surface(modifier = Modifier.fillMaxSize()) {
-        mainUiState.map?.let {
+        map?.let {
             Image(
                 bitmap = it.asImageBitmap(),
                 contentDescription = "map",
@@ -260,9 +295,9 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                     }
                     .padding(start = 40.dp)
             )
-            if (latestUser.relativeTime != "") {
+            if (relativeTime != "") {
                 Text(
-                    text = latestUser.relativeTime,
+                    text = relativeTime,
                     fontSize = 20.sp,
                     color = Color.Black,
                     modifier = Modifier
@@ -285,7 +320,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                     .padding(end = 12.dp)
             )
             Text(
-                text = mainUiState.limitTime,
+                text = limitTime,
                 fontSize = 20.sp,
                 color = Color.Red,
                 modifier = Modifier
@@ -309,7 +344,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                         navController.navigate("capture")
                     }
             )
-            if (mainUiState.isOverSkillTime) {
+            if (isOverSkillTime) {
                 Image(
                     painter = painterResource(R.drawable.button_skill_on),
                     contentDescription = "skill button on",
@@ -322,12 +357,7 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                         .width(180.dp)
                         .clickable {
                             // 自分の罠をRoomにinsert
-                            viewModel.postTrapRoom(0, latestUser)
-                            viewModel.postTrapSpacetime("post", latestUser)
-                            viewModel.setSkillTime(latestUser)
-                            viewModel.saveSkillTime(latestUser.relativeTime)
-                            viewModel.setIsOverSkillTime(false)
-                            viewModel.saveIsOverSkillTime(false)
+                            onClickSkillButton()
                         }
                 )
             } else {
@@ -365,7 +395,8 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
                     Image(
                         painter = painterResource(id = selectDrawable(it.icon, it.status)),
                         contentDescription = "userList",
-                        modifier = Modifier.padding(start = 28.dp)
+                        modifier = Modifier
+                            .padding(start = 28.dp)
                             .height(72.dp)
                             .width(72.dp)
 
@@ -378,166 +409,15 @@ fun MainFragmentScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.vie
 
 @Preview
 @Composable
-fun MainFragmentPreview() {
-    Surface(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(R.drawable.title_background_responsive_nontitlever),
-            contentDescription = "background",
-            contentScale = ContentScale.Crop
-        )
-        ConstraintLayout {
-            // Create references for the composable to constrain
-            val (ivTime, tvNow, tvRelative, tvLimit, tvLimitTime, btCaptureOn, btSkillOn, btSkillOff, progressSkill, user1, user2, user3, user4) = createRefs()
-
-            Image(
-                painter = painterResource(R.drawable.text_times),
-                contentDescription = "時間が表示されています",
-                modifier = Modifier
-                    .constrainAs(ivTime) {
-                        top.linkTo(parent.top)
-                        end.linkTo(parent.end)
-                        start.linkTo(parent.start)
-                    }
-                    .height(100.dp)
-            )
-            Text(
-                text = "NOW",
-                fontSize = 12.sp,
-                color = Color.Black,
-                modifier = Modifier
-                    .constrainAs(tvNow) {
-                        top.linkTo(ivTime.top)
-                        bottom.linkTo(ivTime.bottom)
-                        start.linkTo(ivTime.start)
-                    }
-                    .padding(start = 40.dp)
-            )
-            Text(
-                text = "relative_time",
-                fontSize = 20.sp,
-                color = Color.Black,
-                modifier = Modifier
-                    .constrainAs(tvRelative) {
-                        bottom.linkTo(tvNow.bottom)
-                        start.linkTo(tvNow.end)
-                    }
-                    .padding(start = 12.dp)
-            )
-            Text(
-                text = "LIMIT",
-                fontSize = 12.sp,
-                color = Color.Red,
-                modifier = Modifier
-                    .constrainAs(tvLimit) {
-                        end.linkTo(tvLimitTime.start)
-                        bottom.linkTo(tvNow.bottom)
-                    }
-                    .padding(end = 12.dp)
-            )
-            Text(
-                text = "limit_time",
-                fontSize = 20.sp,
-                color = Color.Red,
-                modifier = Modifier
-                    .constrainAs(tvLimitTime) {
-                        end.linkTo(ivTime.end)
-                        bottom.linkTo(tvNow.bottom)
-                    }
-                    .padding(end = 40.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.button_captured_on),
-                contentDescription = "鬼に捕まったときに押すボタン",
-                modifier = Modifier
-                    .constrainAs(btCaptureOn) {
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                    }
-                    .height(100.dp)
-                    .width(200.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.button_skill_on),
-                contentDescription = "skill button on",
-                modifier = Modifier
-                    .constrainAs(btSkillOn) {
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                    }
-                    .height(100.dp)
-                    .width(180.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.button_skill_off),
-                contentDescription = "skill button off",
-                modifier = Modifier
-                    .constrainAs(btSkillOff) {
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                        visibility = Visibility.Invisible
-                    }
-                    .height(100.dp)
-                    .width(180.dp)
-            )
-            LinearProgressIndicator(
-                modifier = Modifier
-                    .constrainAs(progressSkill) {
-                        end.linkTo(btSkillOff.end)
-                        bottom.linkTo(btSkillOff.bottom)
-                        start.linkTo(btSkillOff.start)
-                    }
-                    .padding(bottom = 24.dp, start = 8.dp)
-                    .height(10.dp)
-                    .width(80.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user01_caputure),
-                contentDescription = "user1",
-                modifier = Modifier
-                    .constrainAs(user1) {
-                        top.linkTo(ivTime.bottom)
-                        start.linkTo(parent.start)
-                    }
-                    .padding(start = 40.dp)
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user02_runaway),
-                contentDescription = "user2",
-                modifier = Modifier
-                    .constrainAs(user2) {
-                        top.linkTo(user1.top)
-                        end.linkTo(user3.start)
-                        start.linkTo(user1.end)
-                    }
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user03_runaway),
-                contentDescription = "user3",
-                modifier = Modifier
-                    .constrainAs(user3) {
-                        top.linkTo(user1.top)
-                        end.linkTo(user4.start)
-                        start.linkTo(user2.end)
-                    }
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user04_oni),
-                contentDescription = "user4",
-                modifier = Modifier
-                    .constrainAs(user4) {
-                        top.linkTo(user1.top)
-                        end.linkTo(parent.end)
-                    }
-                    .padding(end = 40.dp)
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-        }
-    }
+private fun MainScreenPreview() {
+    MainLayout(
+        map = null,
+        relativeTime = "",
+        limitTime = "",
+        navController = rememberNavController(),
+        isOverSkillTime = true,
+        onClickSkillButton = {},
+        howProgressSkill = 0f,
+        allPlayer = listOf()
+    )
 }
