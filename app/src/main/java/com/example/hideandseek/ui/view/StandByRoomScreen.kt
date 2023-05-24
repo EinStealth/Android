@@ -25,7 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.R
+import com.example.hideandseek.data.datasource.remote.ResponseData
 import com.example.hideandseek.ui.viewmodel.StandByRoomFragmentViewModel
 
 private fun selectDrawable(icon: Int): Int {
@@ -56,6 +58,22 @@ fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecyc
         navController.navigate("main")
     }
     val allPlayer = standByRoomUiState.allPlayer
+
+    StandByRoomLayout(
+        navController = navController,
+        secretWords = standByRoomUiState.secretWords,
+        allPlayer = allPlayer,
+        onClickStartButton = { viewModel.updateIsStart() },
+    )
+}
+
+@Composable
+private fun StandByRoomLayout(
+    navController: NavController,
+    secretWords: String,
+    allPlayer: List<ResponseData.ResponseGetPlayer>,
+    onClickStartButton: () -> Unit,
+) {
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
@@ -79,7 +97,7 @@ fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecyc
                     .height(405.dp)
             )
             Text(
-                text = standByRoomUiState.secretWords,
+                text = secretWords,
                 fontSize = 24.sp,
                 modifier = Modifier
                     .constrainAs(textSecret) {
@@ -128,149 +146,20 @@ fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecyc
                     .height(72.dp)
                     .clickable {
                         navController.navigate("main")
-                        viewModel.updateIsStart()
+                        onClickStartButton()
                     }
             )
         }
     }
 }
 
-@Composable
 @Preview
-fun StandByRoomPreview() {
-    ConstraintLayout {
-        // Create references for the composable to constrain
-        val (background, dialog, textSecret, icon1, icon2, icon3, icon4, name1, name2, name3, name4, btStart) = createRefs()
-
-        Image(
-            painter = painterResource(R.drawable.title_background_responsive_nontitlever),
-            contentDescription = "background",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .constrainAs(background) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                }
-        )
-        Image(
-            painter = painterResource(R.drawable.stand_by_room),
-            contentDescription = "dialog",
-            modifier = Modifier
-                .constrainAs(dialog) {
-                    top.linkTo(parent.top)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                }
-                .width(302.dp)
-                .height(405.dp)
-        )
-        Text(
-            text = "secretWords",
-            fontSize = 24.sp,
-            modifier = Modifier
-                .constrainAs(textSecret) {
-                    top.linkTo(dialog.top)
-                    end.linkTo(parent.end)
-                    start.linkTo(parent.start)
-                }
-                .padding(top = 44.dp)
-        )
-        Image(
-            painter = painterResource(R.drawable.user01_normal),
-            contentDescription = "icon1",
-            modifier = Modifier
-                .constrainAs(icon1) {
-                    top.linkTo(dialog.top)
-                    start.linkTo(dialog.start)
-                }
-                .padding(top = 80.dp, start = 12.dp)
-                .height(100.dp)
-                .width(100.dp)
-        )
-        Text(
-            text = "name1",
-            modifier = Modifier
-                .constrainAs(name1) {
-                    top.linkTo(icon1.bottom)
-                    start.linkTo(icon1.start)
-                    end.linkTo(icon1.end)
-                }
-        )
-        Image(
-            painter = painterResource(R.drawable.user01_normal),
-            contentDescription = "icon2",
-            modifier = Modifier
-                .constrainAs(icon2) {
-                    top.linkTo(dialog.top)
-                    start.linkTo(icon1.end)
-                }
-                .padding(top = 80.dp, start = 12.dp)
-                .height(100.dp)
-                .width(100.dp)
-        )
-        Text(
-            text = "name2",
-            modifier = Modifier
-                .constrainAs(name2) {
-                    top.linkTo(icon1.bottom)
-                    start.linkTo(icon2.start)
-                    end.linkTo(icon2.end)
-                }
-        )
-        Image(
-            painter = painterResource(R.drawable.user01_normal),
-            contentDescription = "icon3",
-            modifier = Modifier
-                .constrainAs(icon3) {
-                    top.linkTo(name1.bottom)
-                    start.linkTo(dialog.start)
-                }
-                .height(100.dp)
-                .width(100.dp)
-        )
-        Text(
-            text = "name3",
-            modifier = Modifier
-                .constrainAs(name3) {
-                    top.linkTo(icon3.bottom)
-                    start.linkTo(icon3.start)
-                    end.linkTo(icon3.end)
-                }
-        )
-        Image(
-            painter = painterResource(R.drawable.user01_normal),
-            contentDescription = "icon4",
-            modifier = Modifier
-                .constrainAs(icon4) {
-                    top.linkTo(name2.bottom)
-                    start.linkTo(icon3.end)
-                }
-                .padding(start = 12.dp)
-                .height(100.dp)
-                .width(100.dp)
-        )
-        Text(
-            text = "name4",
-            modifier = Modifier
-                .constrainAs(name4) {
-                    top.linkTo(icon4.bottom)
-                    start.linkTo(icon4.start)
-                    end.linkTo(icon4.end)
-                }
-        )
-        Image(
-            painter = painterResource(R.drawable.bt_start),
-            contentDescription = "button_start",
-            modifier = Modifier
-                .constrainAs(btStart) {
-                    end.linkTo(parent.end)
-                    bottom.linkTo(dialog.bottom)
-                    start.linkTo(parent.start)
-                }
-                .padding(bottom = 12.dp)
-                .width(142.dp)
-                .height(72.dp)
-        )
-    }
+@Composable
+private fun StandByRoomPreview() {
+    StandByRoomLayout(
+        navController = rememberNavController(),
+        secretWords = "a",
+        allPlayer = listOf(),
+        onClickStartButton = {},
+    )
 }
