@@ -25,7 +25,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.R
-import com.example.hideandseek.ui.viewmodel.RegisterUserNameFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
 
 @Composable

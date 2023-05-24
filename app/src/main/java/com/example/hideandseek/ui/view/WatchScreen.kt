@@ -188,7 +188,6 @@ private fun WatchLayout(
                             .padding(start = 28.dp)
                             .height(72.dp)
                             .width(72.dp)
-
                     )
                 }
             }

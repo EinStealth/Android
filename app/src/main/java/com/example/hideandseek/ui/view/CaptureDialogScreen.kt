@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -37,7 +36,7 @@ private fun CaptureDialogLayout(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        ConstraintLayout (
+        ConstraintLayout(
             modifier = Modifier.align(Alignment.Center)
         ) {
             // Create references for the composable to constrain
