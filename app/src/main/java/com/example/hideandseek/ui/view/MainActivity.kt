@@ -131,7 +131,7 @@ fun MyApp() {
         }
         composable("watch") {
             val viewModel = hiltViewModel<WatchFragmentViewModel>()
-            WatchScreen(viewModel, navController)
+            WatchScreen(viewModel)
         }
         composable("result") {
             ResultScreen()
