@@ -250,7 +250,7 @@ fun MainScreen(viewModel: MainFragmentViewModel = androidx.lifecycle.viewmodel.c
 }
 
 @Composable
-fun MainLayout(
+private fun MainLayout(
     map: Bitmap?,
     relativeTime: String,
     limitTime: String,
@@ -410,7 +410,7 @@ fun MainLayout(
 
 @Preview
 @Composable
-fun MainScreenPreview() {
+private fun MainScreenPreview() {
     MainLayout(
         map = null,
         relativeTime = "",

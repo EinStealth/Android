@@ -30,7 +30,7 @@ fun CaptureDialogScreen(viewModel: CaptureDialogViewModel = viewModel(), navCont
 }
 
 @Composable
-fun CaptureDialogLayout(
+private fun CaptureDialogLayout(
     navController: NavController,
     updateStatus: () -> Unit,
 ) {
@@ -112,7 +112,7 @@ fun CaptureDialogLayout(
 
 @Preview
 @Composable
-fun CaptureDialogPreview() {
+private fun CaptureDialogPreview() {
     val navController = rememberNavController()
     CaptureDialogLayout(
         navController = navController,

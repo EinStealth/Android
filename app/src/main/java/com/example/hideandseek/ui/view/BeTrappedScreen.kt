@@ -133,7 +133,7 @@ fun BeTrappedScreen(viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.v
 }
 
 @Composable
-fun BeTrappedLayout(
+private fun BeTrappedLayout(
     howProgressTrap: Float,
     howProgressSkill: Float,
     relativeTime: String,
@@ -352,7 +352,7 @@ fun BeTrappedLayout(
 
 @Preview
 @Composable
-fun BeTrappedPreview() {
+private fun BeTrappedPreview() {
     val navController = rememberNavController()
     BeTrappedLayout(
         howProgressTrap = 0f,
