@@ -113,5 +113,6 @@ private fun RegisterUserNamePreview() {
     RegisterUserNameLayout(
         navController = rememberNavController(),
         isEdit = true,
-        writeUserName = {})
+        writeUserName = {},
+    )
 }

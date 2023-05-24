@@ -14,11 +14,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.navigation.NavController
 import com.example.hideandseek.R
 
 @Composable
-fun ResultScreen(navController: NavController) {
+fun ResultScreen() {
+    ResultLayout()
+}
+
+@Composable
+private fun ResultLayout() {
     ConstraintLayout {
         // Create references for the composable to constrain
         val (dialog, textResult, textWinner, textLoser, winner1, winner2, loser1, loser2, btClose) = createRefs()
@@ -135,121 +139,8 @@ fun ResultScreen(navController: NavController) {
     }
 }
 
+@Preview(showBackground = true)
 @Composable
-@Preview
-fun ResultPreview() {
-    ConstraintLayout {
-        // Create references for the composable to constrain
-        val (dialog, textResult, textWinner, textLoser, winner1, winner2, loser1, loser2, btClose) = createRefs()
-
-        Image(
-            painter = painterResource(R.drawable.text_null),
-            contentDescription = "dialog",
-            modifier = Modifier
-                .constrainAs(dialog) {
-                    top.linkTo(parent.top)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                }
-                .scale(scaleX = 1f, scaleY = 2f)
-                .fillMaxHeight()
-                .padding(10.dp)
-        )
-        Text(
-            text = "RESULT",
-            fontSize = 32.sp,
-            modifier = Modifier
-                .constrainAs(textResult) {
-                    end.linkTo(parent.end)
-                    bottom.linkTo(textWinner.top)
-                    start.linkTo(parent.start)
-                }
-                .padding(bottom = 12.dp)
-        )
-        Text(
-            text = "WINNER",
-            fontSize = 32.sp,
-            modifier = Modifier
-                .constrainAs(textWinner) {
-                    top.linkTo(dialog.top)
-                    bottom.linkTo(textLoser.top)
-                    start.linkTo(dialog.start)
-                }
-                .padding(start = 32.dp)
-        )
-        Image(
-            painter = painterResource(R.drawable.user01_normal),
-            contentDescription = "winner1",
-            modifier = Modifier
-                .constrainAs(winner1) {
-                    top.linkTo(textWinner.bottom)
-                    bottom.linkTo(textLoser.top)
-                    start.linkTo(textWinner.start)
-                }
-                .height(120.dp)
-                .width(120.dp)
-        )
-        Image(
-            painter = painterResource(R.drawable.user02_normal),
-            contentDescription = "winner2",
-            modifier = Modifier
-                .constrainAs(winner2) {
-                    top.linkTo(textWinner.bottom)
-                    bottom.linkTo(textLoser.top)
-                    start.linkTo(winner1.end)
-                }
-                .padding(start = 12.dp)
-                .height(120.dp)
-                .width(120.dp)
-        )
-        Text(
-            text = "LOSER",
-            fontSize = 32.sp,
-            modifier = Modifier
-                .constrainAs(textLoser) {
-                    top.linkTo(dialog.top)
-                    bottom.linkTo(dialog.bottom)
-                    start.linkTo(dialog.start)
-                }
-                .padding(start = 32.dp)
-        )
-        Image(
-            painter = painterResource(R.drawable.user03_normal),
-            contentDescription = "loser1",
-            modifier = Modifier
-                .constrainAs(loser1) {
-                    top.linkTo(textLoser.bottom)
-                    start.linkTo(textWinner.start)
-                }
-                .padding(top = 24.dp)
-                .height(120.dp)
-                .width(120.dp)
-        )
-        Image(
-            painter = painterResource(R.drawable.user02_normal),
-            contentDescription = "loser2",
-            modifier = Modifier
-                .constrainAs(loser2) {
-                    top.linkTo(textLoser.bottom)
-                    start.linkTo(loser1.end)
-                }
-                .padding(top = 24.dp, start = 12.dp)
-                .height(120.dp)
-                .width(120.dp)
-        )
-        Image(
-            painter = painterResource(R.drawable.button_close),
-            contentDescription = "button_close",
-            modifier = Modifier
-                .constrainAs(btClose) {
-                    top.linkTo(loser1.bottom)
-                    end.linkTo(parent.end)
-                    start.linkTo(parent.start)
-                }
-                .padding(top = 52.dp)
-                .height(80.dp)
-                .width(160.dp)
-        )
-    }
+private fun ResultPreview() {
+    ResultLayout()
 }
