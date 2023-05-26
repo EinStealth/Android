@@ -3,7 +3,12 @@ package com.example.hideandseek.ui.view
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -13,13 +18,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.R
@@ -146,19 +151,98 @@ private fun BeTrappedLayout(
         modifier = Modifier.fillMaxSize(),
         color = Color.Black
     ) {
-        ConstraintLayout {
-            // Create references for the composable to constrain
-            val (eye, tvTrap, progressTrap, ivTime, tvNow, tvRelative, tvLimit, tvLimitTime, btCaptureOn, btSkillOn, btSkillOff, progressSkill, user1, user2, user3, user4) = createRefs()
-
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.text_times),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(100.dp)
+                )
+                Row(
+                    verticalAlignment = Alignment.Bottom,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "NOW",
+                        fontSize = 12.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(start = 40.dp)
+                    )
+                    if (relativeTime != "") {
+                        Text(
+                            text = relativeTime,
+                            fontSize = 20.sp,
+                            color = Color.Black,
+                            modifier = Modifier
+                                .padding(start = 12.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = "LIMIT",
+                        fontSize = 12.sp,
+                        color = Color.Red,
+                        modifier = Modifier
+                            .padding(end = 12.dp)
+                    )
+                    Text(
+                        text = limitTime,
+                        fontSize = 20.sp,
+                        color = Color.Red,
+                        modifier = Modifier
+                            .padding(end = 40.dp)
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier.height(72.dp)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.user01_caputure),
+                    contentDescription = "user1",
+                    modifier = Modifier
+                        .padding(start = 40.dp)
+                        .height(72.dp)
+                        .width(72.dp)
+                )
+                Image(
+                    painter = painterResource(R.drawable.user02_runaway),
+                    contentDescription = "user2",
+                    modifier = Modifier
+                        .height(72.dp)
+                        .width(72.dp)
+                )
+                Image(
+                    painter = painterResource(R.drawable.user03_runaway),
+                    contentDescription = "user3",
+                    modifier = Modifier
+                        .height(72.dp)
+                        .width(72.dp)
+                )
+                Image(
+                    painter = painterResource(R.drawable.user04_oni),
+                    contentDescription = "user4",
+                    modifier = Modifier
+                        .padding(end = 40.dp)
+                        .height(72.dp)
+                        .width(72.dp)
+                )
+            }
+            Spacer(modifier = Modifier.weight(1f))
             Image(
                 painter = painterResource(R.drawable.eye),
                 contentDescription = "text_watching",
                 modifier = Modifier
-                    .constrainAs(eye) {
-                        end.linkTo(parent.end)
-                        bottom.linkTo(tvTrap.top)
-                        start.linkTo(parent.start)
-                    }
                     .height(160.dp)
                     .width(160.dp)
             )
@@ -166,186 +250,60 @@ private fun BeTrappedLayout(
                 text = "罠が解除されるまで",
                 fontSize = 20.sp,
                 color = Color.White,
-                modifier = Modifier
-                    .constrainAs(tvTrap) {
-                        top.linkTo(parent.top)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                    }
             )
             LinearProgressIndicator(
                 progress = howProgressTrap,
                 modifier = Modifier
-                    .constrainAs(progressTrap) {
-                        top.linkTo(tvTrap.bottom)
-                        end.linkTo(parent.end)
-                        start.linkTo(parent.start)
-                    }
                     .padding(top = 20.dp)
                     .height(40.dp)
                     .width(280.dp)
             )
-            Image(
-                painter = painterResource(R.drawable.text_times),
-                contentDescription = "時間が表示されています",
-                modifier = Modifier
-                    .constrainAs(ivTime) {
-                        top.linkTo(parent.top)
-                        end.linkTo(parent.end)
-                        start.linkTo(parent.start)
-                    }
-                    .height(100.dp)
-            )
-            Text(
-                text = "NOW",
-                fontSize = 12.sp,
-                color = Color.Black,
-                modifier = Modifier
-                    .constrainAs(tvNow) {
-                        top.linkTo(ivTime.top)
-                        bottom.linkTo(ivTime.bottom)
-                        start.linkTo(ivTime.start)
-                    }
-                    .padding(start = 40.dp)
-            )
-            if (relativeTime != "") {
-                Text(
-                    text = relativeTime,
-                    fontSize = 20.sp,
-                    color = Color.Black,
-                    modifier = Modifier
-                        .constrainAs(tvRelative) {
-                            bottom.linkTo(tvNow.bottom)
-                            start.linkTo(tvNow.end)
-                        }
-                        .padding(start = 12.dp)
-                )
-            }
-            Text(
-                text = "LIMIT",
-                fontSize = 12.sp,
-                color = Color.Red,
-                modifier = Modifier
-                    .constrainAs(tvLimit) {
-                        end.linkTo(tvLimitTime.start)
-                        bottom.linkTo(tvNow.bottom)
-                    }
-                    .padding(end = 12.dp)
-            )
-            Text(
-                text = limitTime,
-                fontSize = 20.sp,
-                color = Color.Red,
-                modifier = Modifier
-                    .constrainAs(tvLimitTime) {
-                        end.linkTo(ivTime.end)
-                        bottom.linkTo(tvNow.bottom)
-                    }
-                    .padding(end = 40.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.button_captured_on),
-                contentDescription = "鬼に捕まったときに押すボタン",
-                modifier = Modifier
-                    .constrainAs(btCaptureOn) {
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                    }
-                    .height(100.dp)
-                    .width(200.dp)
-                    .clickable {
-                        navController.navigate("capture")
-                    }
-            )
-            if (isOverSkillTime) {
+            Spacer(modifier = Modifier.weight(1f))
+            Row(
+                modifier = Modifier.height(100.dp)
+            ) {
                 Image(
-                    painter = painterResource(R.drawable.button_skill_on),
-                    contentDescription = "skill button on",
+                    painter = painterResource(R.drawable.button_captured_on),
+                    contentDescription = "鬼に捕まったときに押すボタン",
                     modifier = Modifier
-                        .constrainAs(btSkillOn) {
-                            end.linkTo(parent.end)
-                            bottom.linkTo(parent.bottom)
-                        }
                         .height(100.dp)
-                        .width(180.dp)
+                        .width(200.dp)
                         .clickable {
-                            onClickSkillButton()
+                            navController.navigate("capture")
                         }
                 )
-            } else {
-                Image(
-                    painter = painterResource(R.drawable.button_skill_off),
-                    contentDescription = "skill button off",
-                    modifier = Modifier
-                        .constrainAs(btSkillOff) {
-                            end.linkTo(parent.end)
-                            bottom.linkTo(parent.bottom)
-                        }
-                        .height(100.dp)
-                        .width(180.dp)
-                )
-                LinearProgressIndicator(
-                    progress = howProgressSkill,
-                    modifier = Modifier
-                        .constrainAs(progressSkill) {
-                            end.linkTo(btSkillOff.end)
-                            bottom.linkTo(btSkillOff.bottom)
-                            start.linkTo(btSkillOff.start)
-                        }
-                        .padding(bottom = 24.dp, start = 8.dp)
-                        .height(10.dp)
-                        .width(80.dp)
-                )
+                if (isOverSkillTime) {
+                    Image(
+                        painter = painterResource(R.drawable.button_skill_on),
+                        contentDescription = "skill button on",
+                        modifier = Modifier
+                            .height(100.dp)
+                            .width(180.dp)
+                            .clickable {
+                                onClickSkillButton()
+                            }
+                    )
+                } else {
+                    Box(
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.button_skill_off),
+                            contentDescription = "skill button off",
+                            modifier = Modifier
+                                .height(100.dp)
+                                .width(180.dp)
+                        )
+                        LinearProgressIndicator(
+                            progress = howProgressSkill,
+                            modifier = Modifier
+                                .padding(bottom = 24.dp, start = 8.dp)
+                                .height(10.dp)
+                                .width(80.dp)
+                        )
+                    }
+                }
             }
-            Image(
-                painter = painterResource(R.drawable.user01_caputure),
-                contentDescription = "user1",
-                modifier = Modifier
-                    .constrainAs(user1) {
-                        top.linkTo(ivTime.bottom)
-                        start.linkTo(parent.start)
-                    }
-                    .padding(start = 40.dp)
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user02_runaway),
-                contentDescription = "user2",
-                modifier = Modifier
-                    .constrainAs(user2) {
-                        top.linkTo(user1.top)
-                        end.linkTo(user3.start)
-                        start.linkTo(user1.end)
-                    }
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user03_runaway),
-                contentDescription = "user3",
-                modifier = Modifier
-                    .constrainAs(user3) {
-                        top.linkTo(user1.top)
-                        end.linkTo(user4.start)
-                        start.linkTo(user2.end)
-                    }
-                    .height(72.dp)
-                    .width(72.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user04_oni),
-                contentDescription = "user4",
-                modifier = Modifier
-                    .constrainAs(user4) {
-                        top.linkTo(user1.top)
-                        end.linkTo(parent.end)
-                    }
-                    .padding(end = 40.dp)
-                    .height(72.dp)
-                    .width(72.dp)
-            )
         }
     }
 }
@@ -357,9 +315,9 @@ private fun BeTrappedPreview() {
     BeTrappedLayout(
         howProgressTrap = 0f,
         howProgressSkill = 0f,
-        relativeTime = "",
+        relativeTime = "12:00:00",
         navController = navController,
-        isOverSkillTime = true,
+        isOverSkillTime = false,
         onClickSkillButton = {}
     )
 }
