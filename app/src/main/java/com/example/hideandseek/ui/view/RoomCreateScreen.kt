@@ -58,7 +58,7 @@ private fun RoomCreateLayout(
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
-            contentDescription = "background",
+            contentDescription = null,
             contentScale = ContentScale.Crop,
         )
         Box(
@@ -66,7 +66,7 @@ private fun RoomCreateLayout(
         ) {
             Image(
                 painter = painterResource(R.drawable.secret_word),
-                contentDescription = "dialog",
+                contentDescription = null,
                 modifier = Modifier
                     .width(300.dp)
                     .height(258.dp)
@@ -88,7 +88,7 @@ private fun RoomCreateLayout(
                 )
                 Image(
                     painter = painterResource(R.drawable.bt_create),
-                    contentDescription = "create_button",
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(top = 20.dp)
                         .width(142.dp)

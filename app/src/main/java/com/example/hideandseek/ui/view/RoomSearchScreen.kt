@@ -56,7 +56,7 @@ private fun RoomSearchLayout(
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
-            contentDescription = "background",
+            contentDescription = null,
             contentScale = ContentScale.Crop,
         )
         Box(
@@ -64,7 +64,7 @@ private fun RoomSearchLayout(
         ) {
             Image(
                 painter = painterResource(R.drawable.secret_word),
-                contentDescription = "dialog",
+                contentDescription = null,
                 modifier = Modifier
                     .width(300.dp)
                     .height(258.dp)
@@ -86,7 +86,7 @@ private fun RoomSearchLayout(
                 )
                 Image(
                     painter = painterResource(R.drawable.bt_search),
-                    contentDescription = "create_button",
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(top = 20.dp)
                         .width(142.dp)

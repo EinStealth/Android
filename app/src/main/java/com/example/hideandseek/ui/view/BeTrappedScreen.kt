@@ -209,7 +209,7 @@ private fun BeTrappedLayout(
             ) {
                 Image(
                     painter = painterResource(R.drawable.user01_caputure),
-                    contentDescription = "user1",
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(start = 40.dp)
                         .height(72.dp)
@@ -217,21 +217,21 @@ private fun BeTrappedLayout(
                 )
                 Image(
                     painter = painterResource(R.drawable.user02_runaway),
-                    contentDescription = "user2",
+                    contentDescription = null,
                     modifier = Modifier
                         .height(72.dp)
                         .width(72.dp)
                 )
                 Image(
                     painter = painterResource(R.drawable.user03_runaway),
-                    contentDescription = "user3",
+                    contentDescription = null,
                     modifier = Modifier
                         .height(72.dp)
                         .width(72.dp)
                 )
                 Image(
                     painter = painterResource(R.drawable.user04_oni),
-                    contentDescription = "user4",
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(end = 40.dp)
                         .height(72.dp)
@@ -241,7 +241,7 @@ private fun BeTrappedLayout(
             Spacer(modifier = Modifier.weight(1f))
             Image(
                 painter = painterResource(R.drawable.eye),
-                contentDescription = "text_watching",
+                contentDescription = null,
                 modifier = Modifier
                     .height(160.dp)
                     .width(160.dp)
@@ -264,7 +264,7 @@ private fun BeTrappedLayout(
             ) {
                 Image(
                     painter = painterResource(R.drawable.button_captured_on),
-                    contentDescription = "鬼に捕まったときに押すボタン",
+                    contentDescription = null,
                     modifier = Modifier
                         .height(100.dp)
                         .width(200.dp)
@@ -275,7 +275,7 @@ private fun BeTrappedLayout(
                 if (isOverSkillTime) {
                     Image(
                         painter = painterResource(R.drawable.button_skill_on),
-                        contentDescription = "skill button on",
+                        contentDescription = null,
                         modifier = Modifier
                             .height(100.dp)
                             .width(180.dp)
@@ -289,7 +289,7 @@ private fun BeTrappedLayout(
                     ) {
                         Image(
                             painter = painterResource(R.drawable.button_skill_off),
-                            contentDescription = "skill button off",
+                            contentDescription = null,
                             modifier = Modifier
                                 .height(100.dp)
                                 .width(180.dp)

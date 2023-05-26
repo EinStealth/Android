@@ -43,7 +43,7 @@ private fun CaptureDialogLayout(
         ) {
             Image(
                 painter = painterResource(R.drawable.text_captureboolean),
-                contentDescription = "dialog",
+                contentDescription = null,
                 modifier = Modifier
                     .width(380.dp)
                     .height(332.dp)
@@ -53,7 +53,7 @@ private fun CaptureDialogLayout(
             ) {
                 Image(
                     painter = painterResource(R.drawable.user04_oni),
-                    contentDescription = "icon",
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(end = 20.dp)
                         .width(160.dp)
@@ -62,7 +62,7 @@ private fun CaptureDialogLayout(
                 Row {
                     Image(
                         painter = painterResource(R.drawable.button_yes),
-                        contentDescription = "button_yes",
+                        contentDescription = null,
                         modifier = Modifier
                             .padding(end = 20.dp, bottom = 20.dp)
                             .width(160.dp)
@@ -75,7 +75,7 @@ private fun CaptureDialogLayout(
                     )
                     Image(
                         painter = painterResource(R.drawable.button_no),
-                        contentDescription = "button_no",
+                        contentDescription = null,
                         modifier = Modifier
                             .padding(start = 20.dp, bottom = 20.dp)
                             .width(160.dp)

@@ -36,7 +36,7 @@ private fun RegisterUserIconLayout(
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
-            contentDescription = "background",
+            contentDescription = null,
             contentScale = ContentScale.Crop
         )
         Box(
@@ -45,7 +45,7 @@ private fun RegisterUserIconLayout(
         ) {
             Image(
                 painter = painterResource(R.drawable.text_null),
-                contentDescription = "dialog",
+                contentDescription = null,
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -53,7 +53,7 @@ private fun RegisterUserIconLayout(
             ) {
                 Image(
                     painter = painterResource(R.drawable.user01_normal),
-                    contentDescription = "icon1",
+                    contentDescription = null,
                     modifier = Modifier
                         .width(92.dp)
                         .height(92.dp)
@@ -65,7 +65,7 @@ private fun RegisterUserIconLayout(
                 )
                 Image(
                     painter = painterResource(R.drawable.user02_normal),
-                    contentDescription = "icon2",
+                    contentDescription = null,
                     modifier = Modifier
                         .width(92.dp)
                         .height(92.dp)
@@ -77,7 +77,7 @@ private fun RegisterUserIconLayout(
                 )
                 Image(
                     painter = painterResource(R.drawable.user03_normal),
-                    contentDescription = "icon3",
+                    contentDescription = null,
                     modifier = Modifier
                         .width(92.dp)
                         .height(92.dp)
@@ -89,7 +89,7 @@ private fun RegisterUserIconLayout(
                 )
                 Image(
                     painter = painterResource(R.drawable.user04_normal),
-                    contentDescription = "icon4",
+                    contentDescription = null,
                     modifier = Modifier
                         .width(92.dp)
                         .height(92.dp)
