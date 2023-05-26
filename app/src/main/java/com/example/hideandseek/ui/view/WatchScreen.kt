@@ -4,10 +4,14 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsEndWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Surface
@@ -137,49 +141,8 @@ private fun WatchLayout(
                 contentScale = ContentScale.Crop
             )
         }
-        ConstraintLayout {
-            // Create references for the composable to constrain
-            val (ivWatching, btCaptureOff, btSkillOf, userList) = createRefs()
-
-            Image(
-                painter = painterResource(R.drawable.text_watching),
-                contentDescription = "text_watching",
-                modifier = Modifier
-                    .constrainAs(ivWatching) {
-                        end.linkTo(parent.end)
-                        bottom.linkTo(btCaptureOff.top)
-                        start.linkTo(parent.start)
-                    }
-                    .height(80.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.button_captured_off),
-                contentDescription = "鬼に捕まったときに押すボタン",
-                modifier = Modifier
-                    .constrainAs(btCaptureOff) {
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                    }
-                    .height(100.dp)
-                    .width(200.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.button_skill_off),
-                contentDescription = "skill button",
-                modifier = Modifier
-                    .constrainAs(btSkillOf) {
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                    }
-                    .height(100.dp)
-                    .width(180.dp)
-            )
-            LazyRow(
-                modifier = Modifier.constrainAs(userList) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                }
-            ) {
+        Column {
+            LazyRow{
                 items(allPlayer) {
                     Image(
                         painter = painterResource(id = selectDrawable(it.icon, it.status)),
@@ -191,6 +154,29 @@ private fun WatchLayout(
                     )
                 }
             }
+            Spacer(modifier = Modifier.weight(1f))
+            Image(
+                painter = painterResource(R.drawable.text_watching),
+                contentDescription = "text_watching",
+                modifier = Modifier
+                    .height(80.dp)
+            )
+            Row {
+                Image(
+                    painter = painterResource(R.drawable.button_captured_off),
+                    contentDescription = "鬼に捕まったときに押すボタン",
+                    modifier = Modifier
+                        .height(100.dp)
+                        .width(200.dp)
+                )
+                Image(
+                    painter = painterResource(R.drawable.button_skill_off),
+                    contentDescription = "skill button",
+                    modifier = Modifier
+                        .height(100.dp)
+                        .width(180.dp)
+                )
+            }
         }
     }
 }
@@ -200,6 +186,10 @@ private fun WatchLayout(
 private fun WatchPreview() {
     WatchLayout(
         map = null,
-        allPlayer = listOf(),
+        allPlayer = listOf(
+            ResponseData.ResponseGetPlayer("","",1,1),
+            ResponseData.ResponseGetPlayer("","",1,1),
+            ResponseData.ResponseGetPlayer("","",1,1),
+            ResponseData.ResponseGetPlayer("","",1,1)),
     )
 }
