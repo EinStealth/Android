@@ -2,8 +2,12 @@ package com.example.hideandseek.ui.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -29,77 +33,63 @@ fun NotifyCaptureDialogScreen(navController: NavController) {
 private fun NotifyCaptureDialogLayout(
     navController: NavController,
 ) {
-    Box(Modifier.fillMaxSize()) {
-        ConstraintLayout(Modifier.align(Alignment.Center)) {
-            // Create references for the composable to constrain
-            val (dialog, demon, normal, metalRod, btClose) = createRefs()
-
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(
+            contentAlignment = Alignment.BottomCenter,
+        ) {
             Image(
                 painter = painterResource(R.drawable.text_captured),
                 contentDescription = "dialog",
                 modifier = Modifier
-                    .constrainAs(dialog) {
-                        top.linkTo(parent.top)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                    }
                     .width(400.dp)
                     .height(352.dp)
             )
-            Image(
-                painter = painterResource(R.drawable.user04_oni),
-                contentDescription = "demon",
-                modifier = Modifier
-                    .constrainAs(demon) {
-                        top.linkTo(dialog.top)
-                        bottom.linkTo(dialog.bottom)
-                        start.linkTo(dialog.start)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.user04_oni),
+                        contentDescription = "demon",
+                        modifier = Modifier
+                            .width(160.dp)
+                            .height(160.dp)
+                    )
+                    Box() {
+                        Image(
+                            painter = painterResource(R.drawable.user01_caputure),
+                            contentDescription = "normal",
+                            modifier = Modifier
+                                .width(160.dp)
+                                .height(160.dp)
+                        )
+                        Image(
+                            painter = painterResource(R.drawable.kanabou),
+                            contentDescription = "metal_rod",
+                            modifier = Modifier
+                                .width(120.dp)
+                                .height(120.dp)
+                        )
                     }
-                    .padding(end = 20.dp)
-                    .width(160.dp)
-                    .height(160.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.user01_caputure),
-                contentDescription = "normal",
-                modifier = Modifier
-                    .constrainAs(normal) {
-                        top.linkTo(dialog.top)
-                        end.linkTo(dialog.end)
-                        bottom.linkTo(dialog.bottom)
-                    }
-                    .padding(end = 20.dp)
-                    .width(160.dp)
-                    .height(160.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.kanabou),
-                contentDescription = "metal_rod",
-                modifier = Modifier
-                    .constrainAs(metalRod) {
-                        top.linkTo(normal.top)
-                        start.linkTo(demon.end)
-                    }
-                    .width(120.dp)
-                    .height(120.dp)
-            )
-            Image(
-                painter = painterResource(R.drawable.button_close),
-                contentDescription = "button_close",
-                modifier = Modifier
-                    .constrainAs(btClose) {
-                        start.linkTo(dialog.start)
-                        end.linkTo(dialog.end)
-                        bottom.linkTo(dialog.bottom)
-                    }
-                    .padding(bottom = 20.dp)
-                    .width(160.dp)
-                    .height(80.dp)
-                    .clickable {
-                        navController.navigate("watch")
-                    }
-            )
+                }
+                Image(
+                    painter = painterResource(R.drawable.button_close),
+                    contentDescription = "button_close",
+                    modifier = Modifier
+                        .padding(bottom = 20.dp)
+                        .width(160.dp)
+                        .height(80.dp)
+                        .clickable {
+                            navController.navigate("watch")
+                        }
+                )
+            }
         }
     }
 }
