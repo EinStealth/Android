@@ -34,7 +34,7 @@ private fun ResultLayout() {
     ) {
         Image(
             painter = painterResource(R.drawable.text_null),
-            contentDescription = "dialog",
+            contentDescription = null,
             modifier = Modifier
                 .scale(scaleX = 1f, scaleY = 2f)
                 .fillMaxHeight()
@@ -60,14 +60,14 @@ private fun ResultLayout() {
             Row {
                 Image(
                     painter = painterResource(R.drawable.user01_normal),
-                    contentDescription = "winner1",
+                    contentDescription = null,
                     modifier = Modifier
                         .height(120.dp)
                         .width(120.dp)
                 )
                 Image(
                     painter = painterResource(R.drawable.user02_normal),
-                    contentDescription = "winner2",
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(start = 12.dp)
                         .height(120.dp)
@@ -83,7 +83,7 @@ private fun ResultLayout() {
             Row {
                 Image(
                     painter = painterResource(R.drawable.user03_normal),
-                    contentDescription = "loser1",
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(top = 24.dp)
                         .height(120.dp)
@@ -91,7 +91,7 @@ private fun ResultLayout() {
                 )
                 Image(
                     painter = painterResource(R.drawable.user02_normal),
-                    contentDescription = "loser2",
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(top = 24.dp, start = 12.dp)
                         .height(120.dp)
@@ -100,7 +100,7 @@ private fun ResultLayout() {
             }
             Image(
                 painter = painterResource(R.drawable.button_close),
-                contentDescription = "button_close",
+                contentDescription = null,
                 modifier = Modifier
                     .padding(top = 52.dp)
                     .height(80.dp)

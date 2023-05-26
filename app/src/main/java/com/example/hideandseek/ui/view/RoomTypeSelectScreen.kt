@@ -50,16 +50,16 @@ private fun RoomTypeSelectLayout(
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
-            contentDescription = "background",
+            contentDescription = null,
             contentScale = ContentScale.Crop
         )
         Column(
-            Modifier.fillMaxSize(10f)
+            Modifier.fillMaxSize()
         ) {
             Box {
                 Image(
                     painter = painterResource(R.drawable.user_info_background),
-                    contentDescription = "user_info_background",
+                    contentDescription = null,
                     modifier = Modifier
                         .width(300.dp)
                         .height(80.dp)
@@ -83,7 +83,7 @@ private fun RoomTypeSelectLayout(
                                 painterResource(R.drawable.user04_normal)
                             }
                         },
-                        contentDescription = "user_icon",
+                        contentDescription = null,
                         modifier = Modifier
                             .width(60.dp)
                             .height(60.dp)
@@ -102,7 +102,7 @@ private fun RoomTypeSelectLayout(
             Spacer(Modifier.weight(1f))
             Image(
                 painter = painterResource(R.drawable.button_room_create),
-                contentDescription = "button_room_create",
+                contentDescription = null,
                 modifier = Modifier
                     .width(198.dp)
                     .height(98.dp)
@@ -114,7 +114,7 @@ private fun RoomTypeSelectLayout(
             Spacer(Modifier.weight(1f))
             Image(
                 painter = painterResource(R.drawable.button_room_search),
-                contentDescription = "button_room_search",
+                contentDescription = null,
                 modifier = Modifier
                     .width(198.dp)
                     .height(98.dp)

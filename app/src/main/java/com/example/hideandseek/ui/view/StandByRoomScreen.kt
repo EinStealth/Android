@@ -77,7 +77,7 @@ private fun StandByRoomLayout(
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
-            contentDescription = "background",
+            contentDescription = null,
             contentScale = ContentScale.Crop
         )
         Box(
@@ -85,7 +85,7 @@ private fun StandByRoomLayout(
         ) {
             Image(
                 painter = painterResource(R.drawable.stand_by_room),
-                contentDescription = "dialog",
+                contentDescription = null,
                 modifier = Modifier
                     .width(302.dp)
                     .height(405.dp)
@@ -112,7 +112,7 @@ private fun StandByRoomLayout(
                         ) {
                             Image(
                                 painter = painterResource(selectDrawable(it.icon)),
-                                contentDescription = "icon"
+                                contentDescription = null
                             )
                             Text(text = it.name)
                         }
@@ -120,7 +120,7 @@ private fun StandByRoomLayout(
                 }
                 Image(
                     painter = painterResource(R.drawable.bt_start),
-                    contentDescription = "button_start",
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(bottom = 12.dp)
                         .width(142.dp)

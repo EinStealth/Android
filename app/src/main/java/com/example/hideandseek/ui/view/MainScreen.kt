@@ -269,7 +269,7 @@ private fun MainLayout(
         map?.let {
             Image(
                 bitmap = it.asImageBitmap(),
-                contentDescription = "map",
+                contentDescription = null,
                 contentScale = ContentScale.Crop
             )
         }
@@ -332,7 +332,7 @@ private fun MainLayout(
                 items(allPlayer) {
                     Image(
                         painter = painterResource(id = selectDrawable(it.icon, it.status)),
-                        contentDescription = "userList",
+                        contentDescription = null,
                         modifier = Modifier
                             .padding(start = 28.dp)
                             .height(72.dp)
@@ -347,7 +347,7 @@ private fun MainLayout(
             ) {
                 Image(
                     painter = painterResource(R.drawable.button_captured_on),
-                    contentDescription = "鬼に捕まったときに押すボタン",
+                    contentDescription = null,
                     modifier = Modifier
                         .height(100.dp)
                         .width(200.dp)
@@ -358,7 +358,7 @@ private fun MainLayout(
                 if (isOverSkillTime) {
                     Image(
                         painter = painterResource(R.drawable.button_skill_on),
-                        contentDescription = "skill button on",
+                        contentDescription = null,
                         modifier = Modifier
                             .height(100.dp)
                             .width(180.dp)
@@ -372,7 +372,7 @@ private fun MainLayout(
                     ) {
                         Image(
                             painter = painterResource(R.drawable.button_skill_off),
-                            contentDescription = "skill button off",
+                            contentDescription = null,
                             modifier = Modifier
                                 .height(100.dp)
                                 .width(180.dp)

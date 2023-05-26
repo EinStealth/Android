@@ -38,7 +38,7 @@ private fun StartLayout(
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive),
-            contentDescription = "title",
+            contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier.clickable {
                 if (name != "") {

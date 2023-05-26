@@ -35,7 +35,7 @@ private fun SuccessEscapeLayout(
     ) {
         Image(
             painter = painterResource(R.drawable.text_clear),
-            contentDescription = "dialog",
+            contentDescription = null,
             modifier = Modifier
                 .width(400.dp)
                 .height(352.dp)
@@ -45,7 +45,7 @@ private fun SuccessEscapeLayout(
         ) {
             Image(
                 painter = painterResource(R.drawable.user01_clear),
-                contentDescription = "demon",
+                contentDescription = null,
                 modifier = Modifier
                     .padding(end = 20.dp)
                     .width(160.dp)
@@ -53,7 +53,7 @@ private fun SuccessEscapeLayout(
             )
             Image(
                 painter = painterResource(R.drawable.button_close),
-                contentDescription = "button_close",
+                contentDescription = null,
                 modifier = Modifier
                     .width(160.dp)
                     .height(80.dp)

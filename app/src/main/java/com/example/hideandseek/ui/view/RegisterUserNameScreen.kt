@@ -52,7 +52,7 @@ private fun RegisterUserNameLayout(
     Surface(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(R.drawable.title_background_responsive_nontitlever),
-            contentDescription = "background",
+            contentDescription = null,
             contentScale = ContentScale.Crop
         )
         Box(
@@ -60,7 +60,7 @@ private fun RegisterUserNameLayout(
         ) {
             Image(
                 painter = painterResource(R.drawable.text_null),
-                contentDescription = "dialog",
+                contentDescription = null,
             )
             var text by remember { mutableStateOf("") }
 
@@ -79,7 +79,7 @@ private fun RegisterUserNameLayout(
                 )
                 Image(
                     painter = painterResource(R.drawable.button_decide),
-                    contentDescription = "decide_button",
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(top = 40.dp)
                         .width(142.dp)

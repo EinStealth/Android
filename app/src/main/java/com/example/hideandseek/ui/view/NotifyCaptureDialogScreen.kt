@@ -41,7 +41,7 @@ private fun NotifyCaptureDialogLayout(
         ) {
             Image(
                 painter = painterResource(R.drawable.text_captured),
-                contentDescription = "dialog",
+                contentDescription = null,
                 modifier = Modifier
                     .width(400.dp)
                     .height(352.dp)
@@ -55,7 +55,7 @@ private fun NotifyCaptureDialogLayout(
                 ) {
                     Image(
                         painter = painterResource(R.drawable.user04_oni),
-                        contentDescription = "demon",
+                        contentDescription = null,
                         modifier = Modifier
                             .width(160.dp)
                             .height(160.dp)
@@ -63,14 +63,14 @@ private fun NotifyCaptureDialogLayout(
                     Box {
                         Image(
                             painter = painterResource(R.drawable.user01_caputure),
-                            contentDescription = "normal",
+                            contentDescription = null,
                             modifier = Modifier
                                 .width(160.dp)
                                 .height(160.dp)
                         )
                         Image(
                             painter = painterResource(R.drawable.kanabou),
-                            contentDescription = "metal_rod",
+                            contentDescription = null,
                             modifier = Modifier
                                 .width(120.dp)
                                 .height(120.dp)
@@ -79,7 +79,7 @@ private fun NotifyCaptureDialogLayout(
                 }
                 Image(
                     painter = painterResource(R.drawable.button_close),
-                    contentDescription = "button_close",
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(bottom = 20.dp)
                         .width(160.dp)
