@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.R
@@ -61,7 +60,7 @@ private fun NotifyCaptureDialogLayout(
                             .width(160.dp)
                             .height(160.dp)
                     )
-                    Box() {
+                    Box {
                         Image(
                             painter = painterResource(R.drawable.user01_caputure),
                             contentDescription = "normal",
