@@ -142,10 +142,10 @@ private fun StandByRoomPreview() {
         navController = rememberNavController(),
         secretWords = "a",
         allPlayer = listOf(
-            ResponseData.ResponseGetPlayer("","user1",1,1),
-            ResponseData.ResponseGetPlayer("","user1",1,1),
-            ResponseData.ResponseGetPlayer("","user1",1,1),
-            ResponseData.ResponseGetPlayer("","user1",1,1),
+            ResponseData.ResponseGetPlayer("", "user1", 1, 1),
+            ResponseData.ResponseGetPlayer("", "user1", 1, 1),
+            ResponseData.ResponseGetPlayer("", "user1", 1, 1),
+            ResponseData.ResponseGetPlayer("", "user1", 1, 1),
         ),
         onClickStartButton = {},
     )

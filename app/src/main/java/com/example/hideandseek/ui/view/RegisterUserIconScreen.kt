@@ -32,7 +32,6 @@ fun RegisterUserIconScreen(viewModel: RegisterUserIconFragmentViewModel = viewMo
 private fun RegisterUserIconLayout(
     navController: NavController,
     writeUserIcon: (Int) -> Unit,
-
 ) {
     Surface(Modifier.fillMaxSize()) {
         Image(
@@ -101,7 +100,6 @@ private fun RegisterUserIconLayout(
                         }
                 )
             }
-
         }
     }
 }

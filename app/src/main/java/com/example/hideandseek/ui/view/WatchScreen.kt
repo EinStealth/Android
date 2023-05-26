@@ -11,21 +11,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsEndWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.hideandseek.R
 import com.example.hideandseek.data.datasource.remote.ResponseData
 import com.example.hideandseek.ui.viewmodel.WatchFragmentViewModel
@@ -143,7 +140,7 @@ private fun WatchLayout(
             )
         }
         Column {
-            LazyRow{
+            LazyRow {
                 items(allPlayer) {
                     Image(
                         painter = painterResource(id = selectDrawable(it.icon, it.status)),
@@ -188,10 +185,10 @@ private fun WatchPreview() {
     WatchLayout(
         map = null,
         allPlayer = listOf(
-            ResponseData.ResponseGetPlayer("","",1,1),
-            ResponseData.ResponseGetPlayer("","",1,1),
-            ResponseData.ResponseGetPlayer("","",1,1),
-            ResponseData.ResponseGetPlayer("","",1,1),
+            ResponseData.ResponseGetPlayer("", "", 1, 1),
+            ResponseData.ResponseGetPlayer("", "", 1, 1),
+            ResponseData.ResponseGetPlayer("", "", 1, 1),
+            ResponseData.ResponseGetPlayer("", "", 1, 1),
         ),
     )
 }
