@@ -18,6 +18,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -190,6 +191,7 @@ private fun WatchPreview() {
             ResponseData.ResponseGetPlayer("","",1,1),
             ResponseData.ResponseGetPlayer("","",1,1),
             ResponseData.ResponseGetPlayer("","",1,1),
-            ResponseData.ResponseGetPlayer("","",1,1)),
+            ResponseData.ResponseGetPlayer("","",1,1),
+        ),
     )
 }

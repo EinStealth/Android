@@ -3,8 +3,8 @@ package com.example.hideandseek.ui.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,13 +17,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.R
@@ -80,75 +80,57 @@ private fun StandByRoomLayout(
             contentDescription = "background",
             contentScale = ContentScale.Crop
         )
-        ConstraintLayout {
-            // Create references for the composable to constrain
-            val (dialog, textSecret, playerList, btStart) = createRefs()
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
             Image(
                 painter = painterResource(R.drawable.stand_by_room),
                 contentDescription = "dialog",
                 modifier = Modifier
-                    .constrainAs(dialog) {
-                        top.linkTo(parent.top)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                    }
                     .width(302.dp)
                     .height(405.dp)
             )
-            Text(
-                text = secretWords,
-                fontSize = 24.sp,
-                modifier = Modifier
-                    .constrainAs(textSecret) {
-                        top.linkTo(dialog.top)
-                        end.linkTo(parent.end)
-                        start.linkTo(parent.start)
-                    }
-                    .padding(top = 44.dp)
-            )
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                verticalArrangement = Arrangement.SpaceEvenly,
-                contentPadding = PaddingValues(start = 100.dp),
-                modifier = Modifier
-                    .constrainAs(playerList) {
-                        top.linkTo(dialog.top)
-                        end.linkTo(dialog.end)
-                        bottom.linkTo(dialog.bottom)
-                        start.linkTo(dialog.start)
-                    }
-                    .height(200.dp)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(allPlayer) {
-                    Column(
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(selectDrawable(it.icon)),
-                            contentDescription = "icon"
-                        )
-                        Text(text = it.name)
+                Text(
+                    text = secretWords,
+                    fontSize = 24.sp,
+                    modifier = Modifier
+                        .padding(top = 44.dp)
+                )
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier
+                        .height(200.dp)
+                ) {
+                    items(allPlayer) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(selectDrawable(it.icon)),
+                                contentDescription = "icon"
+                            )
+                            Text(text = it.name)
+                        }
                     }
                 }
+                Image(
+                    painter = painterResource(R.drawable.bt_start),
+                    contentDescription = "button_start",
+                    modifier = Modifier
+                        .padding(bottom = 12.dp)
+                        .width(142.dp)
+                        .height(72.dp)
+                        .clickable {
+                            navController.navigate("main")
+                            onClickStartButton()
+                        }
+                )
             }
-            Image(
-                painter = painterResource(R.drawable.bt_start),
-                contentDescription = "button_start",
-                modifier = Modifier
-                    .constrainAs(btStart) {
-                        end.linkTo(parent.end)
-                        bottom.linkTo(dialog.bottom)
-                        start.linkTo(parent.start)
-                    }
-                    .padding(bottom = 12.dp)
-                    .width(142.dp)
-                    .height(72.dp)
-                    .clickable {
-                        navController.navigate("main")
-                        onClickStartButton()
-                    }
-            )
         }
     }
 }
@@ -159,7 +141,12 @@ private fun StandByRoomPreview() {
     StandByRoomLayout(
         navController = rememberNavController(),
         secretWords = "a",
-        allPlayer = listOf(),
+        allPlayer = listOf(
+            ResponseData.ResponseGetPlayer("","user1",1,1),
+            ResponseData.ResponseGetPlayer("","user1",1,1),
+            ResponseData.ResponseGetPlayer("","user1",1,1),
+            ResponseData.ResponseGetPlayer("","user1",1,1),
+        ),
         onClickStartButton = {},
     )
 }
