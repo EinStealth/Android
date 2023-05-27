@@ -26,6 +26,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.R
 import com.example.hideandseek.ui.viewmodel.RoomTypeSelectFragmentViewModel
 
+private fun selectDrawable(icon: Int): Int {
+    val list = listOf(R.drawable.user01_normal, R.drawable.user02_normal, R.drawable.user03_normal, R.drawable.user04_normal)
+    return list[icon - 1]
+}
+
 @Composable
 fun RoomTypeSelectScreen(viewModel: RoomTypeSelectFragmentViewModel = viewModel(), navController: NavController) {
     val roomTypeSelectUiState by viewModel.uiState.collectAsState()
@@ -67,20 +72,7 @@ private fun RoomTypeSelectLayout(
                 )
                 Row {
                     Image(
-                        painter = when (userIcon) {
-                            1 -> {
-                                painterResource(R.drawable.user01_normal)
-                            }
-                            2 -> {
-                                painterResource(R.drawable.user02_normal)
-                            }
-                            3 -> {
-                                painterResource(R.drawable.user03_normal)
-                            }
-                            else -> {
-                                painterResource(R.drawable.user04_normal)
-                            }
-                        },
+                        painter = painterResource(id = selectDrawable(userIcon)),
                         contentDescription = null,
                         modifier = Modifier
                             .size(width = 60.dp, height = 60.dp)
