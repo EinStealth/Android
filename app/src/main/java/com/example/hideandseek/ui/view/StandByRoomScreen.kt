@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -87,8 +87,7 @@ private fun StandByRoomLayout(
                 painter = painterResource(R.drawable.stand_by_room),
                 contentDescription = null,
                 modifier = Modifier
-                    .width(302.dp)
-                    .height(405.dp)
+                    .size(width = 302.dp, height = 405.dp)
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -123,8 +122,7 @@ private fun StandByRoomLayout(
                     contentDescription = null,
                     modifier = Modifier
                         .padding(bottom = 12.dp)
-                        .width(142.dp)
-                        .height(72.dp)
+                        .size(width = 142.dp, height = 72.dp)
                         .clickable {
                             navController.navigate("main")
                             onClickStartButton()

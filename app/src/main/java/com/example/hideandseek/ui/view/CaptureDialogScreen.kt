@@ -6,9 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,8 +44,7 @@ private fun CaptureDialogLayout(
                 painter = painterResource(R.drawable.text_captureboolean),
                 contentDescription = null,
                 modifier = Modifier
-                    .width(380.dp)
-                    .height(332.dp)
+                    .size(width = 380.dp, height = 332.dp)
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -56,8 +54,7 @@ private fun CaptureDialogLayout(
                     contentDescription = null,
                     modifier = Modifier
                         .padding(end = 20.dp)
-                        .width(160.dp)
-                        .height(160.dp)
+                        .size(width = 160.dp, height = 160.dp)
                 )
                 Row {
                     Image(
@@ -65,8 +62,7 @@ private fun CaptureDialogLayout(
                         contentDescription = null,
                         modifier = Modifier
                             .padding(end = 20.dp, bottom = 20.dp)
-                            .width(160.dp)
-                            .height(80.dp)
+                            .size(width = 160.dp, height = 80.dp)
                             .clickable {
                                 // ステータスを捕まったに変更
                                 updateStatus()
@@ -78,8 +74,7 @@ private fun CaptureDialogLayout(
                         contentDescription = null,
                         modifier = Modifier
                             .padding(start = 20.dp, bottom = 20.dp)
-                            .width(160.dp)
-                            .height(80.dp)
+                            .size(width = 160.dp, height = 80.dp)
                             .clickable {
                                 if (isOverTrapInBeTrapped) {
                                     navController.navigate("main")

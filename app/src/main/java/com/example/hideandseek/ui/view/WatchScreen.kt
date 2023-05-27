@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Surface
@@ -147,8 +147,7 @@ private fun WatchLayout(
                         contentDescription = null,
                         modifier = Modifier
                             .padding(start = 28.dp)
-                            .height(72.dp)
-                            .width(72.dp)
+                            .size(width = 72.dp, height = 72.dp)
                     )
                 }
             }
@@ -164,15 +163,13 @@ private fun WatchLayout(
                     painter = painterResource(R.drawable.button_captured_off),
                     contentDescription = null,
                     modifier = Modifier
-                        .height(100.dp)
-                        .width(200.dp)
+                        .size(width = 200.dp, height = 100.dp)
                 )
                 Image(
                     painter = painterResource(R.drawable.button_skill_off),
                     contentDescription = null,
                     modifier = Modifier
-                        .height(100.dp)
-                        .width(180.dp)
+                        .size(width = 180.dp, height = 100.dp)
                 )
             }
         }

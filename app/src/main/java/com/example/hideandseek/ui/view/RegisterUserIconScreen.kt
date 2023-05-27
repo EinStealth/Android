@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -55,8 +54,7 @@ private fun RegisterUserIconLayout(
                     painter = painterResource(R.drawable.user01_normal),
                     contentDescription = null,
                     modifier = Modifier
-                        .width(92.dp)
-                        .height(92.dp)
+                        .size(width = 92.dp, height = 92.dp)
                         .clickable {
                             // アイコンの保存
                             writeUserIcon(1)
@@ -67,8 +65,7 @@ private fun RegisterUserIconLayout(
                     painter = painterResource(R.drawable.user02_normal),
                     contentDescription = null,
                     modifier = Modifier
-                        .width(92.dp)
-                        .height(92.dp)
+                        .size(width = 92.dp, height = 92.dp)
                         .clickable {
                             // アイコンの保存
                             writeUserIcon(2)
@@ -79,8 +76,7 @@ private fun RegisterUserIconLayout(
                     painter = painterResource(R.drawable.user03_normal),
                     contentDescription = null,
                     modifier = Modifier
-                        .width(92.dp)
-                        .height(92.dp)
+                        .size(width = 92.dp, height = 92.dp)
                         .clickable {
                             // アイコンの保存
                             writeUserIcon(3)
@@ -91,8 +87,7 @@ private fun RegisterUserIconLayout(
                     painter = painterResource(R.drawable.user04_normal),
                     contentDescription = null,
                     modifier = Modifier
-                        .width(92.dp)
-                        .height(92.dp)
+                        .size(width = 92.dp, height = 92.dp)
                         .clickable {
                             // アイコンの保存
                             writeUserIcon(4)

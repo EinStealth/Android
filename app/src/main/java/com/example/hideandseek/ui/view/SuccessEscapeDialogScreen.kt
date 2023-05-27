@@ -5,9 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,8 +36,7 @@ private fun SuccessEscapeLayout(
             painter = painterResource(R.drawable.text_clear),
             contentDescription = null,
             modifier = Modifier
-                .width(400.dp)
-                .height(352.dp)
+                .size(width = 400.dp, height = 352.dp)
         )
         Column(
             modifier = Modifier.padding(top = 68.dp)
@@ -48,15 +46,13 @@ private fun SuccessEscapeLayout(
                 contentDescription = null,
                 modifier = Modifier
                     .padding(end = 20.dp)
-                    .width(160.dp)
-                    .height(160.dp)
+                    .size(width = 160.dp, height = 160.dp)
             )
             Image(
                 painter = painterResource(R.drawable.button_close),
                 contentDescription = null,
                 modifier = Modifier
-                    .width(160.dp)
-                    .height(80.dp)
+                    .size(width = 160.dp, height = 80.dp)
                     .clickable {
                         navController.navigate("result")
                     }

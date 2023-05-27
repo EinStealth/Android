@@ -7,9 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -61,8 +60,7 @@ private fun RoomTypeSelectLayout(
                     painter = painterResource(R.drawable.user_info_background),
                     contentDescription = null,
                     modifier = Modifier
-                        .width(300.dp)
-                        .height(80.dp)
+                        .size(width = 300.dp, height = 80.dp)
                         .clickable {
                             navController.navigate("registerIcon")
                         }
@@ -85,8 +83,7 @@ private fun RoomTypeSelectLayout(
                         },
                         contentDescription = null,
                         modifier = Modifier
-                            .width(60.dp)
-                            .height(60.dp)
+                            .size(width = 60.dp, height = 60.dp)
                             .padding(start = 0.dp, top = 10.dp, end = 0.dp, bottom = 0.dp)
                     )
                     Text(
@@ -104,8 +101,7 @@ private fun RoomTypeSelectLayout(
                 painter = painterResource(R.drawable.button_room_create),
                 contentDescription = null,
                 modifier = Modifier
-                    .width(198.dp)
-                    .height(98.dp)
+                    .size(width = 198.dp, height = 98.dp)
                     .align(Alignment.CenterHorizontally)
                     .clickable {
                         navController.navigate("roomCreate")
@@ -116,8 +112,7 @@ private fun RoomTypeSelectLayout(
                 painter = painterResource(R.drawable.button_room_search),
                 contentDescription = null,
                 modifier = Modifier
-                    .width(198.dp)
-                    .height(98.dp)
+                    .size(width = 198.dp, height = 98.dp)
                     .align(Alignment.CenterHorizontally)
                     .clickable {
                         navController.navigate("roomSearch")

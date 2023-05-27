@@ -7,9 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -62,16 +61,14 @@ private fun ResultLayout() {
                     painter = painterResource(R.drawable.user01_normal),
                     contentDescription = null,
                     modifier = Modifier
-                        .height(120.dp)
-                        .width(120.dp)
+                        .size(width = 120.dp, height = 120.dp)
                 )
                 Image(
                     painter = painterResource(R.drawable.user02_normal),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(start = 12.dp)
-                        .height(120.dp)
-                        .width(120.dp)
+                        .size(width = 120.dp, height = 120.dp)
                 )
             }
             Text(
@@ -86,16 +83,14 @@ private fun ResultLayout() {
                     contentDescription = null,
                     modifier = Modifier
                         .padding(top = 24.dp)
-                        .height(120.dp)
-                        .width(120.dp)
+                        .size(width = 120.dp, height = 120.dp)
                 )
                 Image(
                     painter = painterResource(R.drawable.user02_normal),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(top = 24.dp, start = 12.dp)
-                        .height(120.dp)
-                        .width(120.dp)
+                        .size(width = 120.dp, height = 120.dp)
                 )
             }
             Image(
@@ -103,8 +98,7 @@ private fun ResultLayout() {
                 contentDescription = null,
                 modifier = Modifier
                     .padding(top = 52.dp)
-                    .height(80.dp)
-                    .width(160.dp)
+                    .size(width = 160.dp, height = 80.dp)
                     .align(Alignment.CenterHorizontally)
             )
         }
