@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -28,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.R
+import com.example.hideandseek.data.datasource.remote.ResponseData
 import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
 
 // 2重LiveData解消のために変数定義
@@ -36,6 +39,44 @@ private var trapTime = ""
 var mainCallCount = 0
 var clearCallCount = 0
 var isOverTrapInBeTrapped = true
+
+private fun selectDrawable(icon: Int, status: Int): Int {
+    when (icon) {
+        1 -> {
+            when (status % 10) {
+                0 -> return R.drawable.user01_runaway
+                1 -> return R.drawable.user01_caputure
+                2 -> return R.drawable.user01_clear
+                3 -> return R.drawable.user01_oni
+            }
+        }
+        2 -> {
+            when (status % 10) {
+                0 -> return R.drawable.user02_runaway
+                1 -> return R.drawable.user02_caputure
+                2 -> return R.drawable.user02_clear
+                3 -> return R.drawable.user02_oni
+            }
+        }
+        3 -> {
+            when (status % 10) {
+                0 -> return R.drawable.user03_runaway
+                1 -> return R.drawable.user03_capture
+                2 -> return R.drawable.user03_clear
+                3 -> return R.drawable.user03_oni
+            }
+        }
+        else -> {
+            when (status % 10) {
+                0 -> return R.drawable.user04_runaway
+                1 -> return R.drawable.user04_capture
+                2 -> return R.drawable.user04_clear
+                3 -> return R.drawable.user04_oni
+            }
+        }
+    }
+    return R.drawable.user01_normal
+}
 
 @Composable
 fun BeTrappedScreen(viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.viewmodel.compose.viewModel(), navController: NavController) {
@@ -61,6 +102,7 @@ fun BeTrappedScreen(viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.v
     val beTrappedUiState by viewModel.uiState.collectAsState()
 
     val skillTime = beTrappedUiState.skillTime
+    val allPlayer = beTrappedUiState.allPlayer
 
     isOverTrapInBeTrapped = beTrappedUiState.isOverTrapTime
 
@@ -133,7 +175,8 @@ fun BeTrappedScreen(viewModel: BeTrappedFragmentViewModel = androidx.lifecycle.v
         relativeTime = latestUser.relativeTime,
         navController = navController,
         isOverSkillTime = returnIsOverSkillTime,
-        onClickSkillButton = onClickSkillButton
+        onClickSkillButton = onClickSkillButton,
+        allPlayer = allPlayer,
     )
 }
 
@@ -145,7 +188,7 @@ private fun BeTrappedLayout(
     navController: NavController,
     isOverSkillTime: Boolean,
     onClickSkillButton: () -> Unit,
-
+    allPlayer: List<ResponseData.ResponseGetPlayer>,
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -203,33 +246,16 @@ private fun BeTrappedLayout(
                     )
                 }
             }
-            Row {
-                Image(
-                    painter = painterResource(R.drawable.user01_caputure),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(start = 40.dp)
-                        .size(width = 72.dp, height = 72.dp)
-                )
-                Image(
-                    painter = painterResource(R.drawable.user02_runaway),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(width = 72.dp, height = 72.dp)
-                )
-                Image(
-                    painter = painterResource(R.drawable.user03_runaway),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(width = 72.dp, height = 72.dp)
-                )
-                Image(
-                    painter = painterResource(R.drawable.user04_oni),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(end = 40.dp)
-                        .size(width = 72.dp, height = 72.dp)
-                )
+            LazyRow {
+                items(allPlayer) {
+                    Image(
+                        painter = painterResource(id = selectDrawable(it.icon, it.status)),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(start = 28.dp)
+                            .size(width = 72.dp, height = 72.dp)
+                    )
+                }
             }
             Spacer(modifier = Modifier.weight(1f))
             Image(
@@ -305,6 +331,12 @@ private fun BeTrappedPreview() {
         relativeTime = "12:00:00",
         navController = navController,
         isOverSkillTime = false,
-        onClickSkillButton = {}
+        onClickSkillButton = {},
+        allPlayer = listOf(
+            ResponseData.ResponseGetPlayer("", "", 1, 1),
+            ResponseData.ResponseGetPlayer("", "", 1, 1),
+            ResponseData.ResponseGetPlayer("", "", 1, 1),
+            ResponseData.ResponseGetPlayer("", "", 1, 1),
+        ),
     )
 }

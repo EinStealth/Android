@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.hideandseek.data.datasource.local.TrapData
 import com.example.hideandseek.data.datasource.local.UserData
 import com.example.hideandseek.data.datasource.remote.PostData
+import com.example.hideandseek.data.datasource.remote.ResponseData
 import com.example.hideandseek.data.repository.ApiRepository
 import com.example.hideandseek.data.repository.MyInfoRepository
 import com.example.hideandseek.data.repository.TrapRepository
@@ -25,7 +26,8 @@ data class BeTrappedUiState(
     val limitTime: String = "",
     val isOverSkillTime: Boolean = true,
     val isOverLimitTime: Boolean = false,
-    val isOverTrapTime: Boolean = false
+    val isOverTrapTime: Boolean = false,
+    val allPlayer: List<ResponseData.ResponseGetPlayer> = listOf(),
 )
 
 @HiltViewModel
@@ -56,6 +58,35 @@ class BeTrappedFragmentViewModel @Inject constructor(
                     }
                 }
                 delay(100)
+            }
+        }
+        viewModelScope.launch {
+            while (true) {
+                val secretWords = myInfoRepository.readSecretWords()
+                getPlayer(secretWords)
+                delay(100)
+            }
+        }
+    }
+
+    private fun getPlayer(secretWords: String) {
+        viewModelScope.launch {
+            try {
+                val response = apiRepository.getPlayer(secretWords)
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        viewModelScope.launch {
+                            _uiState.update { mainUiState ->
+                                mainUiState.copy(allPlayer = response.body()!!)
+                            }
+                        }
+                    }
+                    Log.d("GET_TEST_PLAYER", "${response}\n${response.body()}")
+                } else {
+                    Log.d("GET_TEST_PLAYER", "$response")
+                }
+            } catch (e: java.lang.Exception) {
+                Log.d("GET_TEST_PLAYER", "$e")
             }
         }
     }
