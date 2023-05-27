@@ -50,50 +50,25 @@ private fun RegisterUserIconLayout(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Image(
-                    painter = painterResource(R.drawable.user01_normal),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(width = 92.dp, height = 92.dp)
-                        .clickable {
-                            // アイコンの保存
-                            writeUserIcon(1)
-                            navController.navigate("roomTypeSelect")
-                        }
+                val painterList = listOf(
+                    R.drawable.user01_normal,
+                    R.drawable.user02_normal,
+                    R.drawable.user03_normal,
+                    R.drawable.user04_normal,
                 )
-                Image(
-                    painter = painterResource(R.drawable.user02_normal),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(width = 92.dp, height = 92.dp)
-                        .clickable {
-                            // アイコンの保存
-                            writeUserIcon(2)
-                            navController.navigate("roomTypeSelect")
-                        }
-                )
-                Image(
-                    painter = painterResource(R.drawable.user03_normal),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(width = 92.dp, height = 92.dp)
-                        .clickable {
-                            // アイコンの保存
-                            writeUserIcon(3)
-                            navController.navigate("roomTypeSelect")
-                        }
-                )
-                Image(
-                    painter = painterResource(R.drawable.user04_normal),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(width = 92.dp, height = 92.dp)
-                        .clickable {
-                            // アイコンの保存
-                            writeUserIcon(4)
-                            navController.navigate("roomTypeSelect")
-                        }
-                )
+                for (i in 0..3) {
+                    Image(
+                        painter = painterResource(painterList[i]),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(width = 92.dp, height = 92.dp)
+                            .clickable {
+                                // アイコンの保存
+                                writeUserIcon(i + 1)
+                                navController.navigate("roomTypeSelect")
+                            }
+                    )
+                }
             }
         }
     }
