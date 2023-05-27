@@ -5,9 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -66,8 +65,7 @@ private fun RoomSearchLayout(
                 painter = painterResource(R.drawable.secret_word),
                 contentDescription = null,
                 modifier = Modifier
-                    .width(300.dp)
-                    .height(258.dp)
+                    .size(width = 300.dp, height = 258.dp)
             )
             var text by remember { mutableStateOf("") }
 
@@ -89,8 +87,7 @@ private fun RoomSearchLayout(
                     contentDescription = null,
                     modifier = Modifier
                         .padding(top = 20.dp)
-                        .width(142.dp)
-                        .height(72.dp)
+                        .size(width = 142.dp, height = 72.dp)
                         .clickable {
                             onClickSearchButton(text)
                             navController.navigate("standByRoom")

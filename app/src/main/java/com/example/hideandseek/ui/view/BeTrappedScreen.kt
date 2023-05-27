@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -159,7 +159,6 @@ private fun BeTrappedLayout(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(100.dp)
             ) {
                 Image(
                     painter = painterResource(R.drawable.text_times),
@@ -204,38 +203,32 @@ private fun BeTrappedLayout(
                     )
                 }
             }
-            Row(
-                modifier = Modifier.height(72.dp)
-            ) {
+            Row {
                 Image(
                     painter = painterResource(R.drawable.user01_caputure),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(start = 40.dp)
-                        .height(72.dp)
-                        .width(72.dp)
+                        .size(width = 72.dp, height = 72.dp)
                 )
                 Image(
                     painter = painterResource(R.drawable.user02_runaway),
                     contentDescription = null,
                     modifier = Modifier
-                        .height(72.dp)
-                        .width(72.dp)
+                        .size(width = 72.dp, height = 72.dp)
                 )
                 Image(
                     painter = painterResource(R.drawable.user03_runaway),
                     contentDescription = null,
                     modifier = Modifier
-                        .height(72.dp)
-                        .width(72.dp)
+                        .size(width = 72.dp, height = 72.dp)
                 )
                 Image(
                     painter = painterResource(R.drawable.user04_oni),
                     contentDescription = null,
                     modifier = Modifier
                         .padding(end = 40.dp)
-                        .height(72.dp)
-                        .width(72.dp)
+                        .size(width = 72.dp, height = 72.dp)
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
@@ -243,8 +236,7 @@ private fun BeTrappedLayout(
                 painter = painterResource(R.drawable.eye),
                 contentDescription = null,
                 modifier = Modifier
-                    .height(160.dp)
-                    .width(160.dp)
+                    .size(width = 160.dp, height = 160.dp)
             )
             Text(
                 text = "罠が解除されるまで",
@@ -255,8 +247,7 @@ private fun BeTrappedLayout(
                 progress = howProgressTrap,
                 modifier = Modifier
                     .padding(top = 20.dp)
-                    .height(40.dp)
-                    .width(280.dp)
+                    .size(width = 280.dp, height = 40.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
             Row(
@@ -266,8 +257,7 @@ private fun BeTrappedLayout(
                     painter = painterResource(R.drawable.button_captured_on),
                     contentDescription = null,
                     modifier = Modifier
-                        .height(100.dp)
-                        .width(200.dp)
+                        .size(width = 200.dp, height = 100.dp)
                         .clickable {
                             navController.navigate("capture")
                         }
@@ -277,8 +267,7 @@ private fun BeTrappedLayout(
                         painter = painterResource(R.drawable.button_skill_on),
                         contentDescription = null,
                         modifier = Modifier
-                            .height(100.dp)
-                            .width(180.dp)
+                            .size(width = 180.dp, height = 100.dp)
                             .clickable {
                                 onClickSkillButton()
                             }
@@ -291,15 +280,13 @@ private fun BeTrappedLayout(
                             painter = painterResource(R.drawable.button_skill_off),
                             contentDescription = null,
                             modifier = Modifier
-                                .height(100.dp)
-                                .width(180.dp)
+                                .size(width = 180.dp, height = 100.dp)
                         )
                         LinearProgressIndicator(
                             progress = howProgressSkill,
                             modifier = Modifier
                                 .padding(bottom = 24.dp, start = 8.dp)
-                                .height(10.dp)
-                                .width(80.dp)
+                                .size(width = 80.dp, height = 10.dp)
                         )
                     }
                 }

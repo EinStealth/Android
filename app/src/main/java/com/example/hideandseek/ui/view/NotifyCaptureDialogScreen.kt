@@ -8,9 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,8 +42,7 @@ private fun NotifyCaptureDialogLayout(
                 painter = painterResource(R.drawable.text_captured),
                 contentDescription = null,
                 modifier = Modifier
-                    .width(400.dp)
-                    .height(352.dp)
+                    .size(width = 400.dp, height = 352.dp)
             )
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -57,23 +55,20 @@ private fun NotifyCaptureDialogLayout(
                         painter = painterResource(R.drawable.user04_oni),
                         contentDescription = null,
                         modifier = Modifier
-                            .width(160.dp)
-                            .height(160.dp)
+                            .size(width = 160.dp, height = 160.dp)
                     )
                     Box {
                         Image(
                             painter = painterResource(R.drawable.user01_caputure),
                             contentDescription = null,
                             modifier = Modifier
-                                .width(160.dp)
-                                .height(160.dp)
+                                .size(width = 160.dp, height = 160.dp)
                         )
                         Image(
                             painter = painterResource(R.drawable.kanabou),
                             contentDescription = null,
                             modifier = Modifier
-                                .width(120.dp)
-                                .height(120.dp)
+                                .size(width = 120.dp, height = 120.dp)
                         )
                     }
                 }
@@ -82,8 +77,7 @@ private fun NotifyCaptureDialogLayout(
                     contentDescription = null,
                     modifier = Modifier
                         .padding(bottom = 20.dp)
-                        .width(160.dp)
-                        .height(80.dp)
+                        .size(width = 160.dp, height = 80.dp)
                         .clickable {
                             navController.navigate("watch")
                         }
