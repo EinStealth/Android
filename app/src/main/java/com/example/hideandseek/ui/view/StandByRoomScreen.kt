@@ -31,20 +31,8 @@ import com.example.hideandseek.data.datasource.remote.ResponseData
 import com.example.hideandseek.ui.viewmodel.StandByRoomFragmentViewModel
 
 private fun selectDrawable(icon: Int): Int {
-    return when (icon) {
-        1 -> {
-            R.drawable.user01_normal
-        }
-        2 -> {
-            R.drawable.user02_normal
-        }
-        3 -> {
-            R.drawable.user03_normal
-        }
-        else -> {
-            R.drawable.user04_normal
-        }
-    }
+    val list = listOf(R.drawable.user01_normal, R.drawable.user02_normal, R.drawable.user03_normal, R.drawable.user04_normal)
+    return list[icon - 1]
 }
 
 @Composable

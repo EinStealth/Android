@@ -43,41 +43,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private fun selectDrawable(icon: Int, status: Int): Int {
-    when (icon) {
-        1 -> {
-            when (status % 10) {
-                0 -> return R.drawable.user01_runaway
-                1 -> return R.drawable.user01_caputure
-                2 -> return R.drawable.user01_clear
-                3 -> return R.drawable.user01_oni
-            }
-        }
-        2 -> {
-            when (status % 10) {
-                0 -> return R.drawable.user02_runaway
-                1 -> return R.drawable.user02_caputure
-                2 -> return R.drawable.user02_clear
-                3 -> return R.drawable.user02_oni
-            }
-        }
-        3 -> {
-            when (status % 10) {
-                0 -> return R.drawable.user03_runaway
-                1 -> return R.drawable.user03_capture
-                2 -> return R.drawable.user03_clear
-                3 -> return R.drawable.user03_oni
-            }
-        }
-        else -> {
-            when (status % 10) {
-                0 -> return R.drawable.user04_runaway
-                1 -> return R.drawable.user04_capture
-                2 -> return R.drawable.user04_clear
-                3 -> return R.drawable.user04_oni
-            }
-        }
-    }
-    return R.drawable.user01_normal
+    val list: List<List<Int>> = listOf(
+        listOf(R.drawable.user01_runaway, R.drawable.user01_caputure, R.drawable.user01_clear, R.drawable.user01_oni),
+        listOf(R.drawable.user02_runaway, R.drawable.user02_caputure, R.drawable.user02_clear, R.drawable.user02_oni),
+        listOf(R.drawable.user03_runaway, R.drawable.user03_capture, R.drawable.user03_clear, R.drawable.user03_oni),
+        listOf(R.drawable.user04_runaway, R.drawable.user04_capture, R.drawable.user04_clear, R.drawable.user04_oni),
+    )
+    return list[icon - 1][status % 10]
 }
 
 @SuppressLint("CoroutineCreationDuringComposition")
