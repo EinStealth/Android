@@ -22,6 +22,7 @@ class ResponseData {
     data class ResponseGetRoom(
         @Json(name = "secret_words") val secret_words: String,
         @Json(name = "is_start") val is_start: Int,
+        @Json(name = "deamon") val deamon: Int,
     )
 
     data class ResponseGetPlayer(

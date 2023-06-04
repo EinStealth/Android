@@ -55,6 +55,7 @@ fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecyc
         secretWords = standByRoomUiState.secretWords,
         allPlayer = allPlayer,
         onClickStartButton = { viewModel.updateIsStart() },
+        updateDemon = { viewModel.updateDemon(allPlayer.size - 1) }
     )
 }
 
@@ -64,6 +65,7 @@ private fun StandByRoomLayout(
     secretWords: String,
     allPlayer: List<ResponseData.ResponseGetPlayer>,
     onClickStartButton: () -> Unit,
+    updateDemon: () -> Unit,
 ) {
     Surface(Modifier.fillMaxSize()) {
         Image(
@@ -117,6 +119,7 @@ private fun StandByRoomLayout(
                         .clickable {
                             navController.navigate("main")
                             onClickStartButton()
+                            updateDemon()
                         }
                 )
             }
@@ -137,5 +140,6 @@ private fun StandByRoomPreview() {
             ResponseData.ResponseGetPlayer("", "user1", 1, 1),
         ),
         onClickStartButton = {},
+        updateDemon = {}
     )
 }

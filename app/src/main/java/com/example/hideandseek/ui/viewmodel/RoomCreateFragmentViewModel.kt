@@ -43,7 +43,7 @@ class RoomCreateFragmentViewModel @Inject constructor(
     fun postRoom(secretWords: String) {
         viewModelScope.launch {
             try {
-                val request = PostData.PostRoom(secretWords, 0)
+                val request = PostData.PostRoom(secretWords, 0, 0)
                 Log.d("POST_TEST_ROOM", request.toString())
                 val response = apiRepository.postRoom(request)
                 if (response.isSuccessful) {
