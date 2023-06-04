@@ -95,6 +95,22 @@ class StandByRoomFragmentViewModel @Inject constructor(
         }
     }
 
+    fun updateDemon(size: Int) {
+        viewModelScope.launch {
+            try {
+                val demon = (0..size).random()
+                val response = apiRepository.postRoomDemon(uiState.value.secretWords, demon)
+                if (response.isSuccessful) {
+                    Log.d("POST_TEST_DEMON", "${response}\n${response.body()}")
+                } else {
+                    Log.d("POST_TEST_DEMON", "$response")
+                }
+            } catch (e: java.lang.Exception) {
+                Log.d("POST_TEST_DEMON", "$e")
+            }
+        }
+    }
+
     private fun getPlayer(secretWords: String) {
         viewModelScope.launch {
             try {

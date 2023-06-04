@@ -24,6 +24,8 @@ interface ApiRepository {
 
     suspend fun postRoomIsStart(secretWords: String, isStart: Int): Response<ResponseData.ResponsePost>
 
+    suspend fun postRoomDemon(secretWords: String, demon: Int): Response<ResponseData.ResponsePost>
+
     suspend fun getRoom(secretWords: String): Response<List<ResponseData.ResponseGetRoom>>
 
     suspend fun postRoom(request: PostData.PostRoom): Response<ResponseData.ResponsePost>
@@ -66,6 +68,11 @@ class ApiRepositoryImpl @Inject constructor(
     override suspend fun postRoomIsStart(secretWords: String, isStart: Int): Response<ResponseData.ResponsePost> =
         withContext(ioDispatcher) {
             restApiService.postRoomIsStart(secretWords, isStart)
+        }
+
+    override suspend fun postRoomDemon(secretWords: String, demon: Int): Response<ResponseData.ResponsePost> =
+        withContext(ioDispatcher) {
+            restApiService.postRoomDemon(secretWords, demon)
         }
 
     override suspend fun getRoom(secretWords: String): Response<List<ResponseData.ResponseGetRoom>> =
