@@ -46,7 +46,7 @@ fun StandByRoomScreen(viewModel: StandByRoomFragmentViewModel = androidx.lifecyc
     viewModel.resetData()
 
     if (standByRoomUiState.isStart == 1) {
-        navController.navigate("main")
+        navController.navigate("hideTime")
     }
     val allPlayer = standByRoomUiState.allPlayer
 
@@ -117,7 +117,7 @@ private fun StandByRoomLayout(
                         .padding(bottom = 12.dp)
                         .size(width = 142.dp, height = 72.dp)
                         .clickable {
-                            navController.navigate("main")
+                            navController.navigate("hideTime")
                             onClickStartButton()
                             updateDemon()
                         }

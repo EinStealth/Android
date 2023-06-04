@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.hideandseek.ui.viewmodel.BeTrappedFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.CaptureDialogViewModel
+import com.example.hideandseek.ui.viewmodel.HideTimeViewModel
 import com.example.hideandseek.ui.viewmodel.MainActivityViewModel
 import com.example.hideandseek.ui.viewmodel.MainFragmentViewModel
 import com.example.hideandseek.ui.viewmodel.RegisterUserIconFragmentViewModel
@@ -114,6 +115,10 @@ fun MyApp() {
         composable("standByRoom") {
             val viewModel = hiltViewModel<StandByRoomFragmentViewModel>()
             StandByRoomScreen(viewModel, navController)
+        }
+        composable("hideTime") {
+            val viewModel = hiltViewModel<HideTimeViewModel>()
+            HideTimeScreen(viewModel, navController)
         }
         composable("main") {
             val viewModel = hiltViewModel<MainFragmentViewModel>()
