@@ -32,7 +32,10 @@ import com.example.hideandseek.ui.viewmodel.StandByRoomFragmentViewModel
 
 private fun selectDrawable(icon: Int): Int {
     val list = listOf(R.drawable.user01_normal, R.drawable.user02_normal, R.drawable.user03_normal, R.drawable.user04_normal)
-    return list[icon - 1]
+    if (icon in 1..4) {
+        return list[icon - 1]
+    }
+    return list[0]
 }
 
 @Composable
