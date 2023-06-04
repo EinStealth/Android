@@ -47,7 +47,10 @@ private fun selectDrawable(icon: Int, status: Int): Int {
         listOf(R.drawable.user03_runaway, R.drawable.user03_capture, R.drawable.user03_clear, R.drawable.user03_oni),
         listOf(R.drawable.user04_runaway, R.drawable.user04_capture, R.drawable.user04_clear, R.drawable.user04_oni),
     )
-    return list[icon - 1][status % 10]
+    if (icon in 1..4 && status in 0..3) {
+        return list[icon - 1][status]
+    }
+    return list[0][0]
 }
 
 @Composable
