@@ -1,9 +1,9 @@
 package com.example.hideandseek.data.repository
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import android.Manifest
 import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -12,23 +12,23 @@ import com.example.hideandseek.data.datasource.remote.ResponseData
 import com.example.hideandseek.di.IODispatcher
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.time.LocalTime
-import javax.inject.Inject
-import kotlin.math.pow
-import kotlin.math.roundToInt
-import kotlin.math.sqrt
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalTime
 import java.time.temporal.ChronoUnit
+import javax.inject.Inject
+import kotlin.math.pow
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 
 interface MyLocationRepository {
     suspend fun start()
